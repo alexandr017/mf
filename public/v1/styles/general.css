@@ -1,0 +1,33 @@
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+    font-family: 'Rubik', sans-serif;
+}
+.heading-font {
+    font-family: 'Russo One', cursive;
+    letter-spacing: 1px;
+}
+.hero-section {
+    /*background-image: linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0.3) 100%), url('https://readdy.ai/api/search-image?query=A%20surreal%20and%20humorous%20football%20match%20in%20a%20muddy%20stadium%20with%20giant%20insect%20mascots%20on%20the%20sidelines.%20The%20scene%20is%20chaotic%20with%20two%20teams%20wearing%20ridiculous%20uniforms%20playing%20in%20mud.%20The%20stadium%20is%20dilapidated%20with%20funny%20banners.%20The%20atmosphere%20is%20absurd%20yet%20energetic%2C%20with%20cartoon-like%20quality%20but%20still%20photorealistic.&width=1920&height=1080&seq=1&orientation=landscape');*/
+    background-image: linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0.3) 100%), url('/v1/images/index-banner.jpg');
+    background-size: cover;
+    background-position: center;
+}
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+.countdown-timer {
+    font-variant-numeric: tabular-nums;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.team-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+}

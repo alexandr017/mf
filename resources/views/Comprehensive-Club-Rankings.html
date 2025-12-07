@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Club Rankings - Meme Football League</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#7FFF00',secondary:'#FF355E'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+  font-family: 'Rubik', sans-serif;
+}
+.heading-font {
+  font-family: 'Bangers', cursive;
+  letter-spacing: 1px;
+}
+.form-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.form-win {
+  background-color: #10B981;
+}
+.form-draw {
+  background-color: #F59E0B;
+}
+.form-loss {
+  background-color: #EF4444;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.team-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+}
+.custom-checkbox {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background-color: #fff;
+  border: 2px solid #d1d5db;
+  cursor: pointer;
+}
+.custom-checkbox.checked {
+  background-color: #7FFF00;
+  border-color: #7FFF00;
+}
+.custom-checkbox.checked::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  width: 6px;
+  height: 10px;
+  border: solid #000;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.custom-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+}
+.custom-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px;
+}
+.switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+input:checked + .switch-slider {
+  background-color: #7FFF00;
+}
+input:checked + .switch-slider:before {
+  transform: translateX(24px);
+}
+.custom-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 5px;
+  background: #d1d5db;
+  outline: none;
+}
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #7FFF00;
+  cursor: pointer;
+}
+.custom-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #7FFF00;
+  cursor: pointer;
+}
+</style>
+</head>
+<body class="bg-gray-50">
+<!-- Navigation -->
+<nav class="bg-white shadow-md sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16">
+<div class="flex items-center">
+<a href="#" class="flex-shrink-0 flex items-center">
+<span class="text-3xl font-['Pacifico'] text-primary">logo</span>
+</a>
+<div class="hidden sm:ml-10 sm:flex sm:space-x-8">
+<a href="https://readdy.ai/home/ba17d2a5-8f15-42cd-a5e7-3b6aff6a4c18/fbe9edc5-e174-4f03-b495-1df96dadbc45" data-readdy="true" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Home</a>
+<a href="#" class="border-primary text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Club Rankings</a>
+<a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Tournaments</a>
+<a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Teams</a>
+<a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Upcoming Matches</a>
+<a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Help & Rules</a>
+<a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Blog</a>
+</div>
+</div>
+<div class="hidden sm:ml-6 sm:flex sm:items-center">
+<div class="ml-3 relative">
+<button class="bg-primary hover:bg-opacity-80 text-white px-4 py-2 !rounded-button whitespace-nowrap">
+Login / Register
+</button>
+</div>
+</div>
+<div class="flex items-center sm:hidden">
+<button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-menu-line ri-lg"></i>
+</div>
+</button>
+</div>
+</div>
+</div>
+</nav>
+<!-- Page Header -->
+<div class="bg-white shadow-sm">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+<div class="flex flex-col md:flex-row md:items-center md:justify-between">
+<div class="flex items-center">
+<a href="https://readdy.ai/home/ba17d2a5-8f15-42cd-a5e7-3b6aff6a4c18/fbe9edc5-e174-4f03-b495-1df96dadbc45" data-readdy="true" class="mr-4 text-gray-500 hover:text-gray-700">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-arrow-left-line ri-lg"></i>
+</div>
+</a>
+<h1 class="heading-font text-4xl text-gray-900">Club Rankings</h1>
+</div>
+<div class="mt-4 md:mt-0 flex flex-col sm:flex-row gap-3">
+<div class="relative">
+<div class="flex items-center">
+<div class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center justify-center text-gray-400">
+<i class="ri-search-line"></i>
+</div>
+<input type="text" placeholder="Search teams..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-sm">
+</div>
+</div>
+<div class="relative">
+<button id="seasonDropdown" class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-sm flex items-center justify-between min-w-[180px]">
+<span>Season 2025-2026</span>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-arrow-down-s-line"></i>
+</div>
+</button>
+<div id="seasonDropdownMenu" class="hidden absolute z-10 mt-1 w-full bg-white shadow-lg rounded-lg py-1 text-sm">
+<a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Season 2024-2025</a>
+<a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 bg-gray-50">Season 2025-2026</a>
+<a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Season 2023-2024</a>
+<a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Season 2022-2023</a>
+</div>
+</div>
+<div class="relative">
+<button id="tournamentDropdown" class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-sm flex items-center justify-between min-w-[180px]">
+<span>Meme Premier League</span>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-arrow-down-s-line"></i>
+</div>
+</button>
+<div id="tournamentDropdownMenu" class="hidden absolute z-10 mt-1 w-full bg-white shadow-lg rounded-lg py-1 text-sm">
+<a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 bg-gray-50">Meme Premier League</a>
+<a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Meme Cup</a>
+<a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Meme Champions League</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Ranking System Explanation -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+<div class="bg-white shadow-sm rounded-lg p-6 mb-8">
+<h2 class="text-xl font-bold text-gray-900 mb-4">Ranking System Explanation</h2>
+<p class="text-gray-600 mb-4">The Meme Football League uses a standard points system to determine team rankings:</p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+<div class="bg-green-50 rounded-lg p-4 flex items-center">
+<div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
+<div class="w-6 h-6 flex items-center justify-center text-green-600">
+<i class="ri-trophy-line"></i>
+</div>
+</div>
+<div>
+<p class="font-bold text-gray-900">Win</p>
+<p class="text-gray-600">3 points</p>
+</div>
+</div>
+<div class="bg-yellow-50 rounded-lg p-4 flex items-center">
+<div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center mr-3">
+<div class="w-6 h-6 flex items-center justify-center text-yellow-600">
+<i class="ri-scales-3-line"></i>
+</div>
+</div>
+<div>
+<p class="font-bold text-gray-900">Draw</p>
+<p class="text-gray-600">1 point</p>
+</div>
+</div>
+<div class="bg-red-50 rounded-lg p-4 flex items-center">
+<div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3">
+<div class="w-6 h-6 flex items-center justify-center text-red-600">
+<i class="ri-close-circle-line"></i>
+</div>
+</div>
+<div>
+<p class="font-bold text-gray-900">Loss</p>
+<p class="text-gray-600">0 points</p>
+</div>
+</div>
+</div>
+<p class="text-gray-600">Teams are ranked by total points. If two or more teams are tied on points, the following tiebreakers are applied in order: 1) Goal difference, 2) Goals scored, 3) Head-to-head results, 4) Fair play points, 5) Drawing of lots.</p>
+</div>
+</div>
+
+<!-- Filter Options -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
+<div class="bg-white shadow-sm rounded-lg p-6">
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+<div>
+<h3 class="text-lg font-bold text-gray-900 mb-2">Filter & Display Options</h3>
+<div class="flex flex-wrap gap-2">
+<button class="bg-primary text-gray-900 px-3 py-1 rounded-full text-sm font-medium">All Teams</button>
+<button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">Top 5</button>
+<button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">Bottom 3</button>
+<button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">Promotion Zone</button>
+<button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">Relegation Zone</button>
+</div>
+</div>
+<div class="flex flex-wrap gap-3">
+<div class="flex items-center">
+<div class="custom-checkbox" id="showForm" onclick="toggleCheckbox(this)"></div>
+<label for="showForm" class="ml-2 text-sm text-gray-700 cursor-pointer">Form</label>
+</div>
+<div class="flex items-center">
+<div class="custom-checkbox checked" id="showGoals" onclick="toggleCheckbox(this)"></div>
+<label for="showGoals" class="ml-2 text-sm text-gray-700 cursor-pointer">Goals</label>
+</div>
+<div class="flex items-center">
+<div class="custom-checkbox checked" id="showPercentage" onclick="toggleCheckbox(this)"></div>
+<label for="showPercentage" class="ml-2 text-sm text-gray-700 cursor-pointer">Win %</label>
+</div>
+<div class="flex items-center">
+<div class="custom-checkbox" id="showCleanSheets" onclick="toggleCheckbox(this)"></div>
+<label for="showCleanSheets" class="ml-2 text-sm text-gray-700 cursor-pointer">Clean Sheets</label>
+</div>
+<div class="flex items-center">
+<div class="custom-checkbox" id="showTopScorer" onclick="toggleCheckbox(this)"></div>
+<label for="showTopScorer" class="ml-2 text-sm text-gray-700 cursor-pointer">Top Scorer</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Main Rankings Table -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+<div class="bg-white shadow-lg rounded-lg overflow-hidden">
+<div class="overflow-x-auto">
+<table class="min-w-full bg-white">
+<thead class="bg-gray-100">
+<tr>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-100 z-10">Position</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-[73px] bg-gray-100 z-10">Team</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Played</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Won</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Draw</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lost</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">GF</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">GA</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">GD</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Points</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Form</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Win %</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clean Sheets</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Top Scorer</th>
+<th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-200">
+<!-- Team 1 -->
+<tr class="bg-primary bg-opacity-10 hover:bg-opacity-20">
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 sticky left-0 bg-primary bg-opacity-10 z-10">1</td>
+<td class="px-6 py-4 whitespace-nowrap sticky left-[73px] bg-primary bg-opacity-10 z-10">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Kazan%2520Cockroaches%2520with%2520insect%2520theme%252C%2520comic%2520style&width=200&height=200&seq=6&orientation=squarish" alt="Kazan Cockroaches" class="h-full w-full object-cover object-top">
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-gray-900">Kazan Cockroaches 🪳</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">14</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">4</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">42</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">18</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">+24</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">46</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+<div class="flex space-x-1">
+<span class="form-indicator form-win" title="Win"></span>
+<span class="form-indicator form-win" title="Win"></span>
+<span class="form-indicator form-draw" title="Draw"></span>
+<span class="form-indicator form-win" title="Win"></span>
+<span class="form-indicator form-win" title="Win"></span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">70%</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">8</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Igor Pestov (15)</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+<button class="text-primary hover:text-primary-dark">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-information-line"></i>
+</div>
+</button>
+</td>
+</tr>
+<!-- Team 2 -->
+<tr class="hover:bg-gray-50">
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 sticky left-0 bg-white z-10">2</td>
+<td class="px-6 py-4 whitespace-nowrap sticky left-[73px] bg-white z-10">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Omsk%2520Stream%2520with%2520water%2520theme%2520elements%252C%2520blue%2520colors%252C%2520comic%2520style&width=200&height=200&seq=2&orientation=squarish" alt="Omsk Stream" class="h-full w-full object-cover object-top">
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-gray-900">Omsk Stream 💧</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">12</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">38</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">+18</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">41</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+<div class="flex space-x-1">
+<span class="form-indicator form-win" title="Win"></span>
+<span class="form-indicator form-win" title="Win"></span>
+<span class="form-indicator form-win" title="Win"></span>
+<span class="form-indicator form-draw" title="Draw"></span>
+<span class="form-indicator form-loss" title="Loss"></span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">60%</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">7</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Alexei Volkov (12)</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+<button class="text-primary hover:text-primary-dark">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-information-line"></i>
+</div>
+</button>
+</td>
+</tr>
+<!-- Team 3 -->
+<tr class="hover:bg-gray-50">
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 sticky left-0 bg-white z-10">3</td>
+<td class="px-6 py-4 whitespace-nowrap sticky left-[73px] bg-white z-10">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Moscow%2520Mildew%2520with%2520fungus%2520theme%252C%2520comic%2520style&width=200&height=200&seq=7&orientation=squarish" alt="Moscow Mildew" class="h-full w-full object-cover object-top">
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-gray-900">Moscow Mildew 🍄</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">11</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">6</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">35</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">22</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">+13</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">39</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+<div class="flex space-x-1">
+<span class="form-indicator form-draw" title="Draw"></span>
+<span class="form-indicator form-win" title="Win"></span>
+<span class="form-indicator form-win" title="Win"></span>
+<span class="form-indicator form-draw" title="Draw"></span>
+<span class="form-indicator form-win" title="Win"></span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">55%</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Mikhail Spore (11)</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+<button class="text-primary hover:text-primary-dark">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-information-line"></i>
+</div>
+</button>
+</td>
+</tr>
+<!-- Team 4 -->
+<tr class="hover:bg-gray-50">
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 sticky left-0 bg-white z-10">4</td>
+<td class="px-6 py-4 whitespace-nowrap sticky left-[73px] bg-white z-10">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Vladivostok%2520Vomit%2520with%2520sick%2520theme%252C%2520comic%2520style&width=200&height=200&seq=8&orientation=squarish" alt="Vladivostok Vomit" class="h-full w-full object-cover object-top">
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-gray-900">Vladivostok Vomit 🤢</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">7</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">28</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">18</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">+10</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">37</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+<div class="flex space-x-1">
+<span class="form-indicator form-draw" title="Draw"></span>
+<span class="form-indicator form-draw" title="Draw"></span>
+<span class="form-indicator form-win" title="Win"></span>
+<span class="form-indicator form-win" title="Win"></span>
+<span class="form-indicator form-draw" title="Draw"></span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">50%</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">6</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Viktor Nausea (9)</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+<button class="text-primary hover:text-primary-dark">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-information-line"></i>
+</div>
+</button>
+</td>
+</tr>
+<!-- Team 5 -->
+<tr class="hover:bg-gray-50">
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 sticky left-0 bg-white z-10">5</td>
+<td class="px-6 py-4 whitespace-nowrap sticky left-[73px] bg-white z-10">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Sochi%2520Stench%2520with%2520bad%2520smell%2520theme%252C%2520comic%2520style&width=200&height=200&seq=9&orientation=squarish" alt="Sochi Stench" class="h-full w-full object-cover object-top">
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-gray-900">Sochi Stench 🦨</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">9</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">8</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">30</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">22</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">+8</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">35</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+<div class="flex space-x-1">
+<span class="form-indicator form-draw" title="Draw"></span>
+<span class="form-indicator form-win" title="Win"></span>
+<span class="form-indicator form-draw" title="Draw"></span>
+<span class="form-indicator form-win" title="Win"></span>
+<span class="form-indicator form-draw" title="Draw"></span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">45%</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">4</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Dmitri Odor (10)</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+<button class="text-primary hover:text-primary-dark">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-information-line"></i>
+</div>
+</button>
+</td>
+</tr>
+<!-- Team 6 -->
+<tr class="hover:bg-gray-50">
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 sticky left-0 bg-white z-10">6</td>
+<td class="px-6 py-4 whitespace-nowrap sticky left-[73px] bg-white z-10">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Perm%2520Pimples%2520with%2520acne%2520theme%252C%2520red%2520colors%252C%2520comic%2520style&width=200&height=200&seq=3&orientation=squarish" alt="Perm Pimples" class="h-full w-full object-cover object-top">
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-gray-900">Perm Pimples 🔴</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">8</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">7</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">25</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">+5</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">31</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+<div class="flex space-x-1">
+<span class="form-indicator form-loss" title="Loss"></span>
+<span class="form-indicator form-win" title="Win"></span>
+<span class="form-indicator form-draw" title="Draw"></span>
+<span class="form-indicator form-win" title="Win"></span>
+<span class="form-indicator form-draw" title="Draw"></span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">40%</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Anton Zit (8)</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+<button class="text-primary hover:text-primary-dark">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-information-line"></i>
+</div>
+</button>
+</td>
+</tr>
+<!-- Team 7 -->
+<tr class="hover:bg-gray-50">
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 sticky left-0 bg-white z-10">7</td>
+<td class="px-6 py-4 whitespace-nowrap sticky left-[73px] bg-white z-10">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Tula%2520Toothaches%2520with%2520dental%2520pain%2520theme%252C%2520comic%2520style&width=200&height=200&seq=5&orientation=squarish" alt="Tula Toothaches" class="h-full w-full object-cover object-top">
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-gray-900">Tula Toothaches 🦷</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">6</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">6</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">8</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">22</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">28</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-6</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">24</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+<div class="flex space-x-1">
+<span class="form-indicator form-loss" title="Loss"></span>
+<span class="form-indicator form-loss" title="Loss"></span>
+<span class="form-indicator form-draw" title="Draw"></span>
+<span class="form-indicator form-win" title="Win"></span>
+<span class="form-indicator form-draw" title="Draw"></span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">30%</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Pavel Molar (7)</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+<button class="text-primary hover:text-primary-dark">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-information-line"></i>
+</div>
+</button>
+</td>
+</tr>
+<!-- Team 8 -->
+<tr class="bg-red-50 hover:bg-red-100">
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 sticky left-0 bg-red-50 z-10">8</td>
+<td class="px-6 py-4 whitespace-nowrap sticky left-[73px] bg-red-50 z-10">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Snot%2520FC%2520with%2520green%2520slime%2520theme%252C%2520comic%2520style&width=200&height=200&seq=4&orientation=squarish" alt="Snot FC" class="h-full w-full object-cover object-top">
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-gray-900">Snot FC 🤧</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">13</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">38</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-23</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">11</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+<div class="flex space-x-1">
+<span class="form-indicator form-win" title="Win"></span>
+<span class="form-indicator form-loss" title="Loss"></span>
+<span class="form-indicator form-loss" title="Loss"></span>
+<span class="form-indicator form-loss" title="Loss"></span>
+<span class="form-indicator form-draw" title="Draw"></span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10%</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Grigori Mucus (5)</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+<button class="text-primary hover:text-primary-dark">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-information-line"></i>
+</div>
+</button>
+</td>
+</tr>
+<!-- Team 9 -->
+<tr class="bg-gray-50 hover:bg-gray-100">
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 sticky left-0 bg-gray-50 z-10">9</td>
+<td class="px-6 py-4 whitespace-nowrap sticky left-[73px] bg-gray-50 z-10">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Yekaterinburg%2520Yeast%2520with%2520bread%2520rising%2520theme%252C%2520comic%2520style&width=200&height=200&seq=14&orientation=squarish" alt="Yekaterinburg Yeast" class="h-full w-full object-cover object-top">
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-gray-900">Yekaterinburg Yeast 🍞</div>
+<div class="text-xs text-gray-500">(Promoted from 2nd Division)</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">0</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+<div class="flex space-x-1">
+<span class="form-indicator bg-gray-300" title="Not played"></span>
+<span class="form-indicator bg-gray-300" title="Not played"></span>
+<span class="form-indicator bg-gray-300" title="Not played"></span>
+<span class="form-indicator bg-gray-300" title="Not played"></span>
+<span class="form-indicator bg-gray-300" title="Not played"></span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0%</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">N/A</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+<button class="text-primary hover:text-primary-dark">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-information-line"></i>
+</div>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center">
+<div class="text-sm text-gray-500 mb-4 sm:mb-0">
+Showing 9 teams - Last updated: June 18, 2025 at 10:15 AM
+</div>
+<div class="flex space-x-2">
+<button class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-lg text-sm flex items-center">
+<div class="w-4 h-4 mr-1 flex items-center justify-center">
+<i class="ri-file-download-line"></i>
+</div>
+Export CSV
+</button>
+<button class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-lg text-sm flex items-center">
+<div class="w-4 h-4 mr-1 flex items-center justify-center">
+<i class="ri-printer-line"></i>
+</div>
+Print
+</button>
+<button class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-lg text-sm flex items-center">
+<div class="w-4 h-4 mr-1 flex items-center justify-center">
+<i class="ri-share-line"></i>
+</div>
+Share
+</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Legend -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+<div class="bg-white shadow-sm rounded-lg p-6">
+<h3 class="text-lg font-bold text-gray-900 mb-4">Legend</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="flex items-center">
+<div class="w-4 h-4 bg-primary bg-opacity-10 border border-primary"></div>
+<span class="ml-2 text-sm text-gray-700">League Leader</span>
+</div>
+<div class="flex items-center">
+<div class="w-4 h-4 bg-blue-50 border border-blue-200"></div>
+<span class="ml-2 text-sm text-gray-700">Champions League Qualification</span>
+</div>
+<div class="flex items-center">
+<div class="w-4 h-4 bg-green-50 border border-green-200"></div>
+<span class="ml-2 text-sm text-gray-700">Europa League Qualification</span>
+</div>
+<div class="flex items-center">
+<div class="w-4 h-4 bg-yellow-50 border border-yellow-200"></div>
+<span class="ml-2 text-sm text-gray-700">Promotion Playoff</span>
+</div>
+<div class="flex items-center">
+<div class="w-4 h-4 bg-red-50 border border-red-200"></div>
+<span class="ml-2 text-sm text-gray-700">Relegation Zone</span>
+</div>
+<div class="flex items-center">
+<div class="w-4 h-4 bg-gray-50 border border-gray-200"></div>
+<span class="ml-2 text-sm text-gray-700">Newly Promoted Team</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Performance Trends -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+<div class="bg-white shadow-lg rounded-lg overflow-hidden">
+<div class="p-6 border-b border-gray-200">
+<h2 class="text-xl font-bold text-gray-900">Performance Trends</h2>
+<p class="text-gray-600">Visual representation of team performance over the current season</p>
+</div>
+<div class="p-6">
+<div class="flex flex-col md:flex-row gap-6">
+<div class="w-full md:w-1/2">
+<div class="mb-4">
+<h3 class="text-lg font-bold text-gray-900 mb-2">Points Progression</h3>
+<div id="pointsChart" class="h-80"></div>
+</div>
+</div>
+<div class="w-full md:w-1/2">
+<div class="mb-4">
+<h3 class="text-lg font-bold text-gray-900 mb-2">Goal Scoring Patterns</h3>
+<div id="goalsChart" class="h-80"></div>
+</div>
+</div>
+</div>
+<div class="mt-6">
+<h3 class="text-lg font-bold text-gray-900 mb-2">Form Trends (Last 10 Matches)</h3>
+<div id="formChart" class="h-64"></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Team Comparison Tool -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+<div class="bg-white shadow-lg rounded-lg overflow-hidden">
+<div class="p-6 border-b border-gray-200">
+<h2 class="text-xl font-bold text-gray-900">Team Comparison Tool</h2>
+<p class="text-gray-600">Compare statistics between any two teams in the league</p>
+</div>
+<div class="p-6">
+<div class="flex flex-col md:flex-row gap-6 mb-6">
+<div class="w-full md:w-1/2">
+<label for="team1" class="block text-sm font-medium text-gray-700 mb-1">Team 1</label>
+<div class="relative">
+<select id="team1" class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-primary focus:border-primary rounded-lg appearance-none">
+<option value="kazan">Kazan Cockroaches 🪳</option>
+<option value="omsk">Omsk Stream 💧</option>
+<option value="moscow">Moscow Mildew 🍄</option>
+<option value="vladivostok">Vladivostok Vomit 🤢</option>
+<option value="sochi">Sochi Stench 🦨</option>
+<option value="perm">Perm Pimples 🔴</option>
+<option value="tula">Tula Toothaches 🦷</option>
+<option value="snot">Snot FC 🤧</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-arrow-down-s-line"></i>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full md:w-1/2">
+<label for="team2" class="block text-sm font-medium text-gray-700 mb-1">Team 2</label>
+<div class="relative">
+<select id="team2" class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-primary focus:border-primary rounded-lg appearance-none">
+<option value="omsk">Omsk Stream 💧</option>
+<option value="kazan">Kazan Cockroaches 🪳</option>
+<option value="moscow">Moscow Mildew 🍄</option>
+<option value="vladivostok">Vladivostok Vomit 🤢</option>
+<option value="sochi">Sochi Stench 🦨</option>
+<option value="perm">Perm Pimples 🔴</option>
+<option value="tula">Tula Toothaches 🦷</option>
+<option value="snot">Snot FC 🤧</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-arrow-down-s-line"></i>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="bg-gray-50 rounded-lg p-6">
+<div class="grid grid-cols-3 gap-4">
+<div class="text-center">
+<div class="flex flex-col items-center">
+<div class="w-16 h-16 rounded-full overflow-hidden mb-2">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Kazan%2520Cockroaches%2520with%2520insect%2520theme%252C%2520comic%2520style&width=200&height=200&seq=6&orientation=squarish" alt="Kazan Cockroaches" class="w-full h-full object-cover object-top">
+</div>
+<p class="font-bold text-gray-900">Kazan Cockroaches</p>
+</div>
+</div>
+<div class="text-center">
+<p class="text-sm text-gray-500 mb-1">Comparison</p>
+<button class="bg-primary hover:bg-opacity-80 text-gray-900 px-4 py-2 !rounded-button text-sm font-medium whitespace-nowrap">
+Compare Stats
+</button>
+</div>
+<div class="text-center">
+<div class="flex flex-col items-center">
+<div class="w-16 h-16 rounded-full overflow-hidden mb-2">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Omsk%2520Stream%2520with%2520water%2520theme%2520elements%252C%2520blue%2520colors%252C%2520comic%2520style&width=200&height=200&seq=2&orientation=squarish" alt="Omsk Stream" class="w-full h-full object-cover object-top">
+</div>
+<p class="font-bold text-gray-900">Omsk Stream</p>
+</div>
+</div>
+</div>
+
+<div class="mt-6">
+<div class="grid grid-cols-3 gap-4">
+<div class="text-right pr-4">
+<p class="font-bold text-gray-900 text-xl">46</p>
+<p class="text-gray-600 text-sm">14 wins, 4 draws, 2 losses</p>
+</div>
+<div class="text-center">
+<p class="text-sm font-medium text-gray-500">Points</p>
+</div>
+<div class="text-left pl-4">
+<p class="font-bold text-gray-900 text-xl">41</p>
+<p class="text-gray-600 text-sm">12 wins, 5 draws, 3 losses</p>
+</div>
+</div>
+
+<div class="h-2 bg-gray-200 rounded-full mt-2 mb-4">
+<div class="h-2 bg-primary rounded-l-full" style="width: 53%"></div>
+</div>
+
+<div class="grid grid-cols-3 gap-4">
+<div class="text-right pr-4">
+<p class="font-bold text-gray-900 text-xl">42</p>
+<p class="text-gray-600 text-sm">2.1 per match</p>
+</div>
+<div class="text-center">
+<p class="text-sm font-medium text-gray-500">Goals Scored</p>
+</div>
+<div class="text-left pl-4">
+<p class="font-bold text-gray-900 text-xl">38</p>
+<p class="text-gray-600 text-sm">1.9 per match</p>
+</div>
+</div>
+
+<div class="h-2 bg-gray-200 rounded-full mt-2 mb-4">
+<div class="h-2 bg-primary rounded-l-full" style="width: 52%"></div>
+</div>
+
+<div class="grid grid-cols-3 gap-4">
+<div class="text-right pr-4">
+<p class="font-bold text-gray-900 text-xl">18</p>
+<p class="text-gray-600 text-sm">0.9 per match</p>
+</div>
+<div class="text-center">
+<p class="text-sm font-medium text-gray-500">Goals Conceded</p>
+</div>
+<div class="text-left pl-4">
+<p class="font-bold text-gray-900 text-xl">20</p>
+<p class="text-gray-600 text-sm">1.0 per match</p>
+</div>
+</div>
+
+<div class="h-2 bg-gray-200 rounded-full mt-2 mb-4">
+<div class="h-2 bg-primary rounded-l-full" style="width: 47%"></div>
+</div>
+
+<div class="grid grid-cols-3 gap-4">
+<div class="text-right pr-4">
+<p class="font-bold text-gray-900 text-xl">8</p>
+<p class="text-gray-600 text-sm">40% of matches</p>
+</div>
+<div class="text-center">
+<p class="text-sm font-medium text-gray-500">Clean Sheets</p>
+</div>
+<div class="text-left pl-4">
+<p class="font-bold text-gray-900 text-xl">7</p>
+<p class="text-gray-600 text-sm">35% of matches</p>
+</div>
+</div>
+
+<div class="h-2 bg-gray-200 rounded-full mt-2 mb-4">
+<div class="h-2 bg-primary rounded-l-full" style="width: 53%"></div>
+</div>
+
+<div class="grid grid-cols-3 gap-4">
+<div class="text-right pr-4">
+<p class="font-bold text-gray-900 text-xl">70%</p>
+</div>
+<div class="text-center">
+<p class="text-sm font-medium text-gray-500">Win Percentage</p>
+</div>
+<div class="text-left pl-4">
+<p class="font-bold text-gray-900 text-xl">60%</p>
+</div>
+</div>
+
+<div class="h-2 bg-gray-200 rounded-full mt-2 mb-4">
+<div class="h-2 bg-primary rounded-l-full" style="width: 54%"></div>
+</div>
+</div>
+
+<div class="mt-6 p-4 bg-gray-50 rounded-lg">
+<h3 class="text-lg font-bold text-gray-900 mb-4">Head-to-Head Results</h3>
+<div class="space-y-4">
+<div class="bg-white p-4 rounded-lg shadow-sm">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full overflow-hidden mr-2">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Kazan%2520Cockroaches%2520with%2520insect%2520theme%252C%2520comic%2520style&width=200&height=200&seq=6&orientation=squarish" alt="Kazan Cockroaches" class="w-full h-full object-cover object-top">
+</div>
+<span class="font-medium">Kazan Cockroaches</span>
+</div>
+<div class="text-center">
+<span class="font-bold">3 - 1</span>
+<div class="text-xs text-gray-500">March 12, 2025</div>
+</div>
+<div class="flex items-center">
+<span class="font-medium">Omsk Stream</span>
+<div class="w-8 h-8 rounded-full overflow-hidden ml-2">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Omsk%2520Stream%2520with%2520water%2520theme%2520elements%252C%2520blue%2520colors%252C%2520comic%2520style&width=200&height=200&seq=2&orientation=squarish" alt="Omsk Stream" class="w-full h-full object-cover object-top">
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white p-4 rounded-lg shadow-sm">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full overflow-hidden mr-2">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Omsk%2520Stream%2520with%2520water%2520theme%2520elements%252C%2520blue%2520colors%252C%2520comic%2520style&width=200&height=200&seq=2&orientation=squarish" alt="Omsk Stream" class="w-full h-full object-cover object-top">
+</div>
+<span class="font-medium">Omsk Stream</span>
+</div>
+<div class="text-center">
+<span class="font-bold">2 - 2</span>
+<div class="text-xs text-gray-500">November 5, 2024</div>
+</div>
+<div class="flex items-center">
+<span class="font-medium">Kazan Cockroaches</span>
+<div class="w-8 h-8 rounded-full overflow-hidden ml-2">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Kazan%2520Cockroaches%2520with%2520insect%2520theme%252C%2520comic%2520style&width=200&height=200&seq=6&orientation=squarish" alt="Kazan Cockroaches" class="w-full h-full object-cover object-top">
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white p-4 rounded-lg shadow-sm">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full overflow-hidden mr-2">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Kazan%2520Cockroaches%2520with%2520insect%2520theme%252C%2520comic%2520style&width=200&height=200&seq=6&orientation=squarish" alt="Kazan Cockroaches" class="w-full h-full object-cover object-top">
+</div>
+<span class="font-medium">Kazan Cockroaches</span>
+</div>
+<div class="text-center">
+<span class="font-bold">1 - 0</span>
+<div class="text-xs text-gray-500">May 20, 2024</div>
+</div>
+<div class="flex items-center">
+<span class="font-medium">Omsk Stream</span>
+<div class="w-8 h-8 rounded-full overflow-hidden ml-2">
+<img src="https://readdy.ai/api/search-image?query=A%2520funny%2520cartoon%2520logo%2520for%2520a%2520football%2520team%2520called%2520Omsk%2520Stream%2520with%2520water%2520theme%2520elements%252C%2520blue%2520colors%252C%2520comic%2520style&width=200&height=200&seq=2&orientation=squarish" alt="Omsk Stream" class="w-full h-full object-cover object-top">
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Settings -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+<div class="bg-white shadow-sm rounded-lg p-6">
+<h3 class="text-lg font-bold text-gray-900 mb-4">Display Settings</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<div class="flex items-center justify-between mb-4">
+<label for="autoRefresh" class="text-sm font-medium text-gray-700">Auto-refresh data</label>
+<label class="custom-switch">
+<input type="checkbox" id="autoRefresh" checked>
+<span class="switch-slider"></span>
+</label>
+</div>
+<div class="mb-4">
+<label for="refreshInterval" class="block text-sm font-medium text-gray-700 mb-1">Refresh interval (minutes)</label>
+<input type="range" id="refreshInterval" min="1" max="30" value="5" class="custom-range">
+<div class="flex justify-between text-xs text-gray-500 mt-1">
+<span>1m</span>
+<span>5m</span>
+<span>15m</span>
+<span>30m</span>
+</div>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between mb-4">
+<label for="darkMode" class="text-sm font-medium text-gray-700">Dark mode</label>
+<label class="custom-switch">
+<input type="checkbox" id="darkMode">
+<span class="switch-slider"></span>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<label for="compactView" class="text-sm font-medium text-gray-700">Compact view</label>
+<label class="custom-switch">
+<input type="checkbox" id="compactView">
+<span class="switch-slider"></span>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-white">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<div>
+<a href="#" class="text-3xl font-['Pacifico'] text-primary block mb-4">logo</a>
+<p class="text-gray-400 mb-4">The most ridiculous football league in Russia, where the teams are absurd and the matches are chaotic.</p>
+<div class="flex space-x-4">
+<a href="#" class="text-gray-400 hover:text-white">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-twitter-x-line ri-lg"></i>
+</div>
+</a>
+<a href="#" class="text-gray-400 hover:text-white">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-instagram-line ri-lg"></i>
+</div>
+</a>
+<a href="#" class="text-gray-400 hover:text-white">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-youtube-line ri-lg"></i>
+</div>
+</a>
+<a href="#" class="text-gray-400 hover:text-white">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-telegram-line ri-lg"></i>
+</div>
+</a>
+</div>
+</div>
+<div>
+<h3 class="text-lg font-bold mb-4">Quick Links</h3>
+<ul class="space-y-2">
+<li><a href="https://readdy.ai/home/ba17d2a5-8f15-42cd-a5e7-3b6aff6a4c18/fbe9edc5-e174-4f03-b495-1df96dadbc45" data-readdy="true" class="text-gray-400 hover:text-white">Home</a></li>
+<li><a href="#" class="text-primary hover:text-white">Club Rankings</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white">Tournaments</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white">Teams</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white">Upcoming Matches</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white">Help & Rules</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white">Blog</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-bold mb-4">Support</h3>
+<ul class="space-y-2">
+<li><a href="#" class="text-gray-400 hover:text-white">Contact Us</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white">Refund Policy</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-bold mb-4">Subscribe</h3>
+<p class="text-gray-400 mb-4">Get the latest news and updates from the most ridiculous football league.</p>
+<div class="flex">
+<input type="email" placeholder="Your email" class="px-4 py-2 w-full rounded-l-lg border-none focus:outline-none focus:ring-2 focus:ring-primary text-gray-900">
+<button class="bg-primary hover:bg-opacity-80 text-gray-900 font-bold px-4 py-2 rounded-r-lg whitespace-nowrap">
+Subscribe
+</button>
+</div>
+<div class="mt-6">
+<a href="#" class="bg-secondary hover:bg-opacity-80 text-white font-bold px-6 py-3 !rounded-button block text-center whitespace-nowrap">
+<div class="flex items-center justify-center gap-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-heart-line"></i>
+</div>
+<span>Donate & Support</span>
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+<p class="text-gray-400">© 2025 Meme Football League. All rights reserved.</p>
+<div class="flex space-x-4 mt-4 md:mt-0">
+<div class="w-8 h-8 flex items-center justify-center text-gray-400">
+<i class="ri-visa-fill ri-lg"></i>
+</div>
+<div class="w-8 h-8 flex items-center justify-center text-gray-400">
+<i class="ri-mastercard-fill ri-lg"></i>
+</div>
+<div class="w-8 h-8 flex items-center justify-center text-gray-400">
+<i class="ri-paypal-fill ri-lg"></i>
+</div>
+<div class="w-8 h-8 flex items-center justify-center text-gray-400">
+<i class="ri-apple-fill ri-lg"></i>
+</div>
+</div>
+</div>
+</div>
+</footer>
+
+<script id="dropdown-handlers">
+document.addEventListener('DOMContentLoaded', function() {
+  const seasonDropdown = document.getElementById('seasonDropdown');
+  const seasonDropdownMenu = document.getElementById('seasonDropdownMenu');
+  const tournamentDropdown = document.getElementById('tournamentDropdown');
+  const tournamentDropdownMenu = document.getElementById('tournamentDropdownMenu');
+  
+  seasonDropdown.addEventListener('click', function() {
+    seasonDropdownMenu.classList.toggle('hidden');
+    tournamentDropdownMenu.classList.add('hidden');
+  });
+  
+  tournamentDropdown.addEventListener('click', function() {
+    tournamentDropdownMenu.classList.toggle('hidden');
+    seasonDropdownMenu.classList.add('hidden');
+  });
+  
+  document.addEventListener('click', function(event) {
+    if (!seasonDropdown.contains(event.target) && !seasonDropdownMenu.contains(event.target)) {
+      seasonDropdownMenu.classList.add('hidden');
+    }
+    
+    if (!tournamentDropdown.contains(event.target) && !tournamentDropdownMenu.contains(event.target)) {
+      tournamentDropdownMenu.classList.add('hidden');
+    }
+  });
+  
+  const seasonOptions = seasonDropdownMenu.querySelectorAll('a');
+  seasonOptions.forEach(option => {
+    option.addEventListener('click', function(e) {
+      e.preventDefault();
+      seasonDropdown.querySelector('span').textContent = this.textContent;
+      seasonDropdownMenu.classList.add('hidden');
+    });
+  });
+  
+  const tournamentOptions = tournamentDropdownMenu.querySelectorAll('a');
+  tournamentOptions.forEach(option => {
+    option.addEventListener('click', function(e) {
+      e.preventDefault();
+      tournamentDropdown.querySelector('span').textContent = this.textContent;
+      tournamentDropdownMenu.classList.add('hidden');
+    });
+  });
+});
+</script>
+
+<script id="checkbox-handlers">
+function toggleCheckbox(checkbox) {
+  checkbox.classList.toggle('checked');
+}
+</script>
+
+<script id="charts-initialization">
+document.addEventListener('DOMContentLoaded', function() {
+  // Points Progression Chart
+  const pointsChart = echarts.init(document.getElementById('pointsChart'));
+  const pointsOption = {
+    animation: false,
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      borderColor: '#ddd',
+      borderWidth: 1,
+      textStyle: {
+        color: '#1f2937'
+      }
+    },
+    legend: {
+      data: ['Kazan Cockroaches', 'Omsk Stream', 'Moscow Mildew', 'Vladivostok Vomit'],
+      textStyle: {
+        color: '#1f2937'
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: ['Match 1', 'Match 5', 'Match 10', 'Match 15', 'Match 20'],
+      axisLine: {
+        lineStyle: {
+          color: '#d1d5db'
+        }
+      },
+      axisLabel: {
+        color: '#1f2937'
+      }
+    },
+    yAxis: {
+      type: 'value',
+      axisLine: {
+        lineStyle: {
+          color: '#d1d5db'
+        }
+      },
+      axisLabel: {
+        color: '#1f2937'
+      },
+      splitLine: {
+        lineStyle: {
+          color: '#f3f4f6'
+        }
+      }
+    },
+    series: [
+      {
+        name: 'Kazan Cockroaches',
+        type: 'line',
+        smooth: true,
+        symbol: 'none',
+        lineStyle: {
+          width: 3
+        },
+        areaStyle: {
+          opacity: 0.1
+        },
+        emphasis: {
+          focus: 'series'
+        },
+        data: [3, 13, 25, 37, 46],
+        color: 'rgba(87, 181, 231, 1)'
+      },
+      {
+        name: 'Omsk Stream',
+        type: 'line',
+        smooth: true,
+        symbol: 'none',
+        lineStyle: {
+          width: 3
+        },
+        areaStyle: {
+          opacity: 0.1
+        },
+        emphasis: {
+          focus: 'series'
+        },
+        data: [3, 11, 22, 33, 41],
+        color: 'rgba(141, 211, 199, 1)'
+      },
+      {
+        name: 'Moscow Mildew',
+        type: 'line',
+        smooth: true,
+        symbol: 'none',
+        lineStyle: {
+          width: 3
+        },
+        areaStyle: {
+          opacity: 0.1
+        },
+        emphasis: {
+          focus: 'series'
+        },
+        data: [1, 10, 21, 31, 39],
+        color: 'rgba(251, 191, 114, 1)'
+      },
+      {
+        name: 'Vladivostok Vomit',
+        type: 'line',
+        smooth: true,
+        symbol: 'none',
+        lineStyle: {
+          width: 3
+        },
+        areaStyle: {
+          opacity: 0.1
+        },
+        emphasis: {
+          focus: 'series'
+        },
+        data: [1, 9, 19, 28, 37],
+        color: 'rgba(252, 141, 98, 1)'
+      }
+    ]
+  };
+  pointsChart.setOption(pointsOption);
+  
+  // Goals Chart
+  const goalsChart = echarts.init(document.getElementById('goalsChart'));
+  const goalsOption = {
+    animation: false,
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      borderColor: '#ddd',
+      borderWidth: 1,
+      textStyle: {
+        color: '#1f2937'
+      }
+    },
+    legend: {
+      data: ['Goals Scored', 'Goals Conceded'],
+      textStyle: {
+        color: '#1f2937'
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: ['Kazan', 'Omsk', 'Moscow', 'Vladivostok', 'Sochi', 'Perm', 'Tula', 'Snot'],
+      axisLine: {
+        lineStyle: {
+          color: '#d1d5db'
+        }
+      },
+      axisLabel: {
+        color: '#1f2937',
+        rotate: 30
+      }
+    },
+    yAxis: {
+      type: 'value',
+      axisLine: {
+        lineStyle: {
+          color: '#d1d5db'
+        }
+      },
+      axisLabel: {
+        color: '#1f2937'
+      },
+      splitLine: {
+        lineStyle: {
+          color: '#f3f4f6'
+        }
+      }
+    },
+    series: [
+      {
+        name: 'Goals Scored',
+        type: 'bar',
+        data: [42, 38, 35, 28, 30, 25, 22, 15],
+        color: 'rgba(87, 181, 231, 1)',
+        barWidth: '20%',
+        barGap: '10%',
+        itemStyle: {
+          borderRadius: [4, 4, 0, 0]
+        }
+      },
+      {
+        name: 'Goals Conceded',
+        type: 'bar',
+        data: [18, 20, 22, 18, 22, 20, 28, 38],
+        color: 'rgba(252, 141, 98, 1)',
+        barWidth: '20%',
+        barGap: '10%',
+        itemStyle: {
+          borderRadius: [4, 4, 0, 0]
+        }
+      }
+    ]
+  };
+  goalsChart.setOption(goalsOption);
+  
+  // Form Chart
+  const formChart = echarts.init(document.getElementById('formChart'));
+  const formOption = {
+    animation: false,
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      borderColor: '#ddd',
+      borderWidth: 1,
+      textStyle: {
+        color: '#1f2937'
+      }
+    },
+    legend: {
+      data: ['Wins', 'Draws', 'Losses'],
+      textStyle: {
+        color: '#1f2937'
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: ['Kazan', 'Omsk', 'Moscow', 'Vladivostok', 'Sochi', 'Perm', 'Tula', 'Snot'],
+      axisLine: {
+        lineStyle: {
+          color: '#d1d5db'
+        }
+      },
+      axisLabel: {
+        color: '#1f2937'
+      }
+    },
+    yAxis: {
+      type: 'value',
+      max: 10,
+      axisLine: {
+        lineStyle: {
+          color: '#d1d5db'
+        }
+      },
+      axisLabel: {
+        color: '#1f2937'
+      },
+      splitLine: {
+        lineStyle: {
+          color: '#f3f4f6'
+        }
+      }
+    },
+    series: [
+      {
+        name: 'Wins',
+        type: 'bar',
+        stack: 'total',
+        emphasis: {
+          focus: 'series'
+        },
+        data: [7, 6, 6, 5, 5, 4, 3, 1],
+        color: 'rgba(141, 211, 199, 1)',
+        barWidth: '40%',
+        itemStyle: {
+          borderRadius: [4, 4, 0, 0]
+        }
+      },
+      {
+        name: 'Draws',
+        type: 'bar',
+        stack: 'total',
+        emphasis: {
+          focus: 'series'
+        },
+        data: [2, 3, 3, 4, 4, 3, 3, 2],
+        color: 'rgba(251, 191, 114, 1)',
+        barWidth: '40%'
+      },
+      {
+        name: 'Losses',
+        type: 'bar',
+        stack: 'total',
+        emphasis: {
+          focus: 'series'
+        },
+        data: [1, 1, 1, 1, 1, 3, 4, 7],
+        color: 'rgba(252, 141, 98, 1)',
+        barWidth: '40%',
+        itemStyle: {
+          borderRadius: [0, 0, 4, 4]
+        }
+      }
+    ]
+  };
+  formChart.setOption(formOption);
+  
+  // Handle window resize
+  window.addEventListener('resize', function() {
+    pointsChart.resize();
+    goalsChart.resize();
+    formChart.resize();
+  });
+});
+</script>
+
+<script id="mobile-menu">
+document.addEventListener('DOMContentLoaded', function() {
+  const menuButton = document.querySelector('button[type="button"]');
+  const mobileMenu = document.createElement('div');
+  mobileMenu.className = 'sm:hidden bg-white absolute top-16 left-0 right-0 z-50 shadow-lg transform transition-transform duration-300 -translate-y-full';
+  mobileMenu.innerHTML = `
+  <div class="px-2 pt-2 pb-3 space-y-1">
+    <a href="https://readdy.ai/home/ba17d2a5-8f15-42cd-a5e7-3b6aff6a4c18/fbe9edc5-e174-4f03-b495-1df96dadbc45" data-readdy="true" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Home</a>
+    <a href="#" class="bg-primary text-white block px-3 py-2 rounded-md text-base font-medium">Club Rankings</a>
+    <a href="#" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Tournaments</a>
+    <a href="#" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Teams</a>
+    <a href="#" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Upcoming Matches</a>
+    <a href="#" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Help & Rules</a>
+    <a href="#" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Blog</a>
+    <a href="#" class="bg-primary hover:bg-opacity-80 text-white block px-3 py-2 rounded-md text-base font-medium text-center mt-4">Login / Register</a>
+  </div>
+  `;
+  document.body.appendChild(mobileMenu);
+  let isMenuOpen = false;
+  menuButton.addEventListener('click', function() {
+    isMenuOpen = !isMenuOpen;
+    if (isMenuOpen) {
+      mobileMenu.classList.remove('-translate-y-full');
+      menuButton.querySelector('i').classList.remove('ri-menu-line');
+      menuButton.querySelector('i').classList.add('ri-close-line');
+    } else {
+      mobileMenu.classList.add('-translate-y-full');
+      menuButton.querySelector('i').classList.remove('ri-close-line');
+      menuButton.querySelector('i').classList.add('ri-menu-line');
+    }
+  });
+});
+</script>
+</body>
+</html>
