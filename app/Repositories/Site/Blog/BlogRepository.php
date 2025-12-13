@@ -15,14 +15,14 @@ class BlogRepository
 
         for ($i = 0; $i < $count; $i++) {
             $title = $faker->sentence(5);
-            $posts->push([
+            $posts->push( ( object ) [
                 'id' => $i + 1,
                 'title' => $title,
-                'preview' => '',
+                'preview' => '/v1/images/demo/news.jpg',
                 'meta_description' => $faker->sentence(5),
                 'h1' => $title,
-                'slug' => \Str::slug($title),
-                'content_content' => $faker->sentence(5),
+                'alias' => \Str::slug($title),
+                'short_content' => $faker->sentence(5),
                 'content' => $faker->realText(500),
                 'created_at' => $faker->dateTimeBetween('-1 year', 'now'),
             ]);

@@ -21,6 +21,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'goals',
+        'assists',
+        'rating',
+        'referral_code',
+        'referred_by_id',
+        'referrals_count',
     ];
 
     /**
@@ -43,6 +49,33 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'rating' => 'decimal:2',
         ];
+    }
+
+    /**
+     * Пользователь, который пригласил этого пользователя
+     */
+    public function referredBy()
+    {
+        return $this->belongsTo(User::class, 'referred_by_id');
+    }
+
+    /**
+     * Пользователи, приглашенные этим пользователем
+     */
+    public function referrals()
+    {
+        return $this->hasMany(User::class, 'referred_by_id');
+    }
+
+    /**
+     * Достижения пользователя
+     */
+    public function achievements()
+    {
+        return $this->belongsToMany(\App\Models\Achievements\Achievement::class, 'user_achievements')
+            ->withPivot('earned_at')
+            ->withTimestamps();
     }
 }

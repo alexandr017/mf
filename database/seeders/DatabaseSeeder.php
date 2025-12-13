@@ -13,11 +13,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        $this->command->info('Запуск сидеров...');
+        
+        // Сначала создаем достижения
+        $this->call(AchievementsSeeder::class);
+        
+        // Затем создаем пользователей
+        $this->call(UsersSeeder::class);
+        
+        // И наконец назначаем достижения пользователям
+        $this->call(UserAchievementsSeeder::class);
+        
+        $this->command->info('Все сидеры выполнены!');
     }
 }

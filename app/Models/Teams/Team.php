@@ -3,7 +3,8 @@
 namespace App\Models\Teams;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+//use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Tournaments\TournamentMatch;
 
 class Team extends Model
 {
@@ -17,6 +18,7 @@ class Team extends Model
         'description',
         'logo',
         'title',
+        'h1',
         'meta_description',
         'country_id',
         'city_id',
@@ -26,7 +28,17 @@ class Team extends Model
         'status'
     ];
 
-    use SoftDeletes;
+    //use SoftDeletes;
 
     public $timestamps = false;
+
+    public function homeMatches()
+    {
+        return $this->hasMany(TournamentMatch::class, 'team_1');
+    }
+
+    public function awayMatches()
+    {
+        return $this->hasMany(TournamentMatch::class, 'team_2');
+    }
 }

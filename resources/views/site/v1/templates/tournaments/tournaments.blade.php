@@ -5,6 +5,16 @@
 @section('content')
     @include('site.v1.modules.tournaments-banner.tournaments-banner')
 
+    <ul>
+        @foreach ($tournaments as $t)
+            <li>
+                <a href="/tournaments/{{$t->id}}">
+                    {{ $t->name }}
+                </a>
+            </li>
+        @endforeach
+    </ul>
+
 <!-- Current Tournaments Section -->
 <section class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
