@@ -49,3 +49,4 @@ class FAQRequest extends FormRequest
     }
 }
 
+

@@ -25,3 +25,4 @@ class CityRepository extends Repository
     }
 }
 
+

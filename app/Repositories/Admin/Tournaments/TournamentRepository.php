@@ -30,3 +30,4 @@ class TournamentRepository extends Repository
     }
 }
 
+

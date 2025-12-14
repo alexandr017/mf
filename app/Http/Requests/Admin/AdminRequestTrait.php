@@ -11,7 +11,11 @@ trait AdminRequestTrait
 
     public function failedValidation(Validator $validator): void
     {
-        $this->errors = (new ValidationException($validator))->errors();
+        $exception = new ValidationException($validator);
+        $this->errors = $exception->errors();
+        
+        // Выбрасываем исключение, чтобы Laravel автоматически сделал редирект назад с ошибками
+        throw $exception;
     }
 
     public function getErrors() : array

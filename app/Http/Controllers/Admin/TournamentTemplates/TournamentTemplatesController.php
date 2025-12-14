@@ -23,12 +23,18 @@ final class TournamentTemplatesController extends AdminController
     {
         $templates = $this->templateRepository->getForShow();
 
-        return view('admin.tournament-templates.index', compact('templates'));
+        $breadcrumbs = [['h1' => 'Шаблоны турниров']];
+
+        return view('admin.tournament-templates.index', compact('templates', 'breadcrumbs'));
     }
 
     public function create(): View
     {
-        return view('admin.tournament-templates.create');
+        $breadcrumbs = [
+            ['h1' => 'Шаблоны турниров', 'link' => route('admin.tournament-templates.index')],
+            ['h1' => 'Создание'],
+        ];
+        return view('admin.tournament-templates.create', compact('breadcrumbs'));
     }
 
     public function store(TournamentTemplateRequest $request): RedirectResponse
@@ -73,8 +79,12 @@ final class TournamentTemplatesController extends AdminController
     public function edit(string $id): View
     {
         $item = $this->templateRepository->findOrFail($id);
+        $breadcrumbs = [
+            ['h1' => 'Шаблоны турниров', 'link' => route('admin.tournament-templates.index')],
+            ['h1' => 'Редактирование'],
+        ];
 
-        return view('admin.tournament-templates.edit', compact('item'));
+        return view('admin.tournament-templates.edit', compact('item', 'breadcrumbs'));
     }
 
     public function update(TournamentTemplateRequest $request, string $id): RedirectResponse

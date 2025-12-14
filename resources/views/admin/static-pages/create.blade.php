@@ -9,7 +9,7 @@
 
         @include('admin.static-pages._form')
 
-        <button type="submit" class="btn btn-success pull-right"><i class="fas fa-save"></i> Сохранить</button>
+        <button type="submit" class="btn btn-success pull-right"><i class="fa fa-save"></i> Сохранить</button>
 
     </form>
 

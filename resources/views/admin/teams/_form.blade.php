@@ -1,4 +1,26 @@
-@include('admin.includes.partials.seo-fields')
+<div class="form-group">
+    <label for="title"><i class="red">*</i> Title <span class="input_counter"></span></label>
+    <input type="text" class="form-control" name="title" id="title" required
+           @if(old('title'))
+               value="{{old('title')}}"
+           @else
+               @if(isset($item))
+                   value="{{$item->title}}"
+        @endif
+        @endif
+    >
+</div>
+
+<div class="form-group">
+    <label for="meta_description"><i class="red">*</i> Мета описание <span class="input_counter"></span></label>
+    <?php
+    $meta_description = old('meta_description')
+        ? old('meta_description')
+        : (isset($item) ? $item->meta_description : '');
+    ?>
+    <textarea class="form-control" name="meta_description" id="meta_description" required>{{$meta_description}}</textarea>
+</div>
+
 
 <div class="form-group">
     <label for="name"><i class="red">*</i> Название команды</label>
@@ -42,30 +64,36 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
-            <label for="country_id">ID страны</label>
-            <input type="number" class="form-control" name="country_id" id="country_id"
-                   @if(old('country_id'))
-                       value="{{old('country_id')}}"
-                   @else
-                       @if(isset($item))
-                           value="{{$item->country_id}}"
-                    @endif
-                    @endif
-            >
+            <label for="country_id">Страна</label>
+            <select class="form-control" name="country_id" id="country_id">
+                <option value="">Выберите страну</option>
+                @foreach($countries as $country)
+                    <option value="{{$country->id}}"
+                            @if((old('country_id') == $country->id) || (isset($item) && $item->country_id == $country->id))
+                                selected
+                            @endif>
+                        {{$country->name}}@if($country->code) ({{$country->code}})@endif
+                    </option>
+                @endforeach
+            </select>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            <label for="city_id">ID города</label>
-            <input type="number" class="form-control" name="city_id" id="city_id"
-                   @if(old('city_id'))
-                       value="{{old('city_id')}}"
-                   @else
-                       @if(isset($item))
-                           value="{{$item->city_id}}"
-                    @endif
-                    @endif
-            >
+            <label for="city_id">Город</label>
+            <select class="form-control" name="city_id" id="city_id">
+                <option value="">Выберите город</option>
+                @if(isset($cities) && $cities->isNotEmpty())
+                    @foreach($cities as $city)
+                        <option value="{{$city->id}}"
+                                @if((old('city_id') == $city->id) || (isset($item) && $item->city_id == $city->id))
+                                    selected
+                                @endif>
+                            {{$city->name}}
+                        </option>
+                    @endforeach
+                @endif
+            </select>
         </div>
     </div>
 </div>
@@ -154,5 +182,63 @@
 <script src="/admin-assets/tinymce/wysiwyg.js"></script>
 <script>
     tInit('#description');
+
+    // Динамическая загрузка городов при выборе страны
+    document.addEventListener('DOMContentLoaded', function() {
+        const countrySelect = document.getElementById('country_id');
+        const citySelect = document.getElementById('city_id');
+        const selectedCityId = @json(old('city_id', isset($item) && $item->city_id ? $item->city_id : null));
+
+        if (countrySelect && citySelect) {
+            countrySelect.addEventListener('change', function() {
+                const countryId = this.value;
+                citySelect.innerHTML = '<option value="">Загрузка...</option>';
+                citySelect.disabled = true;
+
+                if (!countryId) {
+                    citySelect.innerHTML = '<option value="">Выберите город</option>';
+                    citySelect.disabled = false;
+                    return;
+                }
+
+                fetch('{{ route("admin.teams.cities-by-country") }}?country_id=' + countryId, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    citySelect.innerHTML = '<option value="">Выберите город</option>';
+
+                    data.forEach(function(city) {
+                        const option = document.createElement('option');
+                        option.value = city.id;
+                        option.textContent = city.name;
+                        // Сохраняем выбранный город (приоритет у old(), затем у текущего значения)
+                        const currentCityId = @json(old('city_id', isset($item) && $item->city_id ? $item->city_id : null));
+                        if (currentCityId && city.id == currentCityId) {
+                            option.selected = true;
+                        }
+                        citySelect.appendChild(option);
+                    });
+
+                    citySelect.disabled = false;
+                })
+                .catch(error => {
+                    console.error('Ошибка загрузки городов:', error);
+                    citySelect.innerHTML = '<option value="">Ошибка загрузки</option>';
+                    citySelect.disabled = false;
+                });
+            });
+
+            // Если страна уже выбрана при загрузке страницы, загружаем города
+            if (countrySelect.value) {
+                countrySelect.dispatchEvent(new Event('change'));
+            }
+        }
+    });
 </script>
+
 

@@ -22,15 +22,25 @@ final class UsersController extends AdminController
 
     public function index(): View
     {
-        $users = $this->userRepository->getForShow();
+        $users = $this->userRepository->getForShow(50); // 50 записей на страницу
 
-        return view('admin.users.index', compact('users'));
+        $breadcrumbs = [['h1' => 'Пользователи']];
+
+        return view('admin.users.index', compact('users', 'breadcrumbs'));
     }
 
     public function create(): View
     {
-        $users = User::orderBy('name')->get();
-        return view('admin.users.create', compact('users'));
+        // Выбираем только нужные поля для выпадающего списка
+        $users = User::select('id', 'name')
+            ->orderBy('name')
+            ->limit(1000) // Ограничиваем до 1000 для выпадающего списка
+            ->get();
+        $breadcrumbs = [
+            ['h1' => 'Пользователи', 'link' => route('admin.users.index')],
+            ['h1' => 'Создание'],
+        ];
+        return view('admin.users.create', compact('users', 'breadcrumbs'));
     }
 
     public function store(UserRequest $request): RedirectResponse
@@ -69,8 +79,17 @@ final class UsersController extends AdminController
     public function edit(string $id): View
     {
         $item = $this->userRepository->findOrFail($id);
-        $users = User::where('id', '!=', $id)->orderBy('name')->get();
-        return view('admin.users.edit', compact('item', 'users'));
+        // Выбираем только нужные поля для выпадающего списка
+        $users = User::select('id', 'name')
+            ->where('id', '!=', $id)
+            ->orderBy('name')
+            ->limit(1000) // Ограничиваем до 1000 для выпадающего списка
+            ->get();
+        $breadcrumbs = [
+            ['h1' => 'Пользователи', 'link' => route('admin.users.index')],
+            ['h1' => 'Редактирование'],
+        ];
+        return view('admin.users.edit', compact('item', 'users', 'breadcrumbs'));
     }
 
     public function update(UserRequest $request, string $id): RedirectResponse
@@ -118,4 +137,5 @@ final class UsersController extends AdminController
             ->with('flash_errors', 'Ошибка удаления!');
     }
 }
+
 

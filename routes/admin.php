@@ -24,6 +24,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('tournament-templates', TournamentTemplatesController::class)->except(['show']);
     Route::resource('tournament-seasons', TournamentSeasonsController::class)->except(['show']);
     Route::resource('teams', TeamsController::class)->except(['show']);
+    Route::get('teams/cities-by-country', [TeamsController::class, 'getCitiesByCountry'])->name('teams.cities-by-country');
     Route::resource('countries', CountriesController::class)->except(['show']);
     Route::resource('cities', CitiesController::class)->except(['show']);
     Route::resource('news', NewsController::class)->except(['show']);

@@ -1,4 +1,19 @@
 <div class="form-group">
+    <label for="country_id"><i class="red">*</i> Страна</label>
+    <select class="form-control" name="country_id" id="country_id" required>
+        <option value="">Выберите страну</option>
+        @foreach($countries as $country)
+            <option value="{{$country->id}}"
+                    @if((old('country_id') == $country->id) || (isset($item) && $item->country_id == $country->id))
+                        selected
+                    @endif>
+                {{$country->name}}@if($country->code) ({{$country->code}})@endif
+            </option>
+        @endforeach
+    </select>
+</div>
+
+<div class="form-group">
     <label for="name"><i class="red">*</i> Название города</label>
     <input type="text" class="form-control" name="name" id="name" required
            @if(old('name'))
@@ -103,4 +118,5 @@
         </div>
     </div>
 </div>
+
 

@@ -31,11 +31,12 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Сохранить</button>
+                <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Сохранить</button>
                 <a href="{{route('admin.achievements.index')}}" class="btn btn-default">Отмена</a>
             </form>
         </div>
     </div>
 
 @stop
+
 

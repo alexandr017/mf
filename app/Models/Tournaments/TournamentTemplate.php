@@ -32,3 +32,4 @@ class TournamentTemplate extends Model
     }
 }
 
+

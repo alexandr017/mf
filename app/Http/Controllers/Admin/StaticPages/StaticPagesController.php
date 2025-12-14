@@ -30,12 +30,19 @@ final class StaticPagesController extends AdminController
     {
         $staticPages = $this->staticPageRepository->getForShow();
 
-        return view('admin.static-pages.index', compact('staticPages'));
+        $breadcrumbs = [['h1' => 'Статические страницы']];
+
+        return view('admin.static-pages.index', compact('staticPages', 'breadcrumbs'));
     }
 
     public function create() :View
     {
-        return view('admin.static-pages.create');
+        $breadcrumbs = [
+            ['h1' => 'Статические страницы', 'link' => route('admin.static-pages.index')],
+            ['h1' => 'Создание'],
+        ];
+
+        return view('admin.static-pages.create', compact('breadcrumbs'));
     }
 
     public function store(StaticPageRequest $request) : RedirectResponse
@@ -68,7 +75,12 @@ final class StaticPagesController extends AdminController
     {
         $item = $this->staticPageRepository->findOrFail($id);
 
-        return view('admin.static-pages.edit', compact('item'));
+        $breadcrumbs = [
+            ['h1' => 'Статические страницы', 'link' => route('admin.static-pages.index')],
+            ['h1' => 'Редактирование'],
+        ];
+
+        return view('admin.static-pages.edit', compact('item', 'breadcrumbs'));
     }
 
     public function update(StaticPageRequest $request, string $id) : RedirectResponse

@@ -23,12 +23,18 @@ final class NewsController extends AdminController
     {
         $news = $this->newsRepository->getForShow();
 
-        return view('admin.news.index', compact('news'));
+        $breadcrumbs = [['h1' => 'Новости']];
+
+        return view('admin.news.index', compact('news', 'breadcrumbs'));
     }
 
     public function create(): View
     {
-        return view('admin.news.create');
+        $breadcrumbs = [
+            ['h1' => 'Новости', 'link' => route('admin.news.index')],
+            ['h1' => 'Создание'],
+        ];
+        return view('admin.news.create', compact('breadcrumbs'));
     }
 
     public function store(NewsRequest $request): RedirectResponse
@@ -55,8 +61,12 @@ final class NewsController extends AdminController
     public function edit(string $id): View
     {
         $item = $this->newsRepository->findOrFail($id);
+        $breadcrumbs = [
+            ['h1' => 'Новости', 'link' => route('admin.news.index')],
+            ['h1' => 'Редактирование'],
+        ];
 
-        return view('admin.news.edit', compact('item'));
+        return view('admin.news.edit', compact('item', 'breadcrumbs'));
     }
 
     public function update(NewsRequest $request, string $id): RedirectResponse
@@ -97,4 +107,5 @@ final class NewsController extends AdminController
             ->with('flash_errors', 'Ошибка удаления!');
     }
 }
+
 

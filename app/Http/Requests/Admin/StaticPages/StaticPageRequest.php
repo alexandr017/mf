@@ -28,9 +28,8 @@ class StaticPageRequest extends FormRequest
             'title' => ['required', 'max:255'],
             'meta_description' => ['required', 'max:255'],
             'h1' => ['required', 'max:255'],
-            'breadcrumb' => ['nullable', 'max:255'],
-            'lead' => ['nullable'],
-            'content' => ['nullable'],
+            'content' => ['required'],
+            'menu_content' => ['required'],
             'average_rating' => ['nullable', 'numeric'],
             'number_of_votes' => ['nullable', 'numeric'],
         ];
@@ -47,9 +46,8 @@ class StaticPageRequest extends FormRequest
             'title' => 'Заголовок',
             'meta_description' => 'Мета описание',
             'h1' => 'h1',
-            'breadcrumb' => 'Хлебные крошки',
-            'lead' => 'Лид',
             'content' => 'Контент',
+            'menu_content' => 'Меню',
             'average_rating' => 'Значение рейтинга',
             'number_of_votes' => 'Количество голосов',
         ];

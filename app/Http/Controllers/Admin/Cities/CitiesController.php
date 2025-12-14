@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Cities;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\Cities\CityRequest;
 use App\Models\Cities\City;
+use App\Models\Countries\Country;
 use App\Repositories\Admin\Cities\CityRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -23,12 +24,19 @@ final class CitiesController extends AdminController
     {
         $cities = $this->cityRepository->getForShow();
 
-        return view('admin.cities.index', compact('cities'));
+        $breadcrumbs = [['h1' => 'Города']];
+
+        return view('admin.cities.index', compact('cities', 'breadcrumbs'));
     }
 
     public function create(): View
     {
-        return view('admin.cities.create');
+        $countries = Country::orderBy('name')->get();
+        $breadcrumbs = [
+            ['h1' => 'Города', 'link' => route('admin.cities.index')],
+            ['h1' => 'Создание'],
+        ];
+        return view('admin.cities.create', compact('countries', 'breadcrumbs'));
     }
 
     public function store(CityRequest $request): RedirectResponse
@@ -55,8 +63,13 @@ final class CitiesController extends AdminController
     public function edit(string $id): View
     {
         $item = $this->cityRepository->findOrFail($id);
+        $countries = Country::orderBy('name')->get();
+        $breadcrumbs = [
+            ['h1' => 'Города', 'link' => route('admin.cities.index')],
+            ['h1' => 'Редактирование'],
+        ];
 
-        return view('admin.cities.edit', compact('item'));
+        return view('admin.cities.edit', compact('item', 'countries', 'breadcrumbs'));
     }
 
     public function update(CityRequest $request, string $id): RedirectResponse
@@ -97,4 +110,5 @@ final class CitiesController extends AdminController
             ->with('flash_errors', 'Ошибка удаления!');
     }
 }
+
 

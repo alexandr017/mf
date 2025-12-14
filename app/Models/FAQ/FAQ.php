@@ -23,3 +23,4 @@ class FAQ extends Model
     ];
 }
 
+

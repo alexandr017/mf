@@ -1,19 +1,6 @@
 @include('admin.includes.partials.seo-fields')
 
 <div class="form-group">
-    <label for="title"><i class="red">*</i> Заголовок</label>
-    <input type="text" class="form-control" name="title" id="title" required
-           @if(old('title'))
-               value="{{old('title')}}"
-           @else
-               @if(isset($item))
-                   value="{{$item->title}}"
-            @endif
-            @endif
-    >
-</div>
-
-<div class="form-group">
     <label for="alias"><i class="red">*</i> Постоянная ссылка:</label> <span class="btn btn-default btn-xs translate"><i class="fa fa-language"></i></span>
     <input type="text" class="form-control" name="alias" id="alias" required
            @if(old('alias'))
@@ -90,4 +77,5 @@
 <script>
     tInit('#content');
 </script>
+
 

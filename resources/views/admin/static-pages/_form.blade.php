@@ -1,17 +1,6 @@
 @include('admin.includes.partials.seo-fields')
 
 <div class="form-group">
-    <label for="breadcrumb">Хлебные крошки <span class="input_counter"></span></label>
-    <?php
-    $breadcrumbs = old('breadcrumbs')
-        ? old('breadcrumbs')
-        : (isset($item) ? $item->breadcrumbs : '');
-    ?>
-    <textarea class="form-control" name="breadcrumbs" id="breadcrumbs">{{$breadcrumbs}}</textarea>
-</div>
-
-
-<div class="form-group">
     <label for="alias"><i>*</i> Постоянная ссылка:</label> <span class="btn btn-default btn-xs translate"><i class="fa fa-language"></i></span>
     <input type="text" class="form-control" name="alias" id="alias"
            @if(old('alias'))
@@ -25,13 +14,13 @@
 </div>
 
 <div class="form-group">
-    <label for="lead"><i class="red">*</i> Лид-абзац <span class="input_counter"></span></label>
+    <label for="menu_content">Меню <span class="input_counter"></span></label>
     <?php
-    $lead = old('lead')
-        ? old('lead')
-        : (isset($item) ? $item->lead : '');
+    $menuContent = old('menu_content')
+        ? old('menu_content')
+        : (isset($item) ? $item->menu_content : '');
     ?>
-    <textarea class="form-control" name="lead" id="lead" required>{{$lead}}</textarea>
+    <textarea class="form-control" name="menu_content" id="menu_content">{{$menuContent}}</textarea>
 </div>
 
 <div class="form-group">

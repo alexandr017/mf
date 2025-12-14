@@ -20,3 +20,4 @@ interface TournamentGeneratorInterface
     public function generate(TournamentSeason $season, TournamentTemplate $template, array $teams, \DateTime $startDate): void;
 }
 
+

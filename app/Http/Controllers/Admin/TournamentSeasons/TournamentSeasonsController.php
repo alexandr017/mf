@@ -30,7 +30,9 @@ final class TournamentSeasonsController extends AdminController
         $seasons = $this->seasonRepository->getForShow($tournamentId);
         $tournaments = Tournament::orderBy('name')->get();
 
-        return view('admin.tournament-seasons.index', compact('seasons', 'tournaments', 'tournamentId'));
+        $breadcrumbs = [['h1' => 'Сезоны турниров']];
+
+        return view('admin.tournament-seasons.index', compact('seasons', 'tournaments', 'tournamentId', 'breadcrumbs'));
     }
 
     public function create(Request $request): View
@@ -39,8 +41,12 @@ final class TournamentSeasonsController extends AdminController
         $tournaments = Tournament::orderBy('name')->get();
         $templates = TournamentTemplate::orderBy('name')->get();
         $teams = Team::orderBy('name')->get();
+        $breadcrumbs = [
+            ['h1' => 'Сезоны турниров', 'link' => route('admin.tournament-seasons.index')],
+            ['h1' => 'Создание'],
+        ];
 
-        return view('admin.tournament-seasons.create', compact('tournaments', 'templates', 'teams', 'tournamentId'));
+        return view('admin.tournament-seasons.create', compact('tournaments', 'templates', 'teams', 'tournamentId', 'breadcrumbs'));
     }
 
     public function store(TournamentSeasonRequest $request): RedirectResponse
@@ -93,8 +99,12 @@ final class TournamentSeasonsController extends AdminController
         $tournaments = Tournament::orderBy('name')->get();
         $templates = TournamentTemplate::orderBy('name')->get();
         $teams = Team::orderBy('name')->get();
+        $breadcrumbs = [
+            ['h1' => 'Сезоны турниров', 'link' => route('admin.tournament-seasons.index')],
+            ['h1' => 'Редактирование'],
+        ];
 
-        return view('admin.tournament-seasons.edit', compact('item', 'tournaments', 'templates', 'teams'));
+        return view('admin.tournament-seasons.edit', compact('item', 'tournaments', 'templates', 'teams', 'breadcrumbs'));
     }
 
     public function update(TournamentSeasonRequest $request, string $id): RedirectResponse
@@ -135,4 +145,5 @@ final class TournamentSeasonsController extends AdminController
             ->with('flash_errors', 'Ошибка удаления!');
     }
 }
+
 

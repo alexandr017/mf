@@ -4,14 +4,29 @@ namespace App\Repositories\Admin\Users;
 
 use App\Models\User;
 use App\Repositories\Repository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class UserRepository extends Repository
 {
-    public function getForShow(): Collection
+    /**
+     * Получить пользователей с пагинацией
+     */
+    public function getForShow(int $perPage = 50): LengthAwarePaginator
     {
-        return User::with('referredBy')
-            ->orderBy('rating', 'desc')
+        return User::orderBy('rating', 'desc')
+            ->orderBy('goals', 'desc')
+            ->orderBy('name')
+            ->paginate($perPage);
+    }
+
+    /**
+     * Получить всех пользователей (для случаев, когда нужны все записи)
+     * Используйте с осторожностью на больших объемах данных
+     */
+    public function getAllForShow(): Collection
+    {
+        return User::orderBy('rating', 'desc')
             ->orderBy('goals', 'desc')
             ->orderBy('name')
             ->get();
@@ -27,4 +42,5 @@ class UserRepository extends Repository
         return User::findOrFail($id);
     }
 }
+
 

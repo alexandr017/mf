@@ -23,12 +23,18 @@ final class CountriesController extends AdminController
     {
         $countries = $this->countryRepository->getForShow();
 
-        return view('admin.countries.index', compact('countries'));
+        $breadcrumbs = [['h1' => 'Страны']];
+
+        return view('admin.countries.index', compact('countries', 'breadcrumbs'));
     }
 
     public function create(): View
     {
-        return view('admin.countries.create');
+        $breadcrumbs = [
+            ['h1' => 'Страны', 'link' => route('admin.countries.index')],
+            ['h1' => 'Создание'],
+        ];
+        return view('admin.countries.create', compact('breadcrumbs'));
     }
 
     public function store(CountryRequest $request): RedirectResponse
@@ -55,8 +61,12 @@ final class CountriesController extends AdminController
     public function edit(string $id): View
     {
         $item = $this->countryRepository->findOrFail($id);
+        $breadcrumbs = [
+            ['h1' => 'Страны', 'link' => route('admin.countries.index')],
+            ['h1' => 'Редактирование'],
+        ];
 
-        return view('admin.countries.edit', compact('item'));
+        return view('admin.countries.edit', compact('item', 'breadcrumbs'));
     }
 
     public function update(CountryRequest $request, string $id): RedirectResponse
@@ -97,4 +107,5 @@ final class CountriesController extends AdminController
             ->with('flash_errors', 'Ошибка удаления!');
     }
 }
+
 

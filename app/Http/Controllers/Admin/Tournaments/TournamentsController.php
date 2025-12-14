@@ -23,12 +23,18 @@ final class TournamentsController extends AdminController
     {
         $tournaments = $this->tournamentRepository->getForShow();
 
-        return view('admin.tournaments.index', compact('tournaments'));
+        $breadcrumbs = [['h1' => 'Турниры']];
+
+        return view('admin.tournaments.index', compact('tournaments', 'breadcrumbs'));
     }
 
     public function create(): View
     {
-        return view('admin.tournaments.create');
+        $breadcrumbs = [
+            ['h1' => 'Турниры', 'link' => route('admin.tournaments.index')],
+            ['h1' => 'Создание'],
+        ];
+        return view('admin.tournaments.create', compact('breadcrumbs'));
     }
 
     public function store(TournamentRequest $request): RedirectResponse
@@ -55,8 +61,12 @@ final class TournamentsController extends AdminController
     public function edit(string $id): View
     {
         $item = $this->tournamentRepository->findOrFail($id);
+        $breadcrumbs = [
+            ['h1' => 'Турниры', 'link' => route('admin.tournaments.index')],
+            ['h1' => 'Редактирование'],
+        ];
 
-        return view('admin.tournaments.edit', compact('item'));
+        return view('admin.tournaments.edit', compact('item', 'breadcrumbs'));
     }
 
     public function update(TournamentRequest $request, string $id): RedirectResponse
@@ -97,4 +107,5 @@ final class TournamentsController extends AdminController
             ->with('flash_errors', 'Ошибка удаления!');
     }
 }
+
 

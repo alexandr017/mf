@@ -26,3 +26,4 @@ class FAQRepository extends Repository
     }
 }
 
+

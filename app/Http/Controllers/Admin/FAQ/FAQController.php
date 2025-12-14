@@ -23,12 +23,18 @@ final class FAQController extends AdminController
     {
         $faqs = $this->faqRepository->getForShow();
 
-        return view('admin.faq.index', compact('faqs'));
+        $breadcrumbs = [['h1' => 'Вопросы-Ответы']];
+
+        return view('admin.faq.index', compact('faqs', 'breadcrumbs'));
     }
 
     public function create(): View
     {
-        return view('admin.faq.create');
+        $breadcrumbs = [
+            ['h1' => 'Вопросы-Ответы', 'link' => route('admin.faq.index')],
+            ['h1' => 'Создание'],
+        ];
+        return view('admin.faq.create', compact('breadcrumbs'));
     }
 
     public function store(FAQRequest $request): RedirectResponse
@@ -55,8 +61,12 @@ final class FAQController extends AdminController
     public function edit(string $id): View
     {
         $item = $this->faqRepository->findOrFail($id);
+        $breadcrumbs = [
+            ['h1' => 'Вопросы-Ответы', 'link' => route('admin.faq.index')],
+            ['h1' => 'Редактирование'],
+        ];
 
-        return view('admin.faq.edit', compact('item'));
+        return view('admin.faq.edit', compact('item', 'breadcrumbs'));
     }
 
     public function update(FAQRequest $request, string $id): RedirectResponse
@@ -97,4 +107,5 @@ final class FAQController extends AdminController
             ->with('flash_errors', 'Ошибка удаления!');
     }
 }
+
 

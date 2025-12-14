@@ -44,5 +44,10 @@
         @endforeach
         </tbody>
     </table>
+
+    <div class="text-center">
+        {{ $users->links() }}
+    </div>
 @endsection
+
 

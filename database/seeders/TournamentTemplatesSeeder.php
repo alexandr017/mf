@@ -150,3 +150,4 @@ class TournamentTemplatesSeeder extends Seeder
     }
 }
 
+

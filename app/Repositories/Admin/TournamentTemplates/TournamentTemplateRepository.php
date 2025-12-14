@@ -26,3 +26,4 @@ class TournamentTemplateRepository extends Repository
     }
 }
 
+

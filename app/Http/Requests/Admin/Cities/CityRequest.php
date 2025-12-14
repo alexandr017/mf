@@ -26,6 +26,7 @@ class CityRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'country_id' => ['required', 'exists:countries,id'],
             'name' => ['required', 'max:255'],
             'ip' => ['nullable', 'max:255'],
             'rp' => ['nullable', 'max:255'],
@@ -44,6 +45,7 @@ class CityRequest extends FormRequest
     public function attributes(): array
     {
         return [
+            'country_id' => 'Страна',
             'name' => 'Название',
             'ip' => 'IP',
             'rp' => 'RP',
@@ -54,4 +56,5 @@ class CityRequest extends FormRequest
         ];
     }
 }
+
 

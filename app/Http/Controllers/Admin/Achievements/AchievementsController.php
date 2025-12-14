@@ -25,12 +25,18 @@ final class AchievementsController extends AdminController
     {
         $achievements = $this->achievementRepository->getForShow();
 
-        return view('admin.achievements.index', compact('achievements'));
+        $breadcrumbs = [['h1' => 'Достижения']];
+
+        return view('admin.achievements.index', compact('achievements', 'breadcrumbs'));
     }
 
     public function create(): View
     {
-        return view('admin.achievements.create');
+        $breadcrumbs = [
+            ['h1' => 'Достижения', 'link' => route('admin.achievements.index')],
+            ['h1' => 'Создание'],
+        ];
+        return view('admin.achievements.create', compact('breadcrumbs'));
     }
 
     public function store(AchievementRequest $request): RedirectResponse
@@ -57,8 +63,12 @@ final class AchievementsController extends AdminController
     public function edit(string $id): View
     {
         $item = $this->achievementRepository->findOrFail($id);
+        $breadcrumbs = [
+            ['h1' => 'Достижения', 'link' => route('admin.achievements.index')],
+            ['h1' => 'Редактирование'],
+        ];
 
-        return view('admin.achievements.edit', compact('item'));
+        return view('admin.achievements.edit', compact('item', 'breadcrumbs'));
     }
 
     public function update(AchievementRequest $request, string $id): RedirectResponse
@@ -104,8 +114,12 @@ final class AchievementsController extends AdminController
         $achievement = $this->achievementRepository->findOrFail($id);
         $users = User::orderBy('name')->get();
         $assignedUserIds = $achievement->users->pluck('id')->toArray();
+        $breadcrumbs = [
+            ['h1' => 'Достижения', 'link' => route('admin.achievements.index')],
+            ['h1' => 'Назначение пользователям'],
+        ];
 
-        return view('admin.achievements.assign-users', compact('achievement', 'users', 'assignedUserIds'));
+        return view('admin.achievements.assign-users', compact('achievement', 'users', 'assignedUserIds', 'breadcrumbs'));
     }
 
     public function updateAssignedUsers(Request $request, string $id): RedirectResponse
