@@ -13,9 +13,17 @@ use App\Http\Controllers\Admin\News\NewsController;
 use App\Http\Controllers\Admin\FAQ\FAQController;
 use App\Http\Controllers\Admin\Users\UsersController;
 use App\Http\Controllers\Admin\Achievements\AchievementsController;
+use App\Http\Controllers\Admin\Games\GamesController;
+use App\Http\Controllers\Admin\GameCategories\GameCategoriesController;
+use App\Http\Controllers\Admin\Matches\MatchesController;
+use App\Http\Controllers\Admin\ActivityLogs\ActivityLogsController;
+use App\Http\Controllers\Admin\UserGameResults\UserGameResultsController;
+use App\Http\Controllers\Admin\Tickets\TicketsController;
+use App\Http\Controllers\Admin\Transactions\TransactionsController;
+use App\Http\Controllers\Admin\TeamPlayers\TeamPlayersController;
+use App\Http\Controllers\Admin\Referrals\ReferralsController;
 
-//Route::group(['middleware' => ['auth.admin'] ,'prefix' => 'admin', 'as' => 'admin.'], function () {
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
 
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
@@ -23,6 +31,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('tournaments', TournamentsController::class)->except(['show']);
     Route::resource('tournament-templates', TournamentTemplatesController::class)->except(['show']);
     Route::resource('tournament-seasons', TournamentSeasonsController::class)->except(['show']);
+    Route::resource('matches', MatchesController::class);
+    Route::get('matches/seasons-by-tournament', [MatchesController::class, 'getSeasonsByTournament'])->name('matches.seasons-by-tournament');
+    Route::get('matches/stages-by-season', [MatchesController::class, 'getStagesBySeason'])->name('matches.stages-by-season');
+    Route::get('matches/groups-by-stage', [MatchesController::class, 'getGroupsByStage'])->name('matches.groups-by-stage');
+    Route::post('matches/{id}/add-event', [MatchesController::class, 'addEvent'])->name('matches.add-event');
+    Route::delete('matches/{matchId}/events/{eventId}', [MatchesController::class, 'deleteEvent'])->name('matches.delete-event');
     Route::resource('teams', TeamsController::class)->except(['show']);
     Route::get('teams/cities-by-country', [TeamsController::class, 'getCitiesByCountry'])->name('teams.cities-by-country');
     Route::resource('countries', CountriesController::class)->except(['show']);
@@ -30,8 +44,24 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('news', NewsController::class)->except(['show']);
     Route::resource('faq', FAQController::class)->except(['show']);
     Route::resource('users', UsersController::class)->except(['show']);
+    Route::get('users/data', [UsersController::class, 'dataTables'])->name('users.data');
     Route::get('achievements/{id}/assign-users', [AchievementsController::class, 'assignUsers'])->name('achievements.assign-users');
     Route::patch('achievements/{id}/assign-users', [AchievementsController::class, 'updateAssignedUsers'])->name('achievements.assign-users.update');
     Route::resource('achievements', AchievementsController::class)->except(['show']);
+    Route::resource('games', GamesController::class)->except(['show']);
+    Route::resource('game-categories', GameCategoriesController::class)->except(['show']);
+    Route::get('activity-logs', [ActivityLogsController::class, 'index'])->name('activity-logs.index');
+    Route::get('activity-logs/data', [ActivityLogsController::class, 'dataTables'])->name('activity-logs.data');
+    Route::get('activity-logs/search-users', [ActivityLogsController::class, 'searchUsers'])->name('activity-logs.search-users');
+    Route::get('user-game-results', [UserGameResultsController::class, 'index'])->name('user-game-results.index');
+    Route::get('user-game-results/data', [UserGameResultsController::class, 'dataTables'])->name('user-game-results.data');
+    Route::get('user-game-results/search-users', [UserGameResultsController::class, 'searchUsers'])->name('user-game-results.search-users');
+    Route::get('tickets/data', [TicketsController::class, 'dataTables'])->name('tickets.data');
+    Route::get('tickets/search-users', [TicketsController::class, 'searchUsers'])->name('tickets.search-users');
+    Route::post('tickets/{id}/add-message', [TicketsController::class, 'addMessage'])->name('tickets.add-message');
+    Route::resource('tickets', TicketsController::class);
+    Route::get('transactions', [TransactionsController::class, 'index'])->name('transactions.index');
+    Route::resource('team-players', TeamPlayersController::class)->except(['show']);
+    Route::get('referrals', [ReferralsController::class, 'index'])->name('referrals.index');
 
 });

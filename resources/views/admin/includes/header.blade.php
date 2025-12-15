@@ -14,32 +14,34 @@
 
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-{{--                        <span class="hidden-xs">{{ auth()->user()->email }}</span>--}}
+                        <span class="hidden-xs">{{ auth()->user()->name ?? auth()->user()->email }}</span>
                     </a>
 
                     <ul class="dropdown-menu">
                         <li class="user-header">
                             <p>
-{{--                                 {{ auth()->user()->email }}--}}
+                                {{ auth()->user()->name ?? auth()->user()->email }}
+                                <small>{{ auth()->user()->email }}</small>
                             </p>
                         </li>
 
-
-
-{{--                        <li class="user-footer">--}}
-{{--                            <div class="pull-left">--}}
-{{--                                <a href="/" class="btn btn-default btn-flat">--}}
-{{--                                    <i class="fa fa-home"></i>--}}
-{{--                                    Главная--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
-{{--                            <div class="pull-right">--}}
-{{--                                <a href="{!! route('logout') !!}" class="btn btn-danger btn-flat">--}}
-{{--                                    <i class="fa fa-sign-out"></i>--}}
-{{--                                    Выход--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
-{{--                        </li>--}}
+                        <li class="user-footer">
+                            <div class="pull-left">
+                                <a href="/" class="btn btn-default btn-flat" target="_blank">
+                                    <i class="fa fa-home"></i>
+                                    Главная
+                                </a>
+                            </div>
+                            <div class="pull-right">
+                                <form method="POST" action="{{ route('logout') }}" class="inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger btn-flat">
+                                        <i class="fa fa-sign-out"></i>
+                                        Выход
+                                    </button>
+                                </form>
+                            </div>
+                        </li>
                     </ul>
                 </li>
             </ul>

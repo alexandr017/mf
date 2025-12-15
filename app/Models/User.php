@@ -78,4 +78,78 @@ class User extends Authenticatable
             ->withPivot('earned_at')
             ->withTimestamps();
     }
+
+    /**
+     * Результаты игр пользователя
+     */
+    public function gameResults()
+    {
+        return $this->hasMany(\App\Models\UserGameResults\UserGameResult::class);
+    }
+
+    /**
+     * Транзакции пользователя
+     */
+    public function transactions()
+    {
+        return $this->hasMany(\App\Models\Transactions\Transaction::class);
+    }
+
+    /**
+     * События матчей пользователя
+     */
+    public function matchEvents()
+    {
+        return $this->hasMany(\App\Models\MatchEvents\MatchEvent::class);
+    }
+
+    /**
+     * Команды пользователя
+     */
+    public function teams()
+    {
+        return $this->belongsToMany(\App\Models\Teams\Team::class, 'team_players')
+            ->withPivot('season_id')
+            ->withTimestamps();
+    }
+
+    /**
+     * Тикеты, созданные пользователем
+     */
+    public function createdTickets()
+    {
+        return $this->hasMany(\App\Models\Tickets\Ticket::class, 'created_by_user_id');
+    }
+
+    /**
+     * Тикеты, назначенные пользователю
+     */
+    public function assignedTickets()
+    {
+        return $this->hasMany(\App\Models\Tickets\Ticket::class, 'assigned_to_user_id');
+    }
+
+    /**
+     * Сообщения в тикетах
+     */
+    public function ticketMessages()
+    {
+        return $this->hasMany(\App\Models\Tickets\TicketMessage::class);
+    }
+
+    /**
+     * Логи активности пользователя
+     */
+    public function activityLogs()
+    {
+        return $this->hasMany(\App\Models\ActivityLogs\ActivityLog::class);
+    }
+
+    /**
+     * Аккаунты соцсетей пользователя
+     */
+    public function socialAccounts()
+    {
+        return $this->hasMany(SocialAccount::class);
+    }
 }

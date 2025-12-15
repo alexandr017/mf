@@ -13,9 +13,11 @@
         <link rel="stylesheet" href="/admin-assets/colors.css?v=2">
         <link rel="stylesheet" href="/admin-assets/_all-skins.min.css">
         <link rel="stylesheet" href="/admin-assets/dataTables/datatables.min.css">
+        <link rel="stylesheet" href="/admin-assets/select2/select2.min.css">
         <script src="/admin-assets/jquery/jquery.min.js"></script>
         <script src="/admin-assets/bootstrap/bootstrap.js"></script>
         <script src="/admin-assets/dataTables/datatables.min.js"></script>
+        <script src="/admin-assets/select2/select2.min.js"></script>
         <script src="/admin-assets/scripts-before.js"></script>
     </head>
     <body class="skin-{{ config('admin.theme') }} {{ config('admin.layout') }}">

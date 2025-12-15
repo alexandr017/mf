@@ -214,3 +214,24 @@ if (! function_exists('emptyDataToNull')) {
         return $data;
     }
 }
+
+if (! function_exists('is_admin')) {
+    /**
+     * Проверяет, является ли текущий пользователь админом
+     *
+     * @param int|null $userId ID пользователя (если null, берется текущий авторизованный)
+     * @return bool
+     */
+    function is_admin(?int $userId = null): bool
+    {
+        if ($userId === null) {
+            if (!auth()->check()) {
+                return false;
+            }
+            $userId = auth()->id();
+        }
+
+        $adminIds = config('admins', []);
+        return in_array($userId, $adminIds);
+    }
+}

@@ -18,22 +18,42 @@
             </div>
 
 
-{{--            <div class="hidden sm:ml-6 sm:flex sm:items-center">--}}
-{{--                <div class="ml-3 relative">--}}
-{{--                    <button class="bg-primary hover:bg-opacity-80 text-white px-4 py-2 !rounded-button whitespace-nowrap">--}}
-{{--                        Login / Register--}}
-{{--                    </button>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full overflow-hidden">
-                    <img src="/v1/images/demo/photo.jpg" alt="Player Avatar" class="w-full h-full object-cover object-top">
+            @auth
+                <div class="flex items-center space-x-3">
+                    <div class="relative group">
+                        <a href="{{ route('account') }}" class="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer">
+                            <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-300 flex items-center justify-center">
+                                @if(auth()->user()->email)
+                                    <span class="text-gray-600 font-semibold text-sm">{{ strtoupper(substr(auth()->user()->email, 0, 1)) }}</span>
+                                @else
+                                    <img src="/v1/images/demo/photo.jpg" alt="User Avatar" class="w-full h-full object-cover object-top">
+                                @endif
+                            </div>
+                            <div class="hidden sm:block">
+                                <div class="text-sm font-medium text-gray-900">{{ auth()->user()->name }}</div>
+                                <div class="text-sm text-gray-500">{{ auth()->user()->email }}</div>
+                            </div>
+                        </a>
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <a href="{{ route('account') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Личный кабинет</a>
+                            @if(in_array(auth()->id(), config('admins', [])))
+                                <a href="{{ route('admin.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Админ-панель</a>
+                            @endif
+                            <form method="POST" action="{{ route('logout') }}" class="block">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Выход</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div class="hidden sm:block">
-                    <div class="text-sm font-medium text-gray-900">Dmitri "Goal Machine" Volkov</div>
-                    <div class="text-sm text-gray-500">Forward</div>
+            @else
+                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                    <div class="flex items-center space-x-3">
+                        <a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">Вход</a>
+                        <a href="{{ route('register') }}" class="bg-primary hover:bg-opacity-80 text-gray-900 px-4 py-2 !rounded-button whitespace-nowrap text-sm font-medium">Регистрация</a>
+                    </div>
                 </div>
-            </div>
+            @endauth
 
 
 

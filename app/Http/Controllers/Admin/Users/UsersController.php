@@ -22,11 +22,39 @@ final class UsersController extends AdminController
 
     public function index(): View
     {
-        $users = $this->userRepository->getForShow(50); // 50 записей на страницу
-
         $breadcrumbs = [['h1' => 'Пользователи']];
 
-        return view('admin.users.index', compact('users', 'breadcrumbs'));
+        return view('admin.users.index', compact('breadcrumbs'));
+    }
+
+    /**
+     * Получить данные для DataTables (AJAX)
+     */
+    public function dataTables(\Illuminate\Http\Request $request): \Illuminate\Http\JsonResponse
+    {
+        $params = $request->all();
+        $result = $this->userRepository->getForDataTables($params);
+
+        $data = [];
+        foreach ($result['data'] as $user) {
+            $data[] = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'goals' => $user->goals ?? 0,
+                'assists' => $user->assists ?? 0,
+                'rating' => number_format($user->rating ?? 0, 2),
+                'referrals_count' => $user->referrals_count ?? 0,
+                'actions' => view('admin.users._actions', ['user' => $user])->render(),
+            ];
+        }
+
+        return response()->json([
+            'draw' => intval($params['draw'] ?? 1),
+            'recordsTotal' => $result['recordsTotal'],
+            'recordsFiltered' => $result['recordsFiltered'],
+            'data' => $data,
+        ]);
     }
 
     public function create(): View

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\StaticPages;
 
+use App\Helpers\ActivityLogHelper;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\StaticPages\StaticPageRequest;
 use App\Models\StaticPages\StaticPage;
@@ -58,9 +59,8 @@ final class StaticPagesController extends AdminController
 
         $result = $item->save();
 
-//        adminLog('Static page', $item->id, 'create');
-
         if ($result) {
+            ActivityLogHelper::logCreate($item);
             return redirect()
                 ->route('admin.static-pages.index')
                 ->with('flash_success', 'Листинг создан!');
@@ -91,11 +91,12 @@ final class StaticPagesController extends AdminController
 
         $data = empty_str_to_null($data);
 
+        $oldData = $item->getOriginal();
         $result = $item->update($data);
 
-//        adminLog('Static page', $item->id, 'update');
-
         if ($result) {
+            $changes = array_diff_assoc($item->getAttributes(), $oldData);
+            ActivityLogHelper::logUpdate($item, $changes);
             return redirect()
                 ->route('admin.static-pages.index')
                 ->with('flash_success', 'Листинг создан!');
@@ -112,9 +113,8 @@ final class StaticPagesController extends AdminController
 
         $result = $item->delete();
 
-//        adminLog('Static page', $id, 'delete');
-
         if ($result) {
+            ActivityLogHelper::logDelete($item);
             return redirect()
                 ->route('admin.static-pages.index')
                 ->with('flash_success', 'Листинг удален!');

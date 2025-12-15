@@ -9,7 +9,7 @@
     <br>
     <br>
 
-    <table id="rowtbl" class="table table-striped table-bordered table-hover">
+    <table id="users-table" class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
             <th>id</th>
@@ -23,31 +23,43 @@
         </tr>
         </thead>
         <tbody>
-        @foreach ($users as $user)
-            <tr>
-                <td>{{ $user->id }}</td>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-                <td>{{ $user->goals ?? 0 }}</td>
-                <td>{{ $user->assists ?? 0 }}</td>
-                <td>{{ number_format($user->rating ?? 0, 2) }}</td>
-                <td>{{ $user->referrals_count ?? 0 }}</td>
-                <td>
-                    <a href="{{route('admin.users.edit', $user->id) }}" class="btn btn-primary btn-xs" title="Редактировать"><i class="fa fa-edit"></i></a>
-                    <form action="{{ route('admin.users.destroy',$user->id) }}" method="post" class="inline">
-                        {{ method_field('DELETE') }}
-                        <input type="hidden" name="_token" id="key" value="{{ csrf_token() }}">
-                        <button class="btn btn-danger btn-xs rest-destroy" title="Удалить"><i class="fa fa-trash"></i></button>
-                    </form>
-                </td>
-            </tr>
-        @endforeach
         </tbody>
     </table>
+@endsection
 
-    <div class="text-center">
-        {{ $users->links() }}
-    </div>
+@section('after-scripts')
+<script>
+$(document).ready(function(){
+    $("#users-table").DataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+            "url": "{{ route('admin.users.data') }}",
+            "type": "GET",
+            "data": function (d) {
+                // Можно добавить дополнительные параметры поиска
+            }
+        },
+        "columns": [
+            { "data": "id", "name": "id" },
+            { "data": "name", "name": "name" },
+            { "data": "email", "name": "email" },
+            { "data": "goals", "name": "goals" },
+            { "data": "assists", "name": "assists" },
+            { "data": "rating", "name": "rating" },
+            { "data": "referrals_count", "name": "referrals_count" },
+            { "data": "actions", "name": "actions", "orderable": false, "searchable": false }
+        ],
+        "order": [[5, "desc"], [3, "desc"], [1, "asc"]], // Сортировка по умолчанию: рейтинг desc, голы desc, имя asc
+        "pageLength": 50,
+        "language": {"url": "/admin-assets/dataTables/datatables.json"},
+        "searching": true,
+        "lengthChange": true,
+        "paging": true,
+        "info": true
+    });
+});
+</script>
 @endsection
 
 

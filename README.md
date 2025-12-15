@@ -1,61 +1,52 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Дополнительные сущности/настройки для админки:
+1. Стадии турниров (Tournament Stages)
+   CRUD для управления стадиями (сейчас создаются автоматически при генерации матчей)
+   Поля: название, тип, порядок, сезон
+2. Группы турниров (Tournament Groups)
+   CRUD для управления группами в групповых стадиях
+   Поля: название, стадия
+3. Игроки/Составы команд (Players/Rosters)
+   Связь пользователей с командами
+   Поля: user_id, team_id, позиция, номер, статус (активен/неактивен), дата присоединения
+   Управление составами команд
+4. Статистика матчей (Match Statistics)
+   Детальная статистика по матчам
+   Поля: match_id, user_id, goals, assists, yellow_cards, red_cards, minutes_played, rating
+   Связь игроков с матчами
+5. События матча (Match Events)
+   Голы, передачи, карточки, замены
+   Поля: match_id, user_id, type (goal/assist/yellow_card/red_card/substitution), minute, description
+   
+6. Уведомления (Notifications)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+19. Интеграции (Integrations)
+    Настройки интеграций (Telegram бот, API ключи)
+    Поля: name, type, config (json), status
+20. Аналитика (Analytics)
+    Статистика посещений, популярные страницы
+    Поля: page, views, unique_visitors, date
+21. Уведомления все же нужны
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+6. Рейтинги и таблицы (Ratings/Tables)
+   Автоматический расчет турнирных таблиц
+   Поля: season_id, team_id, position, points, wins, draws, losses, goals_for, goals_against
+   Обновление после каждого матча
 
-## Learning Laravel
+9. Транзакции/Баллы (Transactions/Points)
+   История начисления/списания баллов рейтинга
+   Поля: user_id, game_id (nullable), match_id (nullable), points, type (earn/spend), description
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+9. Транзакции/Баллы (Transactions/Points) - делаем
+   также давай сделаем отдельно статистику по рефельной систему, с удобной фильтрацией по пользователям, времени и др.
+6. Рейтинги и таблицы (Ratings/Tables) это больше свойственно для клиенской части. Чтобы был единый вид и расчет таблиц (и я их хотел бы видеть на клиенсктой стороне), то я бы просто добавил в админке ссылки на клиенские части напротив каждого турнира (ну или напротив тех где надо)
+   5 События мачта делаем., только без карточек: просто голы, передачи и время когда игрок этот сделал Плюс обьединяем с пунктов 4 статистика мачта. Это можно сделать в "карточке" мачта (если не ошибаюсь метод show)
+   3 Игроки/Составы команд (Players/Rosters) - делаем. Так как на одну команду может быть много игкровок (1000 и более), то номера и статусы не надо. Я вижу это так (поля): команда, игрок, сезон (позиция не надо так как это задается в профиле игрока)
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

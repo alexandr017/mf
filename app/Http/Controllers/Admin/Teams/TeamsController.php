@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Teams;
 
+use App\Helpers\ActivityLogHelper;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\Teams\TeamRequest;
 use App\Models\Cities\City;
@@ -54,6 +55,7 @@ final class TeamsController extends AdminController
         $result = $item->save();
 
         if ($result) {
+            ActivityLogHelper::logCreate($item);
             return redirect()
                 ->route('admin.teams.index')
                 ->with('flash_success', 'Команда создана!');
@@ -85,9 +87,12 @@ final class TeamsController extends AdminController
 
         $data = empty_str_to_null($data);
 
+        $oldData = $item->getOriginal();
         $result = $item->update($data);
 
         if ($result) {
+            $changes = array_diff_assoc($item->getAttributes(), $oldData);
+            ActivityLogHelper::logUpdate($item, $changes);
             return redirect()
                 ->route('admin.teams.index')
                 ->with('flash_success', 'Команда обновлена!');
@@ -105,6 +110,7 @@ final class TeamsController extends AdminController
         $result = $item->delete();
 
         if ($result) {
+            ActivityLogHelper::logDelete($item);
             return redirect()
                 ->route('admin.teams.index')
                 ->with('flash_success', 'Команда удалена!');

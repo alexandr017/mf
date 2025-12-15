@@ -23,7 +23,18 @@
 
         <!-- Login Form -->
         <div class="login-card rounded-xl shadow-2xl p-8">
-            <form class="space-y-6" id="login-form">
+            @if ($errors->any())
+                <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-button">
+                    <ul class="list-disc list-inside text-sm text-red-600">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form class="space-y-6" id="login-form" method="POST" action="{{ route('login') }}">
+                @csrf
                 <!-- Email Field -->
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
@@ -58,10 +69,10 @@
                 <!-- Remember Me & Forgot Password -->
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <input type="checkbox" id="remember-me" name="remember-me" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
-                        <label for="remember-me" class="ml-2 block text-sm text-gray-700 cursor-pointer">Remember me</label>
+                        <input type="checkbox" id="remember" name="remember" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                        <label for="remember" class="ml-2 block text-sm text-gray-700 cursor-pointer">Remember me</label>
                     </div>
-                    <a href="#" class="text-sm text-primary hover:text-opacity-80 font-medium cursor-pointer">
+                    <a href="{{ route('password.request') }}" class="text-sm text-primary hover:text-opacity-80 font-medium cursor-pointer">
                         Forgot password?
                     </a>
                 </div>
@@ -83,25 +94,43 @@
 
                 <!-- Social Login Buttons -->
                 <div class="grid grid-cols-2 gap-4">
-                    <button type="button" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-button bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer whitespace-nowrap">
+                    <a href="{{ route('social.redirect', 'google') }}" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-button bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer whitespace-nowrap">
                         <div class="w-5 h-5 flex items-center justify-center mr-3">
                             <i class="ri-google-fill text-red-500"></i>
                         </div>
                         <span class="text-sm font-medium text-gray-700">Google</span>
-                    </button>
-                    <button type="button" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-button bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer whitespace-nowrap">
+                    </a>
+                    <a href="{{ route('social.redirect', 'facebook') }}" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-button bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer whitespace-nowrap">
                         <div class="w-5 h-5 flex items-center justify-center mr-3">
                             <i class="ri-facebook-fill text-blue-600"></i>
                         </div>
                         <span class="text-sm font-medium text-gray-700">Facebook</span>
-                    </button>
+                    </a>
+                    <a href="{{ route('social.redirect', 'vk') }}" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-button bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer whitespace-nowrap">
+                        <div class="w-5 h-5 flex items-center justify-center mr-3">
+                            <i class="ri-vk-fill text-blue-700"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">VK</span>
+                    </a>
+                    <a href="{{ route('social.redirect', 'yandex') }}" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-button bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer whitespace-nowrap">
+                        <div class="w-5 h-5 flex items-center justify-center mr-3">
+                            <span class="text-red-600 font-bold text-sm">Я</span>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Yandex</span>
+                    </a>
+                    <a href="{{ route('social.redirect', 'odnoklassniki') }}" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-button bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer whitespace-nowrap col-span-2">
+                        <div class="w-5 h-5 flex items-center justify-center mr-3">
+                            <i class="ri-odnoklassniki-fill text-orange-500"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Odnoklassniki</span>
+                    </a>
                 </div>
 
                 <!-- Sign Up Link -->
                 <div class="text-center">
                     <p class="text-sm text-gray-600">
                         Don't have an account?
-                        <a href="#" class="text-primary hover:text-opacity-80 font-medium cursor-pointer">Sign up here</a>
+                        <a href="{{ route('register') }}" class="text-primary hover:text-opacity-80 font-medium cursor-pointer">Sign up here</a>
                     </p>
                 </div>
             </form>
@@ -224,43 +253,34 @@
         });
 
         loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
             let isValid = true;
 
             const email = emailInput.value.trim();
             const password = passwordInput.value.trim();
 
             if (!email) {
+                e.preventDefault();
                 showError(emailInput, 'Email address is required');
                 isValid = false;
             } else if (!validateEmail(email)) {
+                e.preventDefault();
                 showError(emailInput, 'Please enter a valid email address');
                 isValid = false;
             }
 
             if (!password) {
+                e.preventDefault();
                 showError(passwordInput, 'Password is required');
                 isValid = false;
             } else if (password.length < 6) {
+                e.preventDefault();
                 showError(passwordInput, 'Password must be at least 6 characters');
                 isValid = false;
             }
 
+            // Если валидация прошла, форма отправится стандартным способом
             if (isValid) {
                 loadingOverlay.classList.remove('hidden');
-
-                setTimeout(() => {
-                    loadingOverlay.classList.add('hidden');
-
-                    if (email === 'demo@memefootball.com' && password === 'password') {
-                        showNotification('Login successful! Redirecting to dashboard...');
-                        setTimeout(() => {
-                            window.location.href = '/dashboard';
-                        }, 1500);
-                    } else {
-                        showNotification('Invalid email or password. Please try again.', 'error');
-                    }
-                }, 2000);
             }
         });
 

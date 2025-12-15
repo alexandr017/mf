@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Countries;
 
+use App\Helpers\ActivityLogHelper;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\Countries\CountryRequest;
 use App\Models\Countries\Country;
@@ -48,6 +49,7 @@ final class CountriesController extends AdminController
         $result = $item->save();
 
         if ($result) {
+            ActivityLogHelper::logCreate($item);
             return redirect()
                 ->route('admin.countries.index')
                 ->with('flash_success', 'Страна создана!');
@@ -77,9 +79,12 @@ final class CountriesController extends AdminController
 
         $data = empty_str_to_null($data);
 
+        $oldData = $item->getOriginal();
         $result = $item->update($data);
 
         if ($result) {
+            $changes = array_diff_assoc($item->getAttributes(), $oldData);
+            ActivityLogHelper::logUpdate($item, $changes);
             return redirect()
                 ->route('admin.countries.index')
                 ->with('flash_success', 'Страна обновлена!');
@@ -97,6 +102,7 @@ final class CountriesController extends AdminController
         $result = $item->delete();
 
         if ($result) {
+            ActivityLogHelper::logDelete($item);
             return redirect()
                 ->route('admin.countries.index')
                 ->with('flash_success', 'Страна удалена!');

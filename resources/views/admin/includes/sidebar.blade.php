@@ -33,12 +33,24 @@
                     <span>Сезоны</span>
                 </a>
             </li>
+            <li class="@if(Request::routeIs('admin.matches.*')) active @endif">
+                <a href="{{ route('admin.matches.index') }}">
+                    <i class="fa fa-futbol-o"></i>
+                    <span>Матчи</span>
+                </a>
+            </li>
 
             <li class="header">Команды</li>
             <li class="@if(Request::routeIs('admin.teams.*')) active @endif">
                 <a href="{{ route('admin.teams.index') }}">
                     <i class="fa fa-users"></i>
                     <span>Команды</span>
+                </a>
+            </li>
+            <li class="@if(Request::routeIs('admin.team-players.*')) active @endif">
+                <a href="{{ route('admin.team-players.index') }}">
+                    <i class="fa fa-user-plus"></i>
+                    <span>Составы команд</span>
                 </a>
             </li>
 
@@ -69,6 +81,18 @@
                     <span>Вопросы-ответы</span>
                 </a>
             </li>
+            <li class="@if(Request::routeIs('admin.games.*')) active @endif">
+                <a href="{{ route('admin.games.index') }}">
+                    <i class="fa fa-gamepad"></i>
+                    <span>Игры</span>
+                </a>
+            </li>
+            <li class="@if(Request::routeIs('admin.game-categories.*')) active @endif">
+                <a href="{{ route('admin.game-categories.index') }}">
+                    <i class="fa fa-tags"></i>
+                    <span>Категории игр</span>
+                </a>
+            </li>
 
             <li class="header">Пользователи</li>
             <li class="@if(Request::routeIs('admin.users.*')) active @endif">
@@ -81,6 +105,38 @@
                 <a href="{{ route('admin.achievements.index') }}">
                     <i class="fa fa-trophy"></i>
                     <span>Достижения</span>
+                </a>
+            </li>
+            <li class="@if(Request::routeIs('admin.referrals.*')) active @endif">
+                <a href="{{ route('admin.referrals.index') }}">
+                    <i class="fa fa-share-alt"></i>
+                    <span>Статистика рефералов</span>
+                </a>
+            </li>
+            <li class="@if(Request::routeIs('admin.user-game-results.*')) active @endif">
+                <a href="{{ route('admin.user-game-results.index') }}">
+                    <i class="fa fa-bar-chart"></i>
+                    <span>Результаты игр</span>
+                </a>
+            </li>
+            <li class="@if(Request::routeIs('admin.transactions.*')) active @endif">
+                <a href="{{ route('admin.transactions.index') }}">
+                    <i class="fa fa-money"></i>
+                    <span>Транзакции</span>
+                </a>
+            </li>
+            <li class="@if(Request::routeIs('admin.tickets.*')) active @endif">
+                <a href="{{ route('admin.tickets.index') }}">
+                    <i class="fa fa-ticket"></i>
+                    <span>Тикеты</span>
+                </a>
+            </li>
+
+            <li class="header">Система</li>
+            <li class="@if(Request::routeIs('admin.activity-logs.*')) active @endif">
+                <a href="{{ route('admin.activity-logs.index') }}">
+                    <i class="fa fa-list-alt"></i>
+                    <span>Логи действий</span>
                 </a>
             </li>
 

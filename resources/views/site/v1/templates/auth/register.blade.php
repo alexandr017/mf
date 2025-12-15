@@ -91,7 +91,18 @@
 
         <!-- Register Form -->
         <div class="login-card rounded-xl shadow-2xl p-8">
-            <form class="space-y-6" id="register-form">
+            @if ($errors->any())
+                <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-button">
+                    <ul class="list-disc list-inside text-sm text-red-600">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form class="space-y-6" id="register-form" method="POST" action="{{ route('register') }}">
+                @csrf
                 <!-- Full Name Field -->
                 <div>
                     <label for="fullName" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
@@ -101,7 +112,7 @@
                                 <i class="ri-user-line text-gray-400 text-sm"></i>
                             </div>
                         </div>
-                        <input type="text" id="fullName" name="fullName" required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Enter your full name">
+                        <input type="text" id="fullName" name="name" required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Enter your full name">
                     </div>
                 </div>
 
@@ -173,7 +184,7 @@
                                 <i class="ri-shield-check-line text-gray-400 text-sm"></i>
                             </div>
                         </div>
-                        <input type="password" id="confirmPassword" name="confirmPassword" required class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Confirm your password">
+                        <input type="password" id="confirmPassword" name="password_confirmation" required class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Confirm your password">
                         <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
                             <div class="w-5 h-5 flex items-center justify-center password-match-status hidden">
                                 <i class="ri-check-line text-green-500 text-sm"></i>
@@ -215,25 +226,43 @@
 
                 <!-- Social Login Buttons -->
                 <div class="grid grid-cols-2 gap-4">
-                    <button type="button" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-button bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer whitespace-nowrap">
+                    <a href="{{ route('social.redirect', 'google') }}" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-button bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer whitespace-nowrap">
                         <div class="w-5 h-5 flex items-center justify-center mr-3">
                             <i class="ri-google-fill text-red-500"></i>
                         </div>
                         <span class="text-sm font-medium text-gray-700">Google</span>
-                    </button>
-                    <button type="button" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-button bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer whitespace-nowrap">
+                    </a>
+                    <a href="{{ route('social.redirect', 'facebook') }}" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-button bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer whitespace-nowrap">
                         <div class="w-5 h-5 flex items-center justify-center mr-3">
                             <i class="ri-facebook-fill text-blue-600"></i>
                         </div>
                         <span class="text-sm font-medium text-gray-700">Facebook</span>
-                    </button>
+                    </a>
+                    <a href="{{ route('social.redirect', 'vk') }}" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-button bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer whitespace-nowrap">
+                        <div class="w-5 h-5 flex items-center justify-center mr-3">
+                            <i class="ri-vk-fill text-blue-700"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">VK</span>
+                    </a>
+                    <a href="{{ route('social.redirect', 'yandex') }}" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-button bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer whitespace-nowrap">
+                        <div class="w-5 h-5 flex items-center justify-center mr-3">
+                            <span class="text-red-600 font-bold text-sm">Я</span>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Yandex</span>
+                    </a>
+                    <a href="{{ route('social.redirect', 'odnoklassniki') }}" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-button bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer whitespace-nowrap col-span-2">
+                        <div class="w-5 h-5 flex items-center justify-center mr-3">
+                            <i class="ri-odnoklassniki-fill text-orange-500"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Odnoklassniki</span>
+                    </a>
                 </div>
 
                 <!-- Sign In Link -->
                 <div class="text-center">
                     <p class="text-sm text-gray-600">
                         Already have an account?
-                        <a href="#" class="text-primary hover:text-opacity-80 font-medium cursor-pointer">Sign in here</a>
+                        <a href="{{ route('login') }}" class="text-primary hover:text-opacity-80 font-medium cursor-pointer">Sign in here</a>
                     </p>
                 </div>
             </form>
@@ -469,7 +498,6 @@
         });
 
         registerForm.addEventListener('submit', function(e) {
-            e.preventDefault();
             let isValid = true;
 
             const fullName = fullNameInput.value.trim();
@@ -480,58 +508,60 @@
             const termsAccepted = termsCheckbox.checked;
 
             if (!fullName || fullName.length < 2) {
+                e.preventDefault();
                 showError(fullNameInput, 'Full name is required (minimum 2 characters)');
                 isValid = false;
             }
 
             if (!username) {
+                e.preventDefault();
                 showError(usernameInput, 'Username is required');
                 isValid = false;
             } else if (!validateUsername(username)) {
+                e.preventDefault();
                 showError(usernameInput, existingUsernames.includes(username.toLowerCase()) ? 'Username already taken' : 'Invalid username format');
                 isValid = false;
             }
 
             if (!email) {
+                e.preventDefault();
                 showError(emailInput, 'Email address is required');
                 isValid = false;
             } else if (!validateEmail(email)) {
+                e.preventDefault();
                 showError(emailInput, 'Please enter a valid email address');
                 isValid = false;
             }
 
             if (!password) {
+                e.preventDefault();
                 showError(passwordInput, 'Password is required');
                 isValid = false;
             } else if (password.length < 6) {
+                e.preventDefault();
                 showError(passwordInput, 'Password must be at least 6 characters');
                 isValid = false;
             }
 
             if (!confirmPassword) {
+                e.preventDefault();
                 showError(confirmPasswordInput, 'Please confirm your password');
                 isValid = false;
             } else if (password !== confirmPassword) {
+                e.preventDefault();
                 showError(confirmPasswordInput, 'Passwords do not match');
                 isValid = false;
             }
 
             if (!termsAccepted) {
+                e.preventDefault();
                 showNotification('Please accept the Terms of Service and Privacy Policy', 'error');
                 isValid = false;
             }
 
+            // Если валидация прошла, форма отправится стандартным способом
             if (isValid) {
                 loadingOverlay.classList.remove('hidden');
-
-                setTimeout(() => {
-                    loadingOverlay.classList.add('hidden');
-                    showNotification('Account created successfully! Welcome to Meme Football League!');
-
-                    setTimeout(() => {
-                        window.location.href = '/dashboard';
-                    }, 2000);
-                }, 2500);
             }
         });
 

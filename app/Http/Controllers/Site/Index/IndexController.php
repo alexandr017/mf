@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Http\Controllers\Site\Index;
+namespace App\Http\Controllers\Site\Index;
 
 use App\Models\StaticPages\StaticPage;
 use App\Repositories\Site\Blog\BlogRepository;
