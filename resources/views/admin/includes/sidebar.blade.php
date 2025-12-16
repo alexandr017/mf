@@ -119,10 +119,10 @@
                     <span>Результаты игр</span>
                 </a>
             </li>
-            <li class="@if(Request::routeIs('admin.transactions.*')) active @endif">
-                <a href="{{ route('admin.transactions.index') }}">
-                    <i class="fa fa-money"></i>
-                    <span>Транзакции</span>
+            <li class="@if(Request::routeIs('admin.rating-history.*')) active @endif">
+                <a href="{{ route('admin.rating-history.index') }}">
+                    <i class="fa fa-line-chart"></i>
+                    <span>История рейтинга</span>
                 </a>
             </li>
             <li class="@if(Request::routeIs('admin.tickets.*')) active @endif">

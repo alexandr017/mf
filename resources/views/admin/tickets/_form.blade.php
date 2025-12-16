@@ -40,34 +40,90 @@
     <div class="col-md-6">
         <div class="form-group">
             <label for="created_by_user_id">Создатель</label>
-            <select class="form-control" name="created_by_user_id" id="created_by_user_id">
-                <option value="">Не выбран</option>
-                @foreach($users as $user)
-                    <option value="{{$user->id}}"
-                            @if((old('created_by_user_id') == $user->id) || (isset($ticket) && $ticket->created_by_user_id == $user->id))
-                                selected
-                            @endif>
-                        {{$user->name}}
-                    </option>
-                @endforeach
-            </select>
+            @if(isset($ticket))
+                {{-- При редактировании: поле только для чтения --}}
+                <input type="hidden" name="created_by_user_id" value="{{$ticket->created_by_user_id}}">
+                <select class="form-control" id="created_by_user_id" disabled style="width: 100%;">
+                    @if($ticket->createdBy)
+                        <option value="{{$ticket->created_by_user_id}}" selected>{{$ticket->createdBy->name}} ({{$ticket->createdBy->email}})</option>
+                    @else
+                        <option value="">Не указан</option>
+                    @endif
+                </select>
+                <small class="form-text text-muted">Создатель не может быть изменен</small>
+            @else
+                {{-- При создании: автоматически устанавливаем текущего админа --}}
+                <select class="form-control select2-ajax" name="created_by_user_id" id="created_by_user_id" data-placeholder="Выберите пользователя" style="width: 100%;">
+                    @if(auth()->check())
+                        <option value="{{auth()->id()}}" selected>{{auth()->user()->name}} ({{auth()->user()->email}})</option>
+                    @endif
+                </select>
+            @endif
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
             <label for="assigned_to_user_id">Назначен</label>
-            <select class="form-control" name="assigned_to_user_id" id="assigned_to_user_id">
-                <option value="">Не назначен</option>
-                @foreach($users as $user)
-                    <option value="{{$user->id}}"
-                            @if((old('assigned_to_user_id') == $user->id) || (isset($ticket) && $ticket->assigned_to_user_id == $user->id))
-                                selected
-                            @endif>
-                        {{$user->name}}
-                    </option>
-                @endforeach
+            <select class="form-control select2-ajax" name="assigned_to_user_id" id="assigned_to_user_id" data-placeholder="Выберите пользователя" style="width: 100%;">
+                @if(isset($ticket) && $ticket->assigned_to_user_id && $ticket->assignedTo)
+                    <option value="{{$ticket->assigned_to_user_id}}" selected>{{$ticket->assignedTo->name}} ({{$ticket->assignedTo->email}})</option>
+                @endif
             </select>
         </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function() {
+    @if(!isset($ticket))
+    // Инициализация select2 для created_by_user_id (только при создании)
+    $('#created_by_user_id').select2({
+        ajax: {
+            url: '{{ route("admin.tickets.search-users") }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term,
+                    page: params.page || 1
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data.results
+                };
+            },
+            cache: true
+        },
+        minimumInputLength: 1,
+        placeholder: 'Выберите пользователя',
+        allowClear: false
+    });
+    @endif
+
+    // Инициализация select2 для assigned_to_user_id
+    $('#assigned_to_user_id').select2({
+        ajax: {
+            url: '{{ route("admin.tickets.search-users") }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term,
+                    page: params.page || 1
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data.results
+                };
+            },
+            cache: true
+        },
+        minimumInputLength: 1,
+        placeholder: 'Выберите пользователя',
+        allowClear: true
+    });
+});
+</script>
 

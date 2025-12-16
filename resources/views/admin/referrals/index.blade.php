@@ -69,27 +69,31 @@
     <div class="panel panel-default">
         <div class="panel-heading">Фильтры</div>
         <div class="panel-body">
-            <form method="GET" action="{{ route('admin.referrals.index') }}" class="form-inline">
+            <form id="filters-form" class="form-inline">
                 <div class="form-group">
                     <label for="referrer_id">Реферер:</label>
-                    <select name="referrer_id" id="referrer_id" class="form-control" style="width: 250px;">
-                        <option value="">Все рефереры</option>
-                        @foreach($users as $user)
-                            <option value="{{$user->id}}" @if(request('referrer_id') == $user->id) selected @endif>
-                                {{$user->name}} ({{$user->email}})
-                            </option>
-                        @endforeach
+                    <select name="referrer_id" id="referrer_id" class="form-control select2-ajax" style="width: 250px;">
+                        @if(request('referrer_id'))
+                            @php
+                                $selectedReferrer = \App\Models\User::find(request('referrer_id'));
+                            @endphp
+                            @if($selectedReferrer)
+                                <option value="{{$selectedReferrer->id}}" selected>{{$selectedReferrer->name}} ({{$selectedReferrer->email}})</option>
+                            @endif
+                        @endif
                     </select>
                 </div>
                 <div class="form-group" style="margin-left: 15px;">
                     <label for="referred_id">Приглашенный:</label>
-                    <select name="referred_id" id="referred_id" class="form-control" style="width: 250px;">
-                        <option value="">Все</option>
-                        @foreach($users as $user)
-                            <option value="{{$user->id}}" @if(request('referred_id') == $user->id) selected @endif>
-                                {{$user->name}} ({{$user->email}})
-                            </option>
-                        @endforeach
+                    <select name="referred_id" id="referred_id" class="form-control select2-ajax" style="width: 250px;">
+                        @if(request('referred_id'))
+                            @php
+                                $selectedReferred = \App\Models\User::find(request('referred_id'));
+                            @endphp
+                            @if($selectedReferred)
+                                <option value="{{$selectedReferred->id}}" selected>{{$selectedReferred->name}} ({{$selectedReferred->email}})</option>
+                            @endif
+                        @endif
                     </select>
                 </div>
                 <div class="form-group" style="margin-left: 15px;">
@@ -101,8 +105,8 @@
                     <input type="date" name="date_to" id="date_to" class="form-control" value="{{request('date_to')}}">
                 </div>
                 <div class="form-group" style="margin-left: 15px;">
-                    <button type="submit" class="btn btn-primary">Применить</button>
-                    <a href="{{ route('admin.referrals.index') }}" class="btn btn-default">Сбросить</a>
+                    <button type="button" id="apply-filters" class="btn btn-primary">Применить</button>
+                    <button type="button" id="reset-filters" class="btn btn-default">Сбросить</button>
                 </div>
             </form>
         </div>
@@ -110,7 +114,7 @@
 
     <br>
 
-    <table id="rowtbl" class="table table-striped table-bordered table-hover">
+    <table id="referrals-table" class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
             <th>id</th>
@@ -121,16 +125,91 @@
         </tr>
         </thead>
         <tbody>
-        @foreach ($referrals as $referral)
-            <tr>
-                <td>{{ $referral->id }}</td>
-                <td>{{ $referral->name }} ({{ $referral->email }})</td>
-                <td>{{ $referral->referredBy->name ?? '-' }} ({{ $referral->referredBy->email ?? '-' }})</td>
-                <td><code>{{ $referral->referredBy->referral_code ?? '-' }}</code></td>
-                <td>{{ $referral->created_at->format('d.m.Y H:i') }}</td>
-            </tr>
-        @endforeach
         </tbody>
     </table>
+@endsection
+
+@section('after-scripts')
+<script>
+$(document).ready(function(){
+    // Инициализация Select2 для поиска пользователей (AJAX)
+    var userSelectConfig = {
+        theme: 'default',
+        width: '100%',
+        placeholder: 'Поиск пользователя...',
+        allowClear: true,
+        ajax: {
+            url: '{{ route("admin.referrals.search-users") }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term,
+                    page: params.page || 1
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data.results
+                };
+            },
+            cache: true
+        },
+        minimumInputLength: 1
+    };
+
+    $('#referrer_id, #referred_id').select2(userSelectConfig);
+
+    // Инициализация DataTables с серверной обработкой
+    var table = $('#referrals-table').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+            "url": "{{ route('admin.referrals.data') }}",
+            "type": "GET",
+            "data": function (d) {
+                // Добавляем фильтры к запросу
+                d.referrer_id = $('#referrer_id').val();
+                d.referred_id = $('#referred_id').val();
+                d.date_from = $('#date_from').val();
+                d.date_to = $('#date_to').val();
+            }
+        },
+        "columns": [
+            { "data": "id", "name": "id" },
+            { "data": "referred_name", "name": "referred_name" },
+            { "data": "referrer_name", "name": "referrer_name" },
+            { "data": "referrer_code", "name": "referrer_code" },
+            { "data": "created_at", "name": "created_at" }
+        ],
+        "order": [[4, "desc"]], // Сортировка по дате по умолчанию
+        "pageLength": 50,
+        "language": {"url": "/admin-assets/dataTables/datatables.json"},
+        "searching": true,
+        "lengthChange": true,
+        "paging": true,
+        "info": true
+    });
+
+    // Применение фильтров
+    $('#apply-filters').on('click', function() {
+        table.ajax.reload();
+    });
+
+    // Сброс фильтров
+    $('#reset-filters').on('click', function() {
+        $('#referrer_id').val(null).trigger('change');
+        $('#referred_id').val(null).trigger('change');
+        $('#date_from').val('');
+        $('#date_to').val('');
+        table.ajax.reload();
+    });
+
+    // Автоматическое применение фильтров при изменении дат
+    $('#date_from, #date_to').on('change', function() {
+        table.ajax.reload();
+    });
+});
+</script>
 @endsection
 

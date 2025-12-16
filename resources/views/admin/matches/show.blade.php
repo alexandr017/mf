@@ -74,7 +74,7 @@
                                         <form action="{{ route('admin.matches.delete-event', [$match->id, $event->id]) }}" method="post" class="inline">
                                             {{ method_field('DELETE') }}
                                             {{ csrf_field() }}
-                                            <button class="btn btn-danger btn-xs" title="Удалить"><i class="fa fa-trash"></i></button>
+                                            <button class="btn btn-danger btn-xs rest-destroy" title="Удалить"><i class="fa fa-trash"></i></button>
                                         </form>
                                     </td>
                                 </tr>

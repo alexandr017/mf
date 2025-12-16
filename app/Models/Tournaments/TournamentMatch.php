@@ -61,8 +61,4 @@ class TournamentMatch extends Model
         return $this->hasMany(\App\Models\MatchEvents\MatchEvent::class, 'match_id')->where('type', 'assist');
     }
 
-    public function transactions()
-    {
-        return $this->hasMany(\App\Models\Transactions\Transaction::class, 'match_id');
-    }
 }

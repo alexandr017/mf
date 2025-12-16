@@ -93,18 +93,22 @@ final class TicketsController extends AdminController
 
     public function create(): View
     {
-        $users = User::orderBy('name')->limit(1000)->get(['id', 'name']);
         $breadcrumbs = [
             ['h1' => 'Тикеты', 'link' => route('admin.tickets.index')],
             ['h1' => 'Создание'],
         ];
-        return view('admin.tickets.create', compact('users', 'breadcrumbs'));
+        return view('admin.tickets.create', compact('breadcrumbs'));
     }
 
     public function store(TicketRequest $request): RedirectResponse
     {
         $data = $request->all();
         $data = empty_str_to_null($data);
+
+        // Если created_by_user_id не указан, устанавливаем текущего админа
+        if (empty($data['created_by_user_id'])) {
+            $data['created_by_user_id'] = auth()->id();
+        }
 
         $ticket = new Ticket($data);
         $result = $ticket->save();
@@ -124,25 +128,23 @@ final class TicketsController extends AdminController
     public function show(string $id): View
     {
         $ticket = $this->ticketRepository->findOrFail($id);
-        $users = User::orderBy('name')->limit(1000)->get(['id', 'name']);
         $breadcrumbs = [
             ['h1' => 'Тикеты', 'link' => route('admin.tickets.index')],
             ['h1' => 'Просмотр'],
         ];
 
-        return view('admin.tickets.show', compact('ticket', 'users', 'breadcrumbs'));
+        return view('admin.tickets.show', compact('ticket', 'breadcrumbs'));
     }
 
     public function edit(string $id): View
     {
         $ticket = $this->ticketRepository->findOrFail($id);
-        $users = User::orderBy('name')->limit(1000)->get(['id', 'name']);
         $breadcrumbs = [
             ['h1' => 'Тикеты', 'link' => route('admin.tickets.index')],
             ['h1' => 'Редактирование'],
         ];
 
-        return view('admin.tickets.edit', compact('ticket', 'users', 'breadcrumbs'));
+        return view('admin.tickets.edit', compact('ticket', 'breadcrumbs'));
     }
 
     public function update(TicketRequest $request, string $id): RedirectResponse
@@ -150,6 +152,9 @@ final class TicketsController extends AdminController
         $ticket = $this->ticketRepository->findOrFail($id);
         $data = $request->all();
         $data = empty_str_to_null($data);
+
+        // Не позволяем изменять created_by_user_id при редактировании
+        unset($data['created_by_user_id']);
 
         // Если статус меняется на closed или resolved, устанавливаем closed_at
         if (in_array($data['status'], ['closed', 'resolved']) && $ticket->status !== $data['status']) {
@@ -195,7 +200,15 @@ final class TicketsController extends AdminController
     {
         $ticket = $this->ticketRepository->findOrFail($id);
         $data = $request->all();
-        $data['is_admin'] = $request->has('is_admin') ? true : false;
+        
+        // Устанавливаем ticket_id из маршрута
+        $data['ticket_id'] = $ticket->id;
+        
+        // Всегда используем авторизованного админа
+        $data['user_id'] = auth()->id();
+        
+        // Все сообщения от администратора
+        $data['is_admin'] = true;
 
         $message = new TicketMessage($data);
         $result = $message->save();

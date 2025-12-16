@@ -19,7 +19,7 @@ use App\Http\Controllers\Admin\Matches\MatchesController;
 use App\Http\Controllers\Admin\ActivityLogs\ActivityLogsController;
 use App\Http\Controllers\Admin\UserGameResults\UserGameResultsController;
 use App\Http\Controllers\Admin\Tickets\TicketsController;
-use App\Http\Controllers\Admin\Transactions\TransactionsController;
+use App\Http\Controllers\Admin\RatingHistory\RatingHistoryController;
 use App\Http\Controllers\Admin\TeamPlayers\TeamPlayersController;
 use App\Http\Controllers\Admin\Referrals\ReferralsController;
 
@@ -60,8 +60,11 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin', 'as' => 'a
     Route::get('tickets/search-users', [TicketsController::class, 'searchUsers'])->name('tickets.search-users');
     Route::post('tickets/{id}/add-message', [TicketsController::class, 'addMessage'])->name('tickets.add-message');
     Route::resource('tickets', TicketsController::class);
-    Route::get('transactions', [TransactionsController::class, 'index'])->name('transactions.index');
+    Route::get('rating-history', [RatingHistoryController::class, 'index'])->name('rating-history.index');
+    Route::get('rating-history/search-users', [RatingHistoryController::class, 'searchUsers'])->name('rating-history.search-users');
     Route::resource('team-players', TeamPlayersController::class)->except(['show']);
     Route::get('referrals', [ReferralsController::class, 'index'])->name('referrals.index');
+    Route::get('referrals/data', [ReferralsController::class, 'dataTables'])->name('referrals.data');
+    Route::get('referrals/search-users', [ReferralsController::class, 'searchUsers'])->name('referrals.search-users');
 
 });

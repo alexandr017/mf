@@ -7,7 +7,7 @@
         {{ method_field('PATCH') }}
         <input type="hidden" name="_token" id="key" value="{{ csrf_token() }}">
         @include('admin.team-players._form')
-        <button type="submit" class="btn btn-success pull-right"><i class="fas fa-save"></i> Сохранить</button>
+        <button type="submit" class="btn btn-success pull-right"><i class="fa fa-save"></i> Сохранить</button>
     </form>
     <div class="clearfix"></div>
     <br>

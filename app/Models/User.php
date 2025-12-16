@@ -90,9 +90,15 @@ class User extends Authenticatable
     /**
      * Транзакции пользователя
      */
+    public function ratingHistory()
+    {
+        return $this->hasMany(\App\Models\RatingHistory\RatingHistory::class);
+    }
+    
+    // Оставляем для обратной совместимости, если где-то используется
     public function transactions()
     {
-        return $this->hasMany(\App\Models\Transactions\Transaction::class);
+        return $this->ratingHistory();
     }
 
     /**

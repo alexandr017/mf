@@ -14,8 +14,12 @@
         }
     });
 
-    $('.rest-destroy').on('click',function(){
-        return confirm("Вы действительно хотите удалить текущий элемент?");
+    // Используем делегирование событий для динамически созданных элементов (DataTables)
+    $(document).on('click', '.rest-destroy', function(e){
+        if (!confirm("Вы действительно хотите удалить текущий элемент?")) {
+            e.preventDefault();
+            return false;
+        }
     });
 
     $('.translate').on('click',function(){

@@ -19,9 +19,9 @@ class TicketMessageRequest extends FormRequest
     {
         return [
             'ticket_id' => ['required', 'exists:tickets,id'],
-            'user_id' => ['required', 'exists:users,id'],
+            'user_id' => ['nullable', 'exists:users,id'], // Устанавливается автоматически в контроллере
             'message' => ['required'],
-            'is_admin' => ['nullable', 'boolean'],
+            'is_admin' => ['nullable', 'boolean'], // Устанавливается автоматически в контроллере
         ];
     }
 

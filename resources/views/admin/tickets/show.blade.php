@@ -49,19 +49,7 @@
                 <div class="panel-body">
                     <form action="{{ route('admin.tickets.add-message', $ticket->id) }}" method="post">
                         {{ csrf_field() }}
-                        <div class="form-group">
-                            <label for="user_id">От имени пользователя:</label>
-                            <select class="form-control" name="user_id" id="user_id" required>
-                                @foreach($users as $user)
-                                    <option value="{{$user->id}}">{{$user->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" name="is_admin" value="1"> От администратора
-                            </label>
-                        </div>
+                        <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
                         <div class="form-group">
                             <label for="message">Сообщение:</label>
                             <textarea class="form-control" name="message" id="message" rows="5" required></textarea>
