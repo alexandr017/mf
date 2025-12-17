@@ -33,3 +33,4 @@ class TicketMessage extends Model
     }
 }
 
+

@@ -20,7 +20,27 @@ class TournamentsController
 // 1) Список турниров
     public function index()
     {
-        $tournaments = Tournament::select('id', 'name', 'image')->get();
+        $tournaments = DB::table('tournaments')
+            ->leftJoin('countries', 'tournaments.country_id', '=', 'countries.id')
+            ->select(
+                'tournaments.id',
+                'tournaments.name',
+                'tournaments.type',
+                'tournaments.image',
+                'tournaments.color',
+                'tournaments.participants_count',
+                DB::raw('COALESCE(countries.id, NULL) as country_id'),
+                DB::raw('COALESCE(countries.name, \'СНГ\') as country_name')
+            )
+            ->where('tournaments.status', 1)
+            ->orderByRaw('CASE WHEN countries.id IS NULL THEN 0 ELSE countries.id END')
+            ->orderBy('tournaments.type')
+            ->orderBy('tournaments.name')
+            ->get()
+            ->groupBy(function($item) {
+                // Группируем по country_id, но для NULL используем 'null' как ключ
+                return $item->country_id ?? 'null';
+            });
 
         return view('site.v1.templates.tournaments.tournaments', compact('tournaments'));
     }
@@ -28,13 +48,22 @@ class TournamentsController
     // 2) Список сезонов выбранного турнира
     public function tournament($tournamentID)
     {
-        $tournament = Tournament::find($tournamentID);
+        $tournament = DB::table('tournaments')
+            ->leftJoin('countries', 'tournaments.country_id', '=', 'countries.id')
+            ->select(
+                'tournaments.*',
+                'countries.name as country_name'
+            )
+            ->where('tournaments.id', $tournamentID)
+            ->first();
+
         if (!$tournament) {
             abort(404);
         }
 
         $seasons = DB::table('tournaments_seasons')
-            ->where(['tournament_id' => $tournamentID])
+            ->where(['tournament_id' => $tournamentID, 'status' => 1])
+            ->orderBy('year_start', 'desc')
             ->get();
 
         return view('site.v1.templates.tournaments.tournament', compact('tournament', 'seasons'));

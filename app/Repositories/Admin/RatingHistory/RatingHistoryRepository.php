@@ -46,3 +46,4 @@ class RatingHistoryRepository extends Repository
     }
 }
 
+

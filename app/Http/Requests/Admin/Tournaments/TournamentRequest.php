@@ -27,7 +27,7 @@ class TournamentRequest extends FormRequest
     {
         return [
             'name' => ['required', 'max:255'],
-            'country_id' => ['nullable', 'integer'],
+            'country_id' => ['nullable', 'integer', 'exists:countries,id'],
             'title' => ['nullable', 'max:255'],
             'h1' => ['nullable', 'max:255'],
             'alias' => ['nullable', 'max:255'],
@@ -35,9 +35,22 @@ class TournamentRequest extends FormRequest
             'image' => ['nullable', 'max:255'],
             'type' => ['required', 'in:league,cup,supercup,mixed'],
             'tournament_template_id' => ['nullable', 'exists:tournament_templates,id'],
+            'color' => ['nullable', 'string', 'max:7', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'participants_count' => ['nullable', 'integer', 'min:0'],
             'content' => ['nullable'],
             'status' => ['nullable', 'boolean'],
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        // Преобразуем пустую строку country_id в null
+        if ($this->has('country_id') && $this->country_id === '') {
+            $this->merge(['country_id' => null]);
+        }
     }
 
     /**
@@ -49,7 +62,7 @@ class TournamentRequest extends FormRequest
     {
         return [
             'name' => 'Название',
-            'country_id' => 'ID страны',
+            'country_id' => 'Страна',
             'title' => 'Title',
             'h1' => 'h1',
             'alias' => 'Алиас',
@@ -57,6 +70,8 @@ class TournamentRequest extends FormRequest
             'image' => 'Изображение',
             'type' => 'Тип',
             'tournament_template_id' => 'Шаблон турнира',
+            'color' => 'Цвет',
+            'participants_count' => 'Количество участников',
             'content' => 'Контент',
             'status' => 'Статус',
         ];

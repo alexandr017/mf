@@ -14,16 +14,27 @@
 </div>
 
 <div class="form-group">
-    <label for="country_id">ID страны</label>
-    <input type="number" class="form-control" name="country_id" id="country_id"
-           @if(old('country_id'))
-               value="{{old('country_id')}}"
-           @else
-               @if(isset($item))
-                   value="{{$item->country_id}}"
-            @endif
-            @endif
-    >
+    <label for="country_id">Страна</label>
+    <select class="form-control" name="country_id" id="country_id">
+        <option value=""
+                @if((old('country_id') === '' || old('country_id') === null) || (isset($item) && ($item->country_id === null || $item->country_id === '')))
+                    selected
+                @endif>
+            СНГ (без страны)
+        </option>
+        @php
+            $countries = \App\Models\Countries\Country::orderBy('name')->get();
+        @endphp
+        @foreach($countries as $country)
+            <option value="{{$country->id}}"
+                    @if((old('country_id') == $country->id) || (isset($item) && $item->country_id == $country->id))
+                        selected
+                    @endif>
+                {{$country->name}}
+            </option>
+        @endforeach
+    </select>
+    <small class="form-text text-muted">Выберите страну или оставьте пустым для СНГ</small>
 </div>
 
 <div class="form-group">
@@ -84,6 +95,45 @@
 </div>
 
 <div class="form-group">
+    <label for="color">Цвет (HEX)</label>
+    <div class="input-group">
+        <input type="text" class="form-control" name="color" id="color" maxlength="7" placeholder="#7FFF00"
+               @if(old('color'))
+                   value="{{old('color')}}"
+               @else
+                   @if(isset($item))
+                       value="{{$item->color}}"
+                @endif
+                @endif
+        >
+        <div class="input-group-append">
+            <input type="color" class="form-control" id="colorPicker" style="width: 50px; height: 38px; cursor: pointer;"
+                   @if(old('color') || (isset($item) && $item->color))
+                       value="{{old('color') ?: ($item->color ?? '#7FFF00')}}"
+                   @else
+                       value="#7FFF00"
+                   @endif
+                   onchange="document.getElementById('color').value = this.value;">
+        </div>
+    </div>
+    <small class="form-text text-muted">Цвет для наведения на карточке турнира (формат HEX: #7FFF00)</small>
+</div>
+
+<div class="form-group">
+    <label for="participants_count">Количество участников</label>
+    <input type="number" class="form-control" name="participants_count" id="participants_count" min="0"
+           @if(old('participants_count'))
+               value="{{old('participants_count')}}"
+           @else
+               @if(isset($item))
+                   value="{{$item->participants_count}}"
+            @endif
+            @endif
+    >
+    <small class="form-text text-muted">Количество команд, участвующих в турнире</small>
+</div>
+
+<div class="form-group">
     <label for="content">Контент <span class="input_counter"></span></label>
     <?php
     $content = old('content')
@@ -105,5 +155,17 @@
 <script src="/admin-assets/tinymce/wysiwyg.js"></script>
 <script>
     tInit('#content');
+    
+    // Синхронизация color picker с текстовым полем
+    document.getElementById('color').addEventListener('input', function(e) {
+        const value = e.target.value;
+        if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+            document.getElementById('colorPicker').value = value;
+        }
+    });
+    
+    document.getElementById('colorPicker').addEventListener('change', function(e) {
+        document.getElementById('color').value = e.target.value;
+    });
 </script>
 

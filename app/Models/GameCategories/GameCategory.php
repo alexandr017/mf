@@ -30,3 +30,4 @@ class GameCategory extends Model
     }
 }
 
+

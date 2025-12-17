@@ -40,3 +40,4 @@ class GameCategoryRequest extends FormRequest
     }
 }
 
+

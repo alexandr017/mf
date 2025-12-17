@@ -15,6 +15,9 @@
             <th>id</th>
             <th>Название</th>
             <th>Тип</th>
+            <th>Страна</th>
+            <th>Цвет</th>
+            <th>Участников</th>
             <th>Алиас</th>
             <th>Статус</th>
             <th>Действия</th>
@@ -22,10 +25,24 @@
         </thead>
         <tbody>
         @foreach ($tournaments as $tournament)
+            @php
+                $country = $tournament->country_id ? \App\Models\Countries\Country::find($tournament->country_id) : null;
+            @endphp
             <tr>
                 <td>{{ $tournament->id }}</td>
                 <td>{{ $tournament->name }}</td>
                 <td>{{ $tournament->type }}</td>
+                <td>{{ $country ? $country->name : 'СНГ' }}</td>
+                <td>
+                    @if($tournament->color)
+                        <span class="badge" style="background-color: {{ $tournament->color }}; color: {{ $tournament->color == '#7FFF00' ? '#000' : '#fff' }};">
+                            {{ $tournament->color }}
+                        </span>
+                    @else
+                        <span class="text-muted">-</span>
+                    @endif
+                </td>
+                <td>{{ $tournament->participants_count ?? 0 }}</td>
                 <td>{{ $tournament->alias }}</td>
                 <td>@if($tournament->status) <span class="badge badge-success">Активен</span> @else <span class="badge badge-warning">Неактивен</span>@endif</td>
                 <td>
@@ -44,5 +61,6 @@
         </tbody>
     </table>
 @endsection
+
 
 

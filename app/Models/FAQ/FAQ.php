@@ -24,3 +24,4 @@ class FAQ extends Model
 }
 
 
+

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Site\Ratings;
 
-use App\Models\Teams\Team;
+use App\Repositories\Site\Ratings\RatingsRepository;
 
 class RatingsController
 {
     public function index()
     {
-        $teams = Team::all();
-        return view('site.v1.templates.ratings.ratings', compact('teams'));
+        $teams = (new RatingsRepository)->getAllTeams();
+        $highlightPositions = false; // Для глобального рейтинга не выделяем цветом
+        return view('site.v1.templates.ratings.ratings', compact('teams', 'highlightPositions'));
     }
 }

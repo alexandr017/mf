@@ -24,3 +24,4 @@ class GameCategoryRepository extends Repository
     }
 }
 
+

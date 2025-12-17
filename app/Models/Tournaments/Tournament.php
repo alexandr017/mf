@@ -9,7 +9,7 @@ class Tournament extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'country_id', 'title', 'alias', 'meta_description', 'image', 'type', 'content', 'status', 'h1', 'tournament_template_id'
+        'name', 'country_id', 'title', 'alias', 'meta_description', 'image', 'type', 'content', 'status', 'h1', 'tournament_template_id', 'color', 'participants_count'
     ];
 
     public function template()

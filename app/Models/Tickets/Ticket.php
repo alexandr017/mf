@@ -45,3 +45,4 @@ class Ticket extends Model
     }
 }
 
+

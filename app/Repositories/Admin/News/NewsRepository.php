@@ -31,3 +31,4 @@ class NewsRepository extends Repository
 }
 
 
+
