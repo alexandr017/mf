@@ -1,7 +1,7 @@
 @extends('site.v1.layouts.default')
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+<div class="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 relative overflow-hidden py-12 hero-bg">
     <!-- Background Graphics -->
     <div class="absolute inset-0 z-0">
         <div class="absolute top-10 left-10 w-32 h-32 bg-primary opacity-10 rounded-full floating-animation"></div>
@@ -17,8 +17,8 @@
             <div class="flex justify-center mb-6">
                 <span class="text-5xl font-['Pacifico'] text-primary pulse-glow">logo</span>
             </div>
-            <h1 class="heading-font text-4xl text-gray-900 mb-2">Welcome Back!</h1>
-            <p class="text-lg text-gray-600">Sign in to your Meme Football League account</p>
+            <h1 class="heading-font text-4xl text-gray-900 mb-2">С возвращением!</h1>
+            <p class="text-lg text-gray-600">Войдите в свой аккаунт Pircl</p>
         </div>
 
         <!-- Login Form -->
@@ -37,27 +37,27 @@
                 @csrf
                 <!-- Email Field -->
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email адрес</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <div class="w-5 h-5 flex items-center justify-center">
                                 <i class="ri-mail-line text-gray-400 text-sm"></i>
                             </div>
                         </div>
-                        <input type="email" id="email" name="email" required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Enter your email">
+                        <input type="email" id="email" name="email" required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Введите ваш email">
                     </div>
                 </div>
 
                 <!-- Password Field -->
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Пароль</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <div class="w-5 h-5 flex items-center justify-center">
                                 <i class="ri-lock-line text-gray-400 text-sm"></i>
                             </div>
                         </div>
-                        <input type="password" id="password" name="password" required class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Enter your password">
+                        <input type="password" id="password" name="password" required class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Введите ваш пароль">
                         <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center password-toggle rounded-r-button cursor-pointer">
                             <div class="w-5 h-5 flex items-center justify-center">
                                 <i class="ri-eye-line text-gray-400 text-sm password-icon"></i>
@@ -70,16 +70,16 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
                         <input type="checkbox" id="remember" name="remember" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
-                        <label for="remember" class="ml-2 block text-sm text-gray-700 cursor-pointer">Remember me</label>
+                        <label for="remember" class="ml-2 block text-sm text-gray-700 cursor-pointer">Запомнить меня</label>
                     </div>
                     <a href="{{ route('password.request') }}" class="text-sm text-primary hover:text-opacity-80 font-medium cursor-pointer">
-                        Forgot password?
+                        Забыли пароль?
                     </a>
                 </div>
 
                 <!-- Login Button -->
                 <button type="submit" class="w-full bg-primary text-gray-900 py-3 px-4 rounded-button font-semibold hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200 transform hover:scale-105 cursor-pointer whitespace-nowrap">
-                    Sign In
+                    Войти
                 </button>
 
                 <!-- Divider -->
@@ -88,7 +88,7 @@
                         <div class="w-full border-t border-gray-300"></div>
                     </div>
                     <div class="relative flex justify-center text-sm">
-                        <span class="px-4 bg-white text-gray-500">Or continue with</span>
+                        <span class="px-4 bg-white text-gray-500">Или войдите через</span>
                     </div>
                 </div>
 
@@ -129,43 +129,14 @@
                 <!-- Sign Up Link -->
                 <div class="text-center">
                     <p class="text-sm text-gray-600">
-                        Don't have an account?
-                        <a href="{{ route('register') }}" class="text-primary hover:text-opacity-80 font-medium cursor-pointer">Sign up here</a>
+                        Нет аккаунта?
+                        <a href="{{ route('register') }}" class="text-primary hover:text-opacity-80 font-medium cursor-pointer">Зарегистрируйтесь здесь</a>
                     </p>
                 </div>
             </form>
         </div>
 
-        <!-- Features Preview -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12">
-            <div class="text-center p-4 bg-white bg-opacity-60 rounded-button backdrop-filter backdrop-blur-sm">
-                <div class="w-12 h-12 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <div class="w-6 h-6 flex items-center justify-center">
-                        <i class="ri-trophy-line text-primary"></i>
-                    </div>
-                </div>
-                <h3 class="font-semibold text-gray-900 text-sm mb-1">Compete</h3>
-                <p class="text-xs text-gray-600">Join matches and climb rankings</p>
-            </div>
-            <div class="text-center p-4 bg-white bg-opacity-60 rounded-button backdrop-filter backdrop-blur-sm">
-                <div class="w-12 h-12 bg-secondary bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <div class="w-6 h-6 flex items-center justify-center">
-                        <i class="ri-team-line text-secondary"></i>
-                    </div>
-                </div>
-                <h3 class="font-semibold text-gray-900 text-sm mb-1">Team Up</h3>
-                <p class="text-xs text-gray-600">Build your dream team roster</p>
-            </div>
-            <div class="text-center p-4 bg-white bg-opacity-60 rounded-button backdrop-filter backdrop-blur-sm">
-                <div class="w-12 h-12 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <div class="w-6 h-6 flex items-center justify-center">
-                        <i class="ri-bar-chart-line text-primary"></i>
-                    </div>
-                </div>
-                <h3 class="font-semibold text-gray-900 text-sm mb-1">Track Stats</h3>
-                <p class="text-xs text-gray-600">Monitor your performance</p>
-            </div>
-        </div>
+        @include('site.v1.modules.auth-features.auth-features')
     </div>
 
     <!-- Loading Overlay -->
@@ -173,8 +144,8 @@
         <div class="bg-white rounded-xl p-8 max-w-sm w-full mx-4">
             <div class="text-center">
                 <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Signing In...</h3>
-                <p class="text-gray-600 text-sm">Please wait while we verify your credentials</p>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Вход в систему...</h3>
+                <p class="text-gray-600 text-sm">Пожалуйста, подождите, пока мы проверяем ваши данные</p>
             </div>
         </div>
     </div>
@@ -260,21 +231,21 @@
 
             if (!email) {
                 e.preventDefault();
-                showError(emailInput, 'Email address is required');
+                showError(emailInput, 'Email адрес обязателен');
                 isValid = false;
             } else if (!validateEmail(email)) {
                 e.preventDefault();
-                showError(emailInput, 'Please enter a valid email address');
+                showError(emailInput, 'Пожалуйста, введите корректный email адрес');
                 isValid = false;
             }
 
             if (!password) {
                 e.preventDefault();
-                showError(passwordInput, 'Password is required');
+                showError(passwordInput, 'Пароль обязателен');
                 isValid = false;
             } else if (password.length < 6) {
                 e.preventDefault();
-                showError(passwordInput, 'Password must be at least 6 characters');
+                showError(passwordInput, 'Пароль должен содержать минимум 6 символов');
                 isValid = false;
             }
 
@@ -333,7 +304,7 @@
                 const email = document.getElementById('email').value.trim();
                 if (!email) {
                     document.getElementById('email').focus();
-                    showNotification('Please enter your email address first', 'error');
+                    showNotification('Пожалуйста, сначала введите ваш email адрес', 'error');
                     return;
                 }
 
@@ -347,14 +318,14 @@
 <i class="ri-mail-send-line text-primary text-xl"></i>
 </div>
 </div>
-<h3 class="text-xl font-semibold text-gray-900 mb-2">Reset Password</h3>
-<p class="text-gray-600 mb-6">We'll send a password reset link to <strong>${email}</strong></p>
+<h3 class="text-xl font-semibold text-gray-900 mb-2">Сброс пароля</h3>
+<p class="text-gray-600 mb-6">Мы отправим ссылку для сброса пароля на <strong>${email}</strong></p>
 <div class="flex space-x-4">
 <button type="button" class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-button font-medium hover:bg-gray-200 transition-colors cursor-pointer whitespace-nowrap modal-close">
-Cancel
+Отмена
 </button>
 <button type="button" class="flex-1 px-4 py-2 bg-primary text-gray-900 rounded-button font-medium hover:bg-opacity-90 transition-colors cursor-pointer whitespace-nowrap reset-confirm">
-Send Reset Link
+Отправить ссылку
 </button>
 </div>
 </div>
@@ -369,7 +340,7 @@ Send Reset Link
 
                 modal.querySelector('.reset-confirm').addEventListener('click', function() {
                     modal.remove();
-                    showNotification(`Password reset link sent to ${email}`);
+                    showNotification(`Ссылка для сброса пароля отправлена на ${email}`);
                 });
 
                 modal.addEventListener('click', function(e) {

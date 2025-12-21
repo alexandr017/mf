@@ -42,3 +42,4 @@ class SupercupGenerator implements TournamentGeneratorInterface
 
 
 
+

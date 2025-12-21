@@ -4,7 +4,8 @@
 
 @section('content')
 
-@include('site.v1.modules.tournaments-banner.tournaments-banner')
+@include('site.v1.modules.tournaments-banner.tournaments-banner', ['image' => '/v1/images/ratings-banner.png'])
+
 <section class="py-10 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">

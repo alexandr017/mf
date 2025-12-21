@@ -30,6 +30,7 @@ class UserRequest extends FormRequest
         $rules = [
             'name' => ['required', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email,' . ($userId ?? 'NULL')],
+            'preferred_position' => ['nullable', 'string', 'in:defender,midfielder,forward'],
             'goals' => ['nullable', 'integer', 'min:0'],
             'assists' => ['nullable', 'integer', 'min:0'],
             'rating' => ['nullable', 'numeric', 'min:0', 'max:100'],
@@ -63,6 +64,7 @@ class UserRequest extends FormRequest
             'name' => 'Имя',
             'email' => 'Email',
             'password' => 'Пароль',
+            'preferred_position' => 'Предпочитаемая позиция',
             'goals' => 'Голы',
             'assists' => 'Голевые передачи',
             'rating' => 'Рейтинг',

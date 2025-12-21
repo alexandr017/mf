@@ -1,151 +1,8 @@
+@extends('site.v1.layouts.account')
 
-<!DOCTYPE html>
-<html lang="en">
-<head><script src="https://static.readdy.ai/static/e.js"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Games - Meme Football League</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>tailwind.config={theme:{extend:{colors:{primary:'#7FFF00',secondary:'#FF355E'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
-    <style>
-        :where([class^="ri-"])::before { content: "\f3c2"; }
-        body {
-            font-family: 'Rubik', sans-serif;
-        }
-        .heading-font {
-            font-family: 'Bangers', cursive;
-            letter-spacing: 1px;
-        }
-        .sidebar-active {
-            background-color: rgba(127, 255, 0, 0.1);
-            border-right: 4px solid #7FFF00;
-            color: #7FFF00;
-        }
-        .card-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .stat-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            border: 1px solid #e2e8f0;
-        }
-        .achievement-badge {
-            background: linear-gradient(135deg, #7FFF00 0%, #32CD32 100%);
-            animation: pulse-glow 2s infinite;
-        }
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(127, 255, 0, 0.4); }
-            50% { box-shadow: 0 0 30px rgba(127, 255, 0, 0.6); }
-        }
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-    </style>
-</head>
-<body class="bg-gray-50">
-<!-- Top Navigation -->
-<nav class="bg-white shadow-md sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex items-center">
-                <a href="#" class="flex-shrink-0 flex items-center cursor-pointer">
-                    <span class="text-3xl font-['Pacifico'] text-primary">logo</span>
-                </a>
-            </div>
-            <div class="flex items-center space-x-4">
-                <div class="relative">
-                    <button class="bg-gray-100 hover:bg-gray-200 p-2 rounded-full cursor-pointer">
-                        <div class="w-6 h-6 flex items-center justify-center">
-                            <i class="ri-notification-3-line text-gray-600"></i>
-                        </div>
-                    </button>
-                    <div class="absolute -top-1 -right-1 w-5 h-5 bg-secondary rounded-full flex items-center justify-center">
-                        <span class="text-xs text-white font-bold">3</span>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-full overflow-hidden">
-                        <img src="https://readdy.ai/api/search-image?query=Professional%20football%20player%20portrait%2C%20confident%20young%20man%20in%20team%20uniform%2C%20clean%20background%2C%20sports%20photography%20style&width=150&height=150&seq=201&orientation=squarish" alt="Player Avatar" class="w-full h-full object-cover object-top">
-                    </div>
-                    <div class="hidden sm:block">
-                        <div class="text-sm font-medium text-gray-900">Dmitri "Goal Machine" Volkov</div>
-                        <div class="text-sm text-gray-500">Forward</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-</nav>
-<div class="flex min-h-screen">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-lg">
-        <div class="p-6">
-            <div class="text-center mb-8">
-                <div class="w-20 h-20 mx-auto rounded-full overflow-hidden mb-4 border-4 border-primary">
-                    <img src="https://readdy.ai/api/search-image?query=Professional%20football%20player%20portrait%2C%20confident%20young%20man%20in%20team%20uniform%2C%20clean%20background%2C%20sports%20photography%20style&width=200&height=200&seq=202&orientation=squarish" alt="Player Avatar" class="w-full h-full object-cover object-top">
-                </div>
-                <h2 class="font-bold text-gray-900">Dmitri Volkov</h2>
-                <p class="text-sm text-gray-500">Forward • Level 47</p>
-                <div class="mt-2">
-                    <div class="bg-gray-200 rounded-full h-2">
-                        <div class="bg-primary h-2 rounded-full" style="width: 73%"></div>
-                    </div>
-                    <p class="text-xs text-gray-500 mt-1">7,320 / 10,000 XP</p>
-                </div>
-            </div>
-            <nav class="space-y-1">
-                <a href="#" class="text-gray-600 hover:text-gray-900 hover:bg-gray-100 flex items-center px-4 py-3 text-sm font-medium rounded-lg cursor-pointer">
-                    <div class="w-5 h-5 mr-3 flex items-center justify-center">
-                        <i class="ri-dashboard-line"></i>
-                    </div>
-                    Dashboard
-                </a>
-                <a href="#" class="text-gray-600 hover:text-gray-900 hover:bg-gray-100 flex items-center px-4 py-3 text-sm font-medium rounded-lg cursor-pointer">
-                    <div class="w-5 h-5 mr-3 flex items-center justify-center">
-                        <i class="ri-team-line"></i>
-                    </div>
-                    My Team
-                </a>
-                <a href="#" class="sidebar-active flex items-center px-4 py-3 text-sm font-medium rounded-lg cursor-pointer">
-                    <div class="w-5 h-5 mr-3 flex items-center justify-center">
-                        <i class="ri-football-line"></i>
-                    </div>
-                    Games
-                </a>
-                <a href="#" class="text-gray-600 hover:text-gray-900 hover:bg-gray-100 flex items-center px-4 py-3 text-sm font-medium rounded-lg cursor-pointer">
-                    <div class="w-5 h-5 mr-3 flex items-center justify-center">
-                        <i class="ri-share-line"></i>
-                    </div>
-                    My Referrals
-                </a>
-                <a href="#" class="text-gray-600 hover:text-gray-900 hover:bg-gray-100 flex items-center px-4 py-3 text-sm font-medium rounded-lg cursor-pointer">
-                    <div class="w-5 h-5 mr-3 flex items-center justify-center">
-                        <i class="ri-settings-3-line"></i>
-                    </div>
-                    Settings
-                </a>
-            </nav>
-            <div class="mt-8 p-4 bg-primary bg-opacity-10 rounded-lg">
-                <div class="flex items-center">
-                    <div class="w-8 h-8 mr-3 flex items-center justify-center">
-                        <i class="ri-trophy-line text-primary ri-lg"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm font-medium text-gray-900">Current Rank</p>
-                        <p class="text-lg font-bold text-primary">#247</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </aside>
-    <!-- Main Content -->
-    <main class="flex-1 p-8">
+@section('title', 'Игры - Pircl')
+
+@section('content')
         <!-- Header -->
         <div class="mb-8">
             <h1 class="heading-font text-4xl text-gray-900 mb-2">Training Games</h1>
@@ -492,22 +349,7 @@
         </div>
     </main>
 </div>
-<script id="sidebar-navigation">
-    document.addEventListener('DOMContentLoaded', function() {
-        const sidebarLinks = document.querySelectorAll('aside nav a');
-        sidebarLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                sidebarLinks.forEach(l => {
-                    l.classList.remove('sidebar-active');
-                    l.classList.add('text-gray-600', 'hover:text-gray-900', 'hover:bg-gray-100');
-                });
-                this.classList.add('sidebar-active');
-                this.classList.remove('text-gray-600', 'hover:text-gray-900', 'hover:bg-gray-100');
-            });
-        });
-    });
-</script>
+
 <script id="game-filter">
     document.addEventListener('DOMContentLoaded', function() {
         const filterButtons = document.querySelectorAll('.game-filter');
@@ -571,20 +413,6 @@
         });
     });
 </script>
-<script>
-    !function (t, e) { var o, n, p, r; e.__SV || (window.posthog = e, e._i = [], e.init = function (i, s, a) { function g(t, e) { var o = e.split("."); 2 == o.length && (t = t[o[0]], e = o[1]), t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } } (p = t.createElement("script")).type = "text/javascript", p.crossOrigin = "anonymous", p.async = !0, p.src = s.api_host.replace(".i.posthog.com", "-assets.i.posthog.com") + "/static/array.js", (r = t.getElementsByTagName("script")[0]).parentNode.insertBefore(p, r); var u = e; for (void 0 !== a ? u = e[a] = [] : a = "posthog", u.people = u.people || [], u.toString = function (t) { var e = "posthog"; return "posthog" !== a && (e += "." + a), t || (e += " (stub)"), e }, u.people.toString = function () { return u.toString(1) + ".people (stub)" }, o = "init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "), n = 0; n < o.length; n++)g(u, o[n]); e._i.push([i, s, a]) }, e.__SV = 1) }(document, window.posthog || []);
-    posthog.init('phc_t9tkQZJiyi2ps9zUYm8TDsL6qXo4YmZx0Ot5rBlAlEd', {
-        api_host: 'https://us.i.posthog.com',
-        autocapture: false,
-        capture_pageview: false,
-        capture_pageleave: false,
-        capture_performance: {
-            web_vitals: false,
-        },
-        rageclick: false,
-    })
-    window.shareKey = 'Ej3SlcduvYPavZjFDe05VA';
-    window.host = 'readdy.ai';
-</script>
-<script src="https://static.readdy.ai/static/share.js"></script></body>
-</html>
+@endsection
+
+@section('additional-scripts')

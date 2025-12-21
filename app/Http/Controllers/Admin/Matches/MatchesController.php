@@ -13,6 +13,8 @@ use App\Models\Tournaments\TournamentMatch;
 use App\Models\Tournaments\TournamentSeason;
 use App\Models\Tournaments\TournamentStage;
 use App\Repositories\Admin\Matches\MatchRepository;
+use App\Services\LiveMatches\MatchResultGenerator;
+use App\Models\LiveMatches\LiveMatch;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -38,9 +40,14 @@ final class MatchesController extends AdminController
         $seasons = $seasonId ? TournamentSeason::where('tournament_id', $request->get('tournament_id'))->orderBy('year_start', 'desc')->get() : collect();
         $stages = $seasonId ? TournamentStage::where('tournaments_season_id', $seasonId)->orderBy('stage_order')->get() : collect();
 
+        // Получаем активные live матчи
+        $liveMatchIds = LiveMatch::where('status', '!=', 'finished')
+            ->pluck('match_id')
+            ->toArray();
+
         $breadcrumbs = [['h1' => 'Матчи']];
 
-        return view('admin.matches.index', compact('matches', 'tournaments', 'seasons', 'stages', 'seasonId', 'stageId', 'breadcrumbs'));
+        return view('admin.matches.index', compact('matches', 'tournaments', 'seasons', 'stages', 'seasonId', 'stageId', 'liveMatchIds', 'breadcrumbs'));
     }
 
     public function create(Request $request): View
@@ -309,6 +316,76 @@ final class MatchesController extends AdminController
             ->get(['id', 'name']);
 
         return response()->json($groups);
+    }
+
+    /**
+     * Запустить live матч
+     */
+    public function startLiveMatch(string $id): RedirectResponse
+    {
+        $match = $this->matchRepository->findOrFail($id);
+
+        // Проверяем, не запущен ли уже матч
+        $existingLiveMatch = LiveMatch::where('match_id', $match->id)
+            ->where('status', '!=', 'finished')
+            ->first();
+
+        if ($existingLiveMatch) {
+            return redirect()
+                ->route('admin.matches.index')
+                ->with('flash_errors', 'Матч уже запущен!');
+        }
+
+        // Проверяем, что у матча есть команды
+        if (!$match->team_1 || !$match->team_2) {
+            return redirect()
+                ->route('admin.matches.index')
+                ->with('flash_errors', 'У матча должны быть указаны обе команды!');
+        }
+
+        try {
+            $resultGenerator = app(MatchResultGenerator::class);
+            $liveMatch = $resultGenerator->generateResult($match);
+
+            return redirect()
+                ->route('admin.matches.index')
+                ->with('flash_success', 'Матч успешно запущен! Ссылка: ' . route('live-matches.show', $match->id));
+        } catch (\Exception $e) {
+            return redirect()
+                ->route('admin.matches.index')
+                ->with('flash_errors', 'Ошибка запуска матча: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Остановить live матч (принудительно завершить)
+     */
+    public function stopLiveMatch(string $id): RedirectResponse
+    {
+        $match = $this->matchRepository->findOrFail($id);
+
+        $liveMatch = LiveMatch::where('match_id', $match->id)
+            ->where('status', '!=', 'finished')
+            ->first();
+
+        if (!$liveMatch) {
+            return redirect()
+                ->route('admin.matches.index')
+                ->with('flash_errors', 'Активный матч не найден!');
+        }
+
+        try {
+            $matchStateService = app(\App\Services\LiveMatches\MatchStateService::class);
+            $matchStateService->saveMatchResult($liveMatch);
+
+            return redirect()
+                ->route('admin.matches.index')
+                ->with('flash_success', 'Матч принудительно завершен и результат сохранен!');
+        } catch (\Exception $e) {
+            return redirect()
+                ->route('admin.matches.index')
+                ->with('flash_errors', 'Ошибка завершения матча: ' . $e->getMessage());
+        }
     }
 }
 

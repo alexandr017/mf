@@ -109,6 +109,28 @@
                     @endif
                 </td>
                 <td>
+                    @if(in_array($match->id, $liveMatchIds ?? []))
+                        <a href="{{ route('live-matches.show', $match->id) }}" target="_blank" class="btn btn-success btn-xs" title="Смотреть матч">
+                            <i class="fa fa-play"></i> Смотреть
+                        </a>
+                        <form action="{{ route('admin.matches.stop-live', $match->id) }}" method="post" class="inline">
+                            {{ method_field('POST') }}
+                            <input type="hidden" name="_token" id="key" value="{{ csrf_token() }}">
+                            <button class="btn btn-warning btn-xs" title="Завершить матч" onclick="return confirm('Вы уверены, что хотите принудительно завершить матч?')">
+                                <i class="fa fa-stop"></i> Завершить
+                            </button>
+                        </form>
+                    @else
+                        @if($match->team_1 && $match->team_2)
+                            <form action="{{ route('admin.matches.start-live', $match->id) }}" method="post" class="inline">
+                                {{ method_field('POST') }}
+                                <input type="hidden" name="_token" id="key" value="{{ csrf_token() }}">
+                                <button class="btn btn-success btn-xs" title="Запустить матч">
+                                    <i class="fa fa-play"></i> Запустить
+                                </button>
+                            </form>
+                        @endif
+                    @endif
                     <a href="{{route('admin.matches.edit', $match->id) }}" class="btn btn-primary btn-xs" title="Редактировать"><i class="fa fa-edit"></i></a>
                     <form action="{{ route('admin.matches.destroy',$match->id) }}" method="post" class="inline">
                         {{ method_field('DELETE') }}
@@ -121,5 +143,6 @@
         </tbody>
     </table>
 @endsection
+
 
 

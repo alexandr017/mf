@@ -96,114 +96,66 @@
 <section class="py-16 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="heading-font text-4xl text-gray-900 mb-4">Tournament Categories</h2>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">Different styles of chaos for every type of team</p>
+            <h2 class="heading-font text-4xl text-gray-900 mb-4">Категории турниров</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">Различные кубки для каждой команды.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Regional Tournaments -->
+            <!-- Международные турниры -->
             <div class="bg-white rounded-lg shadow-lg p-6 text-center card-hover transition-all duration-300 cursor-pointer">
                 <div class="w-16 h-16 mx-auto mb-4 bg-primary bg-opacity-10 rounded-full flex items-center justify-center">
                     <div class="w-8 h-8 text-primary">
-                        <i class="ri-map-pin-2-line ri-lg"></i>
-                    </div>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Regional</h3>
-                <p class="text-gray-600 mb-4">Local chaos, neighborhood glory</p>
-                <div class="text-2xl font-bold text-primary mb-2">23</div>
-                <div class="text-sm text-gray-500">Active Tournaments</div>
-            </div>
-
-            <!-- International Tournaments -->
-            <div class="bg-white rounded-lg shadow-lg p-6 text-center card-hover transition-all duration-300 cursor-pointer">
-                <div class="w-16 h-16 mx-auto mb-4 bg-secondary bg-opacity-10 rounded-full flex items-center justify-center">
-                    <div class="w-8 h-8 text-secondary">
                         <i class="ri-global-line ri-lg"></i>
                     </div>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">International</h3>
-                <p class="text-gray-600 mb-4">Cross-border madness</p>
-                <div class="text-2xl font-bold text-secondary mb-2">8</div>
-                <div class="text-sm text-gray-500">Active Tournaments</div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Международные турниры</h3>
+                <p class="text-gray-600 mb-4">Турниры между странами</p>
+                <div class="text-2xl font-bold text-primary mb-2">1</div>
+                <div class="text-sm text-gray-500">Турнир</div>
             </div>
 
-            <!-- Seasonal Cups -->
+            <!-- Страны -->
+            <div class="bg-white rounded-lg shadow-lg p-6 text-center card-hover transition-all duration-300 cursor-pointer">
+                <div class="w-16 h-16 mx-auto mb-4 bg-secondary bg-opacity-10 rounded-full flex items-center justify-center">
+                    <div class="w-8 h-8 text-secondary">
+                        <i class="ri-map-pin-2-line ri-lg"></i>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Страны</h3>
+                <p class="text-gray-600 mb-4">Национальные чемпионаты</p>
+                <div class="text-2xl font-bold text-secondary mb-2">4</div>
+                <div class="text-sm text-gray-500">Страны</div>
+            </div>
+
+            <!-- Турниры стран -->
             <div class="bg-white rounded-lg shadow-lg p-6 text-center card-hover transition-all duration-300 cursor-pointer">
                 <div class="w-16 h-16 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
                     <div class="w-8 h-8 text-yellow-600">
-                        <i class="ri-sun-line ri-lg"></i>
+                        <i class="ri-trophy-line ri-lg"></i>
                     </div>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Seasonal</h3>
-                <p class="text-gray-600 mb-4">Weather-dependent disasters</p>
-                <div class="text-2xl font-bold text-yellow-600 mb-2">12</div>
-                <div class="text-sm text-gray-500">Seasonal Events</div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Турниры стран</h3>
+                <p class="text-gray-600 mb-4">Национальные соревнования</p>
+                <div class="text-2xl font-bold text-yellow-600 mb-2">13</div>
+                <div class="text-sm text-gray-500">Турниров</div>
             </div>
 
-            <!-- Special Events -->
+            <!-- Двухдивизионные страны -->
             <div class="bg-white rounded-lg shadow-lg p-6 text-center card-hover transition-all duration-300 cursor-pointer">
                 <div class="w-16 h-16 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
                     <div class="w-8 h-8 text-purple-600">
-                        <i class="ri-star-line ri-lg"></i>
+                        <i class="ri-stack-line ri-lg"></i>
                     </div>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Special</h3>
-                <p class="text-gray-600 mb-4">Once-in-a-lifetime chaos</p>
-                <div class="text-2xl font-bold text-purple-600 mb-2">4</div>
-                <div class="text-sm text-gray-500">Exclusive Events</div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Двухдивизионные страны</h3>
+                <p class="text-gray-600 mb-4">Страны с несколькими дивизионами</p>
+                <div class="text-2xl font-bold text-purple-600 mb-2">1</div>
+                <div class="text-sm text-gray-500">Страна</div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- How to Join Section -->
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="heading-font text-4xl text-gray-900 mb-4">How to Join a Tournament</h2>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">It's easier than you think to become a champion of chaos</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Step 1 -->
-            <div class="text-center">
-                <div class="w-20 h-20 mx-auto mb-6 bg-primary rounded-full flex items-center justify-center">
-                    <span class="text-3xl font-bold text-gray-900">1</span>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-4">Choose Your Tournament</h3>
-                <p class="text-gray-600">Browse our collection of ridiculous tournaments and select the one that matches your team's particular brand of chaos.</p>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="text-center">
-                <div class="w-20 h-20 mx-auto mb-6 bg-secondary rounded-full flex items-center justify-center">
-                    <span class="text-3xl font-bold text-white">2</span>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-4">Register Your Team</h3>
-                <p class="text-gray-600">Complete the registration form with your team details, ridiculous name, and proof that you meet the minimum chaos requirements.</p>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="text-center">
-                <div class="w-20 h-20 mx-auto mb-6 bg-yellow-400 rounded-full flex items-center justify-center">
-                    <span class="text-3xl font-bold text-gray-900">3</span>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-4">Embrace the Mayhem</h3>
-                <p class="text-gray-600">Show up, play badly but enthusiastically, and compete for glory in the most absurd football competitions on Earth.</p>
-            </div>
-        </div>
-
-        <div class="text-center mt-12">
-            <button class="bg-primary hover:bg-opacity-80 text-gray-900 font-bold px-8 py-4 !rounded-button text-lg whitespace-nowrap cursor-pointer">
-                <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 flex items-center justify-center">
-                        <i class="ri-team-line"></i>
-                    </div>
-                    <span>Register Your Team Now</span>
-                </div>
-            </button>
-        </div>
-    </div>
-</section>
+@include('site.v1.modules.how-to-join.how-to-join')
 
 @endsection

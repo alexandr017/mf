@@ -6,127 +6,20 @@
 
     @include('site.v1.modules.index-banner.index-banner')
 
-    <!-- Recent Games -->
     <section class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="heading-font text-4xl text-gray-900 mb-8">Последние игры</h2>
             <div class="flex overflow-x-auto pb-4 gap-6 hide-scrollbar">
-
-                @include('site.v1.modules.recent-game.recent-game')
-
-                <div class="bg-white rounded-lg shadow-lg p-6 min-w-[300px] border-2 border-primary card-hover transition-all duration-300">
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex flex-col items-center">
-                            <div class="w-16 h-16 bg-gray-200 rounded-full mb-2 flex items-center justify-center overflow-hidden">
-                                <img src="https://readdy.ai/api/search-image?query=A%20funny%20cartoon%20logo%20for%20a%20football%20team%20called%20Omsk%20Stream%20with%20water%20theme%20elements%2C%20blue%20colors%2C%20comic%20style&width=200&height=200&seq=2&orientation=squarish" alt="Omsk Stream" class="object-cover w-full h-full object-top">
-                            </div>
-                            <span class="font-medium text-sm">Omsk Stream</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="bg-gray-100 px-4 py-2 rounded-lg mb-1">
-                                <span class="text-2xl font-bold">3 - 2</span>
-                            </div>
-                            <span class="text-xs text-gray-500">June 15, 2025</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="w-16 h-16 bg-gray-200 rounded-full mb-2 flex items-center justify-center overflow-hidden">
-                                <img src="https://readdy.ai/api/search-image?query=A%20funny%20cartoon%20logo%20for%20a%20football%20team%20called%20Perm%20Pimples%20with%20acne%20theme%2C%20red%20colors%2C%20comic%20style&width=200&height=200&seq=3&orientation=squarish" alt="Perm Pimples" class="object-cover w-full h-full object-top">
-                            </div>
-                            <span class="font-medium text-sm">Perm Pimples</span>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded">Mud Stadium</span>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg p-6 min-w-[300px] border-2 border-gray-200 card-hover transition-all duration-300">
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex flex-col items-center">
-                            <div class="w-16 h-16 bg-gray-200 rounded-full mb-2 flex items-center justify-center overflow-hidden">
-                                <img src="https://readdy.ai/api/search-image?query=A%20funny%20cartoon%20logo%20for%20a%20football%20team%20called%20Snot%20FC%20with%20green%20slime%20theme%2C%20comic%20style&width=200&height=200&seq=4&orientation=squarish" alt="Snot FC" class="object-cover w-full h-full object-top">
-                            </div>
-                            <span class="font-medium text-sm">Snot FC</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="bg-gray-100 px-4 py-2 rounded-lg mb-1">
-                                <span class="text-2xl font-bold">1 - 0</span>
-                            </div>
-                            <span class="text-xs text-gray-500">June 12, 2025</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="w-16 h-16 bg-gray-200 rounded-full mb-2 flex items-center justify-center overflow-hidden">
-                                <img src="https://readdy.ai/api/search-image?query=A%20funny%20cartoon%20logo%20for%20a%20football%20team%20called%20Tula%20Toothaches%20with%20dental%20pain%20theme%2C%20comic%20style&width=200&height=200&seq=5&orientation=squarish" alt="Tula Toothaches" class="object-cover w-full h-full object-top">
-                            </div>
-                            <span class="font-medium text-sm">Tula Toothaches</span>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded">Swamp Arena</span>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg p-6 min-w-[300px] border-2 border-gray-200 card-hover transition-all duration-300">
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex flex-col items-center">
-                            <div class="w-16 h-16 bg-gray-200 rounded-full mb-2 flex items-center justify-center overflow-hidden">
-                                <img src="https://readdy.ai/api/search-image?query=A%20funny%20cartoon%20logo%20for%20a%20football%20team%20called%20Kazan%20Cockroaches%20with%20insect%20theme%2C%20comic%20style&width=200&height=200&seq=6&orientation=squarish" alt="Kazan Cockroaches" class="object-cover w-full h-full object-top">
-                            </div>
-                            <span class="font-medium text-sm">Kazan Cockroaches</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="bg-gray-100 px-4 py-2 rounded-lg mb-1">
-                                <span class="text-2xl font-bold">4 - 1</span>
-                            </div>
-                            <span class="text-xs text-gray-500">June 10, 2025</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="w-16 h-16 bg-gray-200 rounded-full mb-2 flex items-center justify-center overflow-hidden">
-                                <img src="https://readdy.ai/api/search-image?query=A%20funny%20cartoon%20logo%20for%20a%20football%20team%20called%20Moscow%20Mildew%20with%20fungus%20theme%2C%20comic%20style&width=200&height=200&seq=7&orientation=squarish" alt="Moscow Mildew" class="object-cover w-full h-full object-top">
-                            </div>
-                            <span class="font-medium text-sm">Moscow Mildew</span>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded">Garbage Dump Stadium</span>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg p-6 min-w-[300px] border-2 border-gray-200 card-hover transition-all duration-300">
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex flex-col items-center">
-                            <div class="w-16 h-16 bg-gray-200 rounded-full mb-2 flex items-center justify-center overflow-hidden">
-                                <img src="https://readdy.ai/api/search-image?query=A%20funny%20cartoon%20logo%20for%20a%20football%20team%20called%20Vladivostok%20Vomit%20with%20sick%20theme%2C%20comic%20style&width=200&height=200&seq=8&orientation=squarish" alt="Vladivostok Vomit" class="object-cover w-full h-full object-top">
-                            </div>
-                            <span class="font-medium text-sm">Vladivostok Vomit</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="bg-gray-100 px-4 py-2 rounded-lg mb-1">
-                                <span class="text-2xl font-bold">2 - 2</span>
-                            </div>
-                            <span class="text-xs text-gray-500">June 8, 2025</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="w-16 h-16 bg-gray-200 rounded-full mb-2 flex items-center justify-center overflow-hidden">
-                                <img src="https://readdy.ai/api/search-image?query=A%20funny%20cartoon%20logo%20for%20a%20football%20team%20called%20Sochi%20Stench%20with%20bad%20smell%20theme%2C%20comic%20style&width=200&height=200&seq=9&orientation=squarish" alt="Sochi Stench" class="object-cover w-full h-full object-top">
-                            </div>
-                            <span class="font-medium text-sm">Sochi Stench</span>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded">Landfill Field</span>
-                    </div>
-                </div>
-
-                <div class="flex items-center justify-center min-w-[100px]">
-                    <a href="#" class="text-primary hover:text-primary-dark font-medium flex items-center">
-                        View All
-                        <div class="w-5 h-5 ml-1 flex items-center justify-center">
-                            <i class="ri-arrow-right-line"></i>
-                        </div>
-                    </a>
-                </div>
+                @for($i = 0; $i < 5; $i++)
+                    @include('site.v1.modules.recent-game.recent-game')
+                @endfor
             </div>
+            <a href="/ratings" class="text-primary hover:text-primary-dark font-medium flex items-center">
+                Смотреть все
+                <div class="w-5 h-5 ml-1 flex items-center justify-center">
+                    <i class="ri-arrow-right-line"></i>
+                </div>
+            </a>
         </div>
     </section>
 
@@ -135,113 +28,16 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="heading-font text-4xl text-gray-900 mb-8">Предстоящие матчи</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
+                @for($i = 0; $i < 3; $i++)
                 @include('site.v1.modules.upcoming-match.upcoming-match')
-
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover transition-all duration-300">
-                    <div class="bg-secondary bg-opacity-10 p-4 text-center">
-                        <span class="text-secondary font-bold">June 20, 2025 - 18:00 MSK</span>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <div class="flex flex-col items-center">
-                                <div class="w-20 h-20 bg-gray-200 rounded-full mb-2 flex items-center justify-center overflow-hidden">
-                                    <img src="https://readdy.ai/api/search-image?query=A%20funny%20cartoon%20logo%20for%20a%20football%20team%20called%20Perm%20Pimples%20with%20acne%20theme%2C%20red%20colors%2C%20comic%20style&width=200&height=200&seq=3&orientation=squarish" alt="Perm Pimples" class="object-cover w-full h-full object-top">
-                                </div>
-                                <span class="font-bold">Perm Pimples</span>
-                            </div>
-                            <div class="text-center">
-                                <span class="text-2xl font-bold text-gray-400">VS</span>
-                                <div class="countdown-timer mt-2 text-sm font-medium text-gray-500">
-                                    <span id="countdown-1">1d 23h 42m</span>
-                                </div>
-                            </div>
-                            <div class="flex flex-col items-center">
-                                <div class="w-20 h-20 bg-gray-200 rounded-full mb-2 flex items-center justify-center overflow-hidden">
-                                    <img src="https://readdy.ai/api/search-image?query=A%20funny%20cartoon%20logo%20for%20a%20football%20team%20called%20Kazan%20Cockroaches%20with%20insect%20theme%2C%20comic%20style&width=200&height=200&seq=6&orientation=squarish" alt="Kazan Cockroaches" class="object-cover w-full h-full object-top">
-                                </div>
-                                <span class="font-bold">Kazan Cockroaches</span>
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <span class="bg-gray-100 text-gray-800 text-sm font-medium px-3 py-1 rounded">Mud Stadium</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover transition-all duration-300">
-                    <div class="bg-secondary bg-opacity-10 p-4 text-center">
-                        <span class="text-secondary font-bold">June 21, 2025 - 16:30 MSK</span>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <div class="flex flex-col items-center">
-                                <div class="w-20 h-20 bg-gray-200 rounded-full mb-2 flex items-center justify-center overflow-hidden">
-                                    <img src="https://readdy.ai/api/search-image?query=A%20funny%20cartoon%20logo%20for%20a%20football%20team%20called%20Snot%20FC%20with%20green%20slime%20theme%2C%20comic%20style&width=200&height=200&seq=4&orientation=squarish" alt="Snot FC" class="object-cover w-full h-full object-top">
-                                </div>
-                                <span class="font-bold">Snot FC</span>
-                            </div>
-                            <div class="text-center">
-                                <span class="text-2xl font-bold text-gray-400">VS</span>
-                                <div class="countdown-timer mt-2 text-sm font-medium text-gray-500">
-                                    <span id="countdown-2">2d 22h 12m</span>
-                                </div>
-                            </div>
-                            <div class="flex flex-col items-center">
-                                <div class="w-20 h-20 bg-gray-200 rounded-full mb-2 flex items-center justify-center overflow-hidden">
-                                    <img src="https://readdy.ai/api/search-image?query=A%20funny%20cartoon%20logo%20for%20a%20football%20team%20called%20Vladivostok%20Vomit%20with%20sick%20theme%2C%20comic%20style&width=200&height=200&seq=8&orientation=squarish" alt="Vladivostok Vomit" class="object-cover w-full h-full object-top">
-                                </div>
-                                <span class="font-bold">Vladivostok Vomit</span>
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <span class="bg-gray-100 text-gray-800 text-sm font-medium px-3 py-1 rounded">Swamp Arena</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover transition-all duration-300">
-                    <div class="bg-secondary bg-opacity-10 p-4 text-center">
-                        <span class="text-secondary font-bold">June 22, 2025 - 19:00 MSK</span>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <div class="flex flex-col items-center">
-                                <div class="w-20 h-20 bg-gray-200 rounded-full mb-2 flex items-center justify-center overflow-hidden">
-                                    <img src="https://readdy.ai/api/search-image?query=A%20funny%20cartoon%20logo%20for%20a%20football%20team%20called%20Moscow%20Mildew%20with%20fungus%20theme%2C%20comic%20style&width=200&height=200&seq=7&orientation=squarish" alt="Moscow Mildew" class="object-cover w-full h-full object-top">
-                                </div>
-                                <span class="font-bold">Moscow Mildew</span>
-                            </div>
-                            <div class="text-center">
-                                <span class="text-2xl font-bold text-gray-400">VS</span>
-                                <div class="countdown-timer mt-2 text-sm font-medium text-gray-500">
-                                    <span id="countdown-3">3d 24h 42m</span>
-                                </div>
-                            </div>
-                            <div class="flex flex-col items-center">
-                                <div class="w-20 h-20 bg-gray-200 rounded-full mb-2 flex items-center justify-center overflow-hidden">
-                                    <img src="https://readdy.ai/api/search-image?query=A%20funny%20cartoon%20logo%20for%20a%20football%20team%20called%20Omsk%20Stream%20with%20water%20theme%20elements%2C%20blue%20colors%2C%20comic%20style&width=200&height=200&seq=2&orientation=squarish" alt="Omsk Stream" class="object-cover w-full h-full object-top">
-                                </div>
-                                <span class="font-bold">Omsk Stream</span>
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <span class="bg-gray-100 text-gray-800 text-sm font-medium px-3 py-1 rounded">Garbage Dump Stadium</span>
-                        </div>
-                    </div>
-                </div>
+                @endfor
             </div>
-
-            <div class="text-center mt-8">
-                <button class="bg-white border-2 border-primary hover:bg-primary hover:text-white text-primary font-bold px-6 py-3 !rounded-button whitespace-nowrap transition-colors duration-300">
-                    <div class="flex items-center gap-2">
-                        <div class="w-5 h-5 flex items-center justify-center">
-                            <i class="ri-calendar-line"></i>
-                        </div>
-                        <span>See Full Schedule</span>
-                    </div>
-                </button>
-            </div>
+            <a href="/ratings" class="text-primary hover:text-primary-dark font-medium flex items-center">
+                Смотреть все
+                <div class="w-5 h-5 ml-1 flex items-center justify-center">
+                    <i class="ri-arrow-right-line"></i>
+                </div>
+            </a>
         </div>
     </section>
 
@@ -335,6 +131,9 @@
 
     <!-- Create Your Team -->
     @include('site.v1.modules.create-team.create-team')
+
+    <!-- How to Join Section -->
+    @include('site.v1.modules.how-to-join.how-to-join')
 
     <!-- News Section -->
     <section class="py-16 bg-gray-50">

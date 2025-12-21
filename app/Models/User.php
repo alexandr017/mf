@@ -12,6 +12,25 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    // Константы для предпочитаемых позиций
+    const POSITION_DEFENDER = 'defender';      // Защитник
+    const POSITION_MIDFIELDER = 'midfielder'; // Полузащитник
+    const POSITION_FORWARD = 'forward';        // Нападающий
+
+    /**
+     * Получить список доступных позиций
+     *
+     * @return array
+     */
+    public static function getPositions(): array
+    {
+        return [
+            self::POSITION_DEFENDER => 'Защитник',
+            self::POSITION_MIDFIELDER => 'Полузащитник',
+            self::POSITION_FORWARD => 'Нападающий',
+        ];
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -19,6 +38,9 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'nickname',
+        'avatar',
+        'preferred_position',
         'email',
         'password',
         'goals',
@@ -110,13 +132,21 @@ class User extends Authenticatable
     }
 
     /**
-     * Команды пользователя
+     * Команды пользователя (через team_players)
      */
     public function teams()
     {
         return $this->belongsToMany(\App\Models\Teams\Team::class, 'team_players')
             ->withPivot('season_id')
             ->withTimestamps();
+    }
+
+    /**
+     * Команды пользователя (через user_teams)
+     */
+    public function userTeams()
+    {
+        return $this->hasMany(\App\Models\UserTeams\UserTeam::class);
     }
 
     /**
@@ -157,5 +187,45 @@ class User extends Authenticatable
     public function socialAccounts()
     {
         return $this->hasMany(SocialAccount::class);
+    }
+
+    /**
+     * Подписки пользователя
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(\App\Models\Subscriptions\UserSubscription::class);
+    }
+
+    /**
+     * Активная подписка пользователя
+     */
+    public function activeSubscription()
+    {
+        return $this->hasOne(\App\Models\Subscriptions\UserSubscription::class)
+            ->where('status', 'active')
+            ->where('ends_at', '>', now())
+            ->whereNull('cancelled_at')
+            ->latest('ends_at');
+    }
+
+    /**
+     * Проверка, есть ли у пользователя активная подписка
+     */
+    public function hasActiveSubscription(): bool
+    {
+        return $this->activeSubscription()->exists();
+    }
+
+    /**
+     * Получить множитель прокачки рейтинга (с учетом подписки)
+     */
+    public function getRatingMultiplier(): float
+    {
+        $subscription = $this->activeSubscription;
+        if ($subscription && $subscription->plan) {
+            return (float) $subscription->plan->rating_multiplier;
+        }
+        return 1.0; // Базовый множитель без подписки
     }
 }

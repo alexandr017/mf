@@ -25,6 +25,21 @@
 </div>
 
 <div class="form-group">
+    <label for="preferred_position">Предпочитаемая позиция</label>
+    <select class="form-control" name="preferred_position" id="preferred_position">
+        <option value="">Не выбрано</option>
+        @foreach(\App\Models\User::getPositions() as $key => $label)
+            <option value="{{ $key }}"
+                    @if((old('preferred_position') == $key) || (isset($item) && $item->preferred_position == $key))
+                        selected
+                    @endif>
+                {{ $label }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+<div class="form-group">
     <label for="password">@if(!isset($item))<i class="red">*</i>@endif Пароль</label>
     <input type="password" class="form-control" name="password" id="password" @if(!isset($item)) required @endif>
     @if(isset($item))

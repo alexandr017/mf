@@ -40,3 +40,4 @@ class UserGameResult extends Model
 }
 
 
+

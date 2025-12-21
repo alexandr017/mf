@@ -1,75 +1,46 @@
+@extends('site.v1.layouts.default')
 
-<!DOCTYPE html>
-<html lang="en">
-<head><script src="https://static.readdy.ai/static/e.js"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - Meme Football League</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>tailwind.config={theme:{extend:{colors:{primary:'#7FFF00',secondary:'#FF355E'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
-    <style>
-        :where([class^="ri-"])::before { content: "\f3c2"; }
-        body {
-            font-family: 'Rubik', sans-serif;
-        }
-        .heading-font {
-            font-family: 'Bangers', cursive;
-            letter-spacing: 1px;
-        }
-        .hero-bg {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-        }
-        .login-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #7FFF00 0%, #32CD32 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .floating-animation {
-            animation: float 6s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-        .pulse-glow {
-            animation: pulse-glow 2s infinite;
-        }
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(127, 255, 0, 0.4); }
-            50% { box-shadow: 0 0 30px rgba(127, 255, 0, 0.6); }
-        }
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        .password-toggle:hover {
-            background-color: rgba(127, 255, 0, 0.1);
-        }
-        .strength-meter {
-            height: 4px;
-            border-radius: 2px;
-            transition: all 0.3s ease;
-        }
-        .strength-weak { background: #ef4444; width: 25%; }
-        .strength-fair { background: #f59e0b; width: 50%; }
-        .strength-good { background: #10b981; width: 75%; }
-        .strength-strong { background: #059669; width: 100%; }
-    </style>
-</head>
-<body class="min-h-screen hero-bg">
-<div class="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 relative overflow-hidden py-12">
+@section('title', 'Регистрация - Pircl')
+
+@section('content')
+<style>
+    .hero-bg {
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    }
+    .login-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .floating-animation {
+        animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+    .pulse-glow {
+        animation: pulse-glow 2s infinite;
+    }
+    @keyframes pulse-glow {
+        0%, 100% { box-shadow: 0 0 20px rgba(127, 255, 0, 0.4); }
+        50% { box-shadow: 0 0 30px rgba(127, 255, 0, 0.6); }
+    }
+    .password-toggle:hover {
+        background-color: rgba(127, 255, 0, 0.1);
+    }
+    .strength-meter {
+        height: 4px;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+    .strength-weak { background: #ef4444; width: 25%; }
+    .strength-fair { background: #f59e0b; width: 50%; }
+    .strength-good { background: #10b981; width: 75%; }
+    .strength-strong { background: #059669; width: 100%; }
+</style>
+
+<div class="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 relative overflow-hidden py-12 hero-bg">
     <!-- Background Graphics -->
     <div class="absolute inset-0 z-0">
         <div class="absolute top-10 left-10 w-32 h-32 bg-primary opacity-10 rounded-full floating-animation"></div>
@@ -85,8 +56,8 @@
             <div class="flex justify-center mb-6">
                 <span class="text-5xl font-['Pacifico'] text-primary pulse-glow">logo</span>
             </div>
-            <h1 class="heading-font text-4xl text-gray-900 mb-2">Join the League!</h1>
-            <p class="text-lg text-gray-600">Create your Meme Football League account</p>
+            <h1 class="heading-font text-4xl text-gray-900 mb-2">Присоединяйтесь к лиге!</h1>
+            <p class="text-lg text-gray-600">Создайте аккаунт в Pircl</p>
         </div>
 
         <!-- Register Form -->
@@ -103,61 +74,67 @@
 
             <form class="space-y-6" id="register-form" method="POST" action="{{ route('register') }}">
                 @csrf
+                <!-- Скрытое поле для реферального кода -->
+                @if(isset($referralCode) && $referralCode)
+                    <input type="hidden" name="referral_code" id="referral_code" value="{{ $referralCode }}">
+                @else
+                    <input type="hidden" name="referral_code" id="referral_code" value="">
+                @endif
                 <!-- Full Name Field -->
                 <div>
-                    <label for="fullName" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                    <label for="fullName" class="block text-sm font-medium text-gray-700 mb-2">Полное имя</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <div class="w-5 h-5 flex items-center justify-center">
                                 <i class="ri-user-line text-gray-400 text-sm"></i>
                             </div>
                         </div>
-                        <input type="text" id="fullName" name="name" required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Enter your full name">
+                        <input type="text" id="fullName" name="name" required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Введите ваше полное имя">
                     </div>
                 </div>
 
                 <!-- Username Field -->
                 <div>
-                    <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                    <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Никнейм</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <div class="w-5 h-5 flex items-center justify-center">
                                 <i class="ri-at-line text-gray-400 text-sm"></i>
                             </div>
                         </div>
-                        <input type="text" id="username" name="username" required class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Choose a username">
+                        <input type="text" id="username" name="username" class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Выберите никнейм (необязательно)">
                         <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
                             <div class="w-5 h-5 flex items-center justify-center username-status hidden">
                                 <i class="ri-check-line text-green-500 text-sm"></i>
                             </div>
                         </div>
                     </div>
-                    <div class="text-xs text-gray-500 mt-1">Username must be 3-20 characters, letters and numbers only</div>
+                    <div class="text-xs text-gray-500 mt-1">Никнейм должен содержать 3-20 символов, только буквы и цифры</div>
                 </div>
 
                 <!-- Email Field -->
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email адрес</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <div class="w-5 h-5 flex items-center justify-center">
                                 <i class="ri-mail-line text-gray-400 text-sm"></i>
                             </div>
                         </div>
-                        <input type="email" id="email" name="email" required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Enter your email">
+                        <input type="email" id="email" name="email" required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Введите ваш email">
                     </div>
                 </div>
 
                 <!-- Password Field -->
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Пароль</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <div class="w-5 h-5 flex items-center justify-center">
                                 <i class="ri-lock-line text-gray-400 text-sm"></i>
                             </div>
                         </div>
-                        <input type="password" id="password" name="password" required class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Create a password">
+                        <input type="password" id="password" name="password" required class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Создайте пароль">
                         <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center password-toggle rounded-r-button cursor-pointer">
                             <div class="w-5 h-5 flex items-center justify-center">
                                 <i class="ri-eye-line text-gray-400 text-sm password-icon"></i>
@@ -166,8 +143,8 @@
                     </div>
                     <div class="mt-2">
                         <div class="flex items-center justify-between mb-1">
-                            <span class="text-xs text-gray-500">Password strength</span>
-                            <span class="text-xs text-gray-500 strength-text">Weak</span>
+                            <span class="text-xs text-gray-500">Надёжность пароля</span>
+                            <span class="text-xs text-gray-500 strength-text">Слабый</span>
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-1">
                             <div class="strength-meter bg-gray-300 rounded-full"></div>
@@ -177,14 +154,14 @@
 
                 <!-- Confirm Password Field -->
                 <div>
-                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">Подтвердите пароль</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <div class="w-5 h-5 flex items-center justify-center">
                                 <i class="ri-shield-check-line text-gray-400 text-sm"></i>
                             </div>
                         </div>
-                        <input type="password" id="confirmPassword" name="password_confirmation" required class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Confirm your password">
+                        <input type="password" id="confirmPassword" name="password_confirmation" required class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Подтвердите ваш пароль">
                         <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
                             <div class="w-5 h-5 flex items-center justify-center password-match-status hidden">
                                 <i class="ri-check-line text-green-500 text-sm"></i>
@@ -197,7 +174,7 @@
                 <div class="flex items-start">
                     <input type="checkbox" id="terms" name="terms" required class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded mt-1">
                     <label for="terms" class="ml-3 block text-sm text-gray-700 cursor-pointer">
-                        I agree to the <a href="#" class="text-primary hover:text-opacity-80 font-medium">Terms of Service</a> and <a href="#" class="text-primary hover:text-opacity-80 font-medium">Privacy Policy</a>
+                        Я согласен с <a href="/terms" target="_blank" class="text-primary hover:text-opacity-80 font-medium">Условиями использования</a> и <a href="/policy" target="_blank" class="text-primary hover:text-opacity-80 font-medium">Политикой конфиденциальности</a>
                     </label>
                 </div>
 
@@ -205,13 +182,13 @@
                 <div class="flex items-center">
                     <input type="checkbox" id="newsletter" name="newsletter" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
                     <label for="newsletter" class="ml-3 block text-sm text-gray-700 cursor-pointer">
-                        Subscribe to newsletter for updates and exclusive content
+                        Подписаться на рассылку для получения обновлений и эксклюзивного контента
                     </label>
                 </div>
 
                 <!-- Register Button -->
                 <button type="submit" class="w-full bg-primary text-gray-900 py-3 px-4 rounded-button font-semibold hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200 transform hover:scale-105 cursor-pointer whitespace-nowrap">
-                    Create Account
+                    Создать аккаунт
                 </button>
 
                 <!-- Divider -->
@@ -220,7 +197,7 @@
                         <div class="w-full border-t border-gray-300"></div>
                     </div>
                     <div class="relative flex justify-center text-sm">
-                        <span class="px-4 bg-white text-gray-500">Or sign up with</span>
+                        <span class="px-4 bg-white text-gray-500">Или зарегистрируйтесь через</span>
                     </div>
                 </div>
 
@@ -261,43 +238,14 @@
                 <!-- Sign In Link -->
                 <div class="text-center">
                     <p class="text-sm text-gray-600">
-                        Already have an account?
-                        <a href="{{ route('login') }}" class="text-primary hover:text-opacity-80 font-medium cursor-pointer">Sign in here</a>
+                        Уже есть аккаунт?
+                        <a href="{{ route('login') }}" class="text-primary hover:text-opacity-80 font-medium cursor-pointer">Войти здесь</a>
                     </p>
                 </div>
             </form>
         </div>
 
-        <!-- Features Preview -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12">
-            <div class="text-center p-4 bg-white bg-opacity-60 rounded-button backdrop-filter backdrop-blur-sm">
-                <div class="w-12 h-12 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <div class="w-6 h-6 flex items-center justify-center">
-                        <i class="ri-trophy-line text-primary"></i>
-                    </div>
-                </div>
-                <h3 class="font-semibold text-gray-900 text-sm mb-1">Compete</h3>
-                <p class="text-xs text-gray-600">Join matches and climb rankings</p>
-            </div>
-            <div class="text-center p-4 bg-white bg-opacity-60 rounded-button backdrop-filter backdrop-blur-sm">
-                <div class="w-12 h-12 bg-secondary bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <div class="w-6 h-6 flex items-center justify-center">
-                        <i class="ri-team-line text-secondary"></i>
-                    </div>
-                </div>
-                <h3 class="font-semibold text-gray-900 text-sm mb-1">Team Up</h3>
-                <p class="text-xs text-gray-600">Build your dream team roster</p>
-            </div>
-            <div class="text-center p-4 bg-white bg-opacity-60 rounded-button backdrop-filter backdrop-blur-sm">
-                <div class="w-12 h-12 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <div class="w-6 h-6 flex items-center justify-center">
-                        <i class="ri-bar-chart-line text-primary"></i>
-                    </div>
-                </div>
-                <h3 class="font-semibold text-gray-900 text-sm mb-1">Track Stats</h3>
-                <p class="text-xs text-gray-600">Monitor your performance</p>
-            </div>
-        </div>
+        @include('site.v1.modules.auth-features.auth-features')
     </div>
 
     <!-- Loading Overlay -->
@@ -305,28 +253,80 @@
         <div class="bg-white rounded-xl p-8 max-w-sm w-full mx-4">
             <div class="text-center">
                 <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Creating Account...</h3>
-                <p class="text-gray-600 text-sm">Please wait while we set up your profile</p>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Создание аккаунта...</h3>
+                <p class="text-gray-600 text-sm">Пожалуйста, подождите, пока мы настраиваем ваш профиль</p>
             </div>
         </div>
     </div>
-    <script>
-        !function (t, e) { var o, n, p, r; e.__SV || (window.posthog = e, e._i = [], e.init = function (i, s, a) { function g(t, e) { var o = e.split("."); 2 == o.length && (t = t[o[0]], e = o[1]), t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } } (p = t.createElement("script")).type = "text/javascript", p.crossOrigin = "anonymous", p.async = !0, p.src = s.api_host.replace(".i.posthog.com", "-assets.i.posthog.com") + "/static/array.js", (r = t.getElementsByTagName("script")[0]).parentNode.insertBefore(p, r); var u = e; for (void 0 !== a ? u = e[a] = [] : a = "posthog", u.people = u.people || [], u.toString = function (t) { var e = "posthog"; return "posthog" !== a && (e += "." + a), t || (e += " (stub)"), e }, u.people.toString = function () { return u.toString(1) + ".people (stub)" }, o = "init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "), n = 0; n < o.length; n++)g(u, o[n]); e._i.push([i, s, a]) }, e.__SV = 1) }(document, window.posthog || []);
-        posthog.init('phc_t9tkQZJiyi2ps9zUYm8TDsL6qXo4YmZx0Ot5rBlAlEd', {
-            api_host: 'https://us.i.posthog.com',
-            autocapture: false,
-            capture_pageview: false,
-            capture_pageleave: false,
-            capture_performance: {
-                web_vitals: false,
-            },
-            rageclick: false,
-        })
-        window.shareKey = 'Ej3SlcduvYPavZjFDe05VA';
-        window.host = 'readdy.ai';
-    </script>
-    <script src="https://static.readdy.ai/static/share.js"></script></body>
 
+    <script id="referral-handler">
+        document.addEventListener('DOMContentLoaded', function() {
+            // Получаем реферальный код из URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref');
+
+            // Если есть реферальный код в URL, сохраняем его в localStorage
+            if (refCode) {
+                localStorage.setItem('referral_code', refCode);
+                // Устанавливаем значение в скрытое поле
+                const referralInput = document.getElementById('referral_code');
+                if (referralInput) {
+                    referralInput.value = refCode;
+                }
+            } else {
+                // Если нет в URL, проверяем localStorage
+                const storedRefCode = localStorage.getItem('referral_code');
+                if (storedRefCode) {
+                    const referralInput = document.getElementById('referral_code');
+                    if (referralInput) {
+                        referralInput.value = storedRefCode;
+                    }
+                }
+            }
+
+            // При отправке формы сохраняем реферальный код
+            const registerForm = document.getElementById('register-form');
+            if (registerForm) {
+                registerForm.addEventListener('submit', function() {
+                    const refCode = document.getElementById('referral_code')?.value;
+                    if (refCode) {
+                        // Сохраняем в localStorage на случай, если форма не отправится
+                        localStorage.setItem('referral_code', refCode);
+                    }
+                });
+
+                // После успешной отправки формы очищаем localStorage
+                registerForm.addEventListener('submit', function(e) {
+                    // Очистка произойдет после успешной регистрации
+                    // (можно добавить через событие успешной регистрации)
+                });
+            }
+
+            // Показываем уведомление, если пользователь пришел по реферальной ссылке
+            const referralInput = document.getElementById('referral_code');
+            if (referralInput && referralInput.value) {
+                const notification = document.createElement('div');
+                notification.className = 'mb-4 p-4 bg-primary bg-opacity-10 border border-primary rounded-button';
+                notification.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="ri-gift-line text-primary text-xl mr-3"></i>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">Вы регистрируетесь по реферальной ссылке!</p>
+                            <p class="text-xs text-gray-600 mt-1">Вы получите бонусы после регистрации</p>
+                        </div>
+                    </div>
+                `;
+                const form = document.getElementById('register-form');
+                if (form && form.parentNode) {
+                    form.parentNode.insertBefore(notification, form);
+                }
+            }
+        });
+    </script>
+</div>
+@endsection
+
+@section('additional-scripts')
 <script id="password-toggle">
     document.addEventListener('DOMContentLoaded', function() {
         const passwordInput = document.getElementById('password');
@@ -366,20 +366,20 @@
                 case 0:
                 case 1:
                     strengthMeter.classList.add('strength-weak');
-                    strengthText.textContent = 'Weak';
+                    strengthText.textContent = 'Слабый';
                     break;
                 case 2:
                     strengthMeter.classList.add('strength-fair');
-                    strengthText.textContent = 'Fair';
+                    strengthText.textContent = 'Средний';
                     break;
                 case 3:
                 case 4:
                     strengthMeter.classList.add('strength-good');
-                    strengthText.textContent = 'Good';
+                    strengthText.textContent = 'Хороший';
                     break;
                 case 5:
                     strengthMeter.classList.add('strength-strong');
-                    strengthText.textContent = 'Strong';
+                    strengthText.textContent = 'Надёжный';
                     break;
             }
         }
@@ -462,15 +462,15 @@
                 } else {
                     usernameStatus.classList.add('hidden');
                     if (existingUsernames.includes(username.toLowerCase())) {
-                        showError(this, 'Username already taken');
+                        showError(this, 'Никнейм уже занят');
                     } else {
-                        showError(this, 'Username must be 3-20 characters, letters and numbers only');
+                        showError(this, 'Никнейм должен содержать 3-20 символов, только буквы и цифры');
                     }
                 }
             } else {
                 usernameStatus.classList.add('hidden');
                 if (username.length > 0) {
-                    showError(this, 'Username must be at least 3 characters');
+                    showError(this, 'Никнейм должен содержать минимум 3 символа');
                 }
             }
         });
@@ -492,7 +492,7 @@
             } else {
                 passwordMatchStatus.classList.add('hidden');
                 if (confirmPassword && password !== confirmPassword) {
-                    showError(this, 'Passwords do not match');
+                    showError(this, 'Пароли не совпадают');
                 }
             }
         });
@@ -509,53 +509,49 @@
 
             if (!fullName || fullName.length < 2) {
                 e.preventDefault();
-                showError(fullNameInput, 'Full name is required (minimum 2 characters)');
+                showError(fullNameInput, 'Полное имя обязательно (минимум 2 символа)');
                 isValid = false;
             }
 
-            if (!username) {
+            if (username && !validateUsername(username)) {
                 e.preventDefault();
-                showError(usernameInput, 'Username is required');
-                isValid = false;
-            } else if (!validateUsername(username)) {
-                e.preventDefault();
-                showError(usernameInput, existingUsernames.includes(username.toLowerCase()) ? 'Username already taken' : 'Invalid username format');
+                showError(usernameInput, existingUsernames.includes(username.toLowerCase()) ? 'Никнейм уже занят' : 'Неверный формат никнейма');
                 isValid = false;
             }
 
             if (!email) {
                 e.preventDefault();
-                showError(emailInput, 'Email address is required');
+                showError(emailInput, 'Email адрес обязателен');
                 isValid = false;
             } else if (!validateEmail(email)) {
                 e.preventDefault();
-                showError(emailInput, 'Please enter a valid email address');
+                showError(emailInput, 'Пожалуйста, введите корректный email адрес');
                 isValid = false;
             }
 
             if (!password) {
                 e.preventDefault();
-                showError(passwordInput, 'Password is required');
+                showError(passwordInput, 'Пароль обязателен');
                 isValid = false;
             } else if (password.length < 6) {
                 e.preventDefault();
-                showError(passwordInput, 'Password must be at least 6 characters');
+                showError(passwordInput, 'Пароль должен содержать минимум 6 символов');
                 isValid = false;
             }
 
             if (!confirmPassword) {
                 e.preventDefault();
-                showError(confirmPasswordInput, 'Please confirm your password');
+                showError(confirmPasswordInput, 'Пожалуйста, подтвердите пароль');
                 isValid = false;
             } else if (password !== confirmPassword) {
                 e.preventDefault();
-                showError(confirmPasswordInput, 'Passwords do not match');
+                showError(confirmPasswordInput, 'Пароли не совпадают');
                 isValid = false;
             }
 
             if (!termsAccepted) {
                 e.preventDefault();
-                showNotification('Please accept the Terms of Service and Privacy Policy', 'error');
+                showNotification('Пожалуйста, примите Условия использования и Политику конфиденциальности', 'error');
                 isValid = false;
             }
 
@@ -591,79 +587,6 @@
             });
         });
 
-        const termsLinks = document.querySelectorAll('a[href="#"]');
-        termsLinks.forEach(link => {
-            if (link.textContent.includes('Terms') || link.textContent.includes('Privacy')) {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const isTerms = this.textContent.includes('Terms');
-
-                    const modal = document.createElement('div');
-                    modal.className = 'fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4';
-                    modal.innerHTML = `
-<div class="bg-white rounded-xl p-6 max-w-2xl w-full max-h-96 overflow-y-auto">
-<div class="flex items-center justify-between mb-4">
-<h3 class="text-xl font-semibold text-gray-900">${isTerms ? 'Terms of Service' : 'Privacy Policy'}</h3>
-<button type="button" class="text-gray-400 hover:text-gray-600 cursor-pointer modal-close">
-<div class="w-6 h-6 flex items-center justify-center">
-<i class="ri-close-line"></i>
-</div>
-</button>
-</div>
-<div class="text-sm text-gray-600 space-y-4">
-${isTerms ? `
-<p><strong>1. Acceptance of Terms</strong><br>
-By creating an account with Meme Football League, you agree to abide by these terms and conditions.</p>
-<p><strong>2. User Accounts</strong><br>
-You are responsible for maintaining the confidentiality of your account credentials and for all activities under your account.</p>
-<p><strong>3. Fair Play</strong><br>
-All users must engage in fair play. Cheating, exploiting, or any form of unsportsmanlike conduct is prohibited.</p>
-<p><strong>4. Content Guidelines</strong><br>
-Users must not post offensive, inappropriate, or copyrighted content. We reserve the right to moderate all user-generated content.</p>
-` : `
-<p><strong>Information We Collect</strong><br>
-We collect information you provide directly, such as your name, email, and gaming statistics.</p>
-<p><strong>How We Use Your Information</strong><br>
-Your information is used to provide our services, improve user experience, and communicate important updates.</p>
-<p><strong>Information Sharing</strong><br>
-We do not sell or share your personal information with third parties except as required by law.</p>
-<p><strong>Data Security</strong><br>
-We implement appropriate security measures to protect your personal information against unauthorized access.</p>
-`}
-</div>
-<div class="mt-6 flex justify-end">
-<button type="button" class="px-6 py-2 bg-primary text-gray-900 rounded-button font-medium hover:bg-opacity-90 transition-colors cursor-pointer whitespace-nowrap modal-close">
-Close
-</button>
-</div>
-</div>
-`;
-
-                    document.body.appendChild(modal);
-
-                    modal.querySelectorAll('.modal-close').forEach(closeBtn => {
-                        closeBtn.addEventListener('click', function() {
-                            modal.remove();
-                        });
-                    });
-
-                    modal.addEventListener('click', function(e) {
-                        if (e.target === modal) {
-                            modal.remove();
-                        }
-                    });
-                });
-            }
-        });
-
-        const signInLink = document.querySelector('a[href="#"]:last-of-type');
-        if (signInLink && signInLink.textContent.includes('Sign in')) {
-            signInLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.location.href = '/login';
-            });
-        }
     });
 </script>
-
-</html>
+@endsection

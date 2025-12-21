@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\Tickets\TicketsController;
 use App\Http\Controllers\Admin\RatingHistory\RatingHistoryController;
 use App\Http\Controllers\Admin\TeamPlayers\TeamPlayersController;
 use App\Http\Controllers\Admin\Referrals\ReferralsController;
+use App\Http\Controllers\Admin\Reports\ReportsController;
 
 Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
 
@@ -34,6 +35,8 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin', 'as' => 'a
     Route::resource('matches', MatchesController::class);
     Route::get('matches/seasons-by-tournament', [MatchesController::class, 'getSeasonsByTournament'])->name('matches.seasons-by-tournament');
     Route::get('matches/stages-by-season', [MatchesController::class, 'getStagesBySeason'])->name('matches.stages-by-season');
+    Route::post('matches/{id}/start-live', [MatchesController::class, 'startLiveMatch'])->name('matches.start-live');
+    Route::post('matches/{id}/stop-live', [MatchesController::class, 'stopLiveMatch'])->name('matches.stop-live');
     Route::get('matches/groups-by-stage', [MatchesController::class, 'getGroupsByStage'])->name('matches.groups-by-stage');
     Route::post('matches/{id}/add-event', [MatchesController::class, 'addEvent'])->name('matches.add-event');
     Route::delete('matches/{matchId}/events/{eventId}', [MatchesController::class, 'deleteEvent'])->name('matches.delete-event');
@@ -66,5 +69,7 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin', 'as' => 'a
     Route::get('referrals', [ReferralsController::class, 'index'])->name('referrals.index');
     Route::get('referrals/data', [ReferralsController::class, 'dataTables'])->name('referrals.data');
     Route::get('referrals/search-users', [ReferralsController::class, 'searchUsers'])->name('referrals.search-users');
+
+    Route::resource('reports', ReportsController::class)->except(['show']);
 
 });

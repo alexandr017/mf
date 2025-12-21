@@ -101,6 +101,12 @@
                     <span>Пользователи</span>
                 </a>
             </li>
+            <li class="@if(Request::routeIs('admin.reports.*')) active @endif">
+                <a href="{{ route('admin.reports.index') }}">
+                    <i class="fa fa-flag"></i>
+                    <span>Жалобы</span>
+                </a>
+            </li>
             <li class="@if(Request::routeIs('admin.achievements.*')) active @endif">
                 <a href="{{ route('admin.achievements.index') }}">
                     <i class="fa fa-trophy"></i>

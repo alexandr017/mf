@@ -1,703 +1,184 @@
-@extends('site.v1.layouts.default')
+@extends('site.v1.layouts.account')
 
 @section('content')
-<style>
-        :where([class^="ri-"])::before { content: "\f3c2"; }
-        body {
-            font-family: 'Rubik', sans-serif;
-        }
-        .heading-font {
-            font-family: 'Bangers', cursive;
-            letter-spacing: 1px;
-        }
-        .sidebar-active {
-            background-color: rgba(127, 255, 0, 0.1);
-            border-right: 4px solid #7FFF00;
-            color: #7FFF00;
-        }
-        .card-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .stat-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            border: 1px solid #e2e8f0;
-        }
-        .achievement-badge {
-            background: linear-gradient(135deg, #7FFF00 0%, #32CD32 100%);
-            animation: pulse-glow 2s infinite;
-        }
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(127, 255, 0, 0.4); }
-            50% { box-shadow: 0 0 30px rgba(127, 255, 0, 0.6); }
-        }
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-    </style>
 
-<!-- Top Navigation -->
-<nav class="bg-white shadow-md sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex items-center">
-                <a href="#" class="flex-shrink-0 flex items-center cursor-pointer">
-                    <span class="text-3xl font-['Pacifico'] text-primary">logo</span>
-                </a>
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-6">
+        <h1 class="heading-font text-3xl text-gray-900 mb-2">Настройки</h1>
+        <p class="text-gray-600 mb-8">Управление личной информацией и настройками аккаунта</p>
+
+        @if(session('success'))
+            <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
+                {{ session('success') }}
             </div>
-            <div class="flex items-center space-x-6">
-                <nav class="hidden md:flex space-x-8">
-                    <a href="#" class="text-gray-600 hover:text-primary font-medium cursor-pointer">Dashboard</a>
-                    <a href="#" class="text-gray-600 hover:text-primary font-medium cursor-pointer">My Team</a>
-                    <a href="#" class="text-gray-600 hover:text-primary font-medium cursor-pointer">Games</a>
-                    <a href="#" class="text-gray-600 hover:text-primary font-medium cursor-pointer">Rankings</a>
-                </nav>
-                <div class="flex items-center space-x-4">
-                    <div class="flex items-center space-x-3">
-                        <img src="https://readdy.ai/api/search-image?query=Professional%20football%20player%20avatar%20portrait%2C%20young%20athlete%20with%20confident%20expression%2C%20friendly%20smile%20in%20team%20colors&width=100&height=100&seq=601&orientation=squarish" alt="Player Avatar" class="w-8 h-8 rounded-full object-cover object-top">
-                        <span class="text-gray-700 font-medium">Alex Chen</span>
+        @endif
+
+        <form action="{{ route('account.options.save') }}" method="POST" enctype="multipart/form-data" id="options-form">
+            @csrf
+            @method('POST')
+
+            <!-- Profile Picture -->
+            <div class="flex items-start space-x-6 mb-8">
+                <div class="relative">
+                    <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-primary bg-gray-300 flex items-center justify-center">
+                        @if(auth()->user()->avatar)
+                            <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="Avatar" class="w-full h-full object-cover object-top" id="avatar-preview">
+                        @elseif(auth()->user()->name)
+                            <span class="text-4xl font-bold text-gray-600" id="avatar-placeholder">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
+                        @else
+                            <i class="ri-user-line text-4xl text-gray-400" id="avatar-placeholder"></i>
+                        @endif
                     </div>
-                    <button class="text-gray-600 hover:text-primary cursor-pointer">
-                        <div class="w-6 h-6 flex items-center justify-center">
-                            <i class="ri-logout-box-line"></i>
+                    <label for="avatar" class="absolute -bottom-2 -right-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-gray-900 hover:bg-opacity-80 transition-colors cursor-pointer">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                            <i class="ri-camera-line text-sm"></i>
                         </div>
-                    </button>
+                    </label>
+                    <input type="file" id="avatar" name="avatar" accept="image/jpeg,image/png,image/jpg,image/gif,image/webp" class="hidden" onchange="previewAvatar(this)">
                 </div>
-            </div>
-        </div>
-</nav>
-<div class="min-h-screen">
-    <!-- Main Content -->
-    <main class="flex max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 gap-8">
-        <!-- Sidebar -->
-        <aside class="w-64 flex-shrink-0">
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-6">Settings</h2>
-                <nav class="space-y-2">
-                    <button class="w-full flex items-center space-x-3 px-4 py-3 text-left rounded-button hover:bg-gray-50 transition-colors settings-nav active" data-section="profile">
-                        <div class="w-5 h-5 flex items-center justify-center">
-                            <i class="ri-user-line text-gray-600"></i>
-                        </div>
-                        <span class="text-gray-700 font-medium">Profile</span>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Фото профиля</h3>
+                    <p class="text-sm text-gray-600 mb-4">Загрузите новое фото профиля. Рекомендуемый размер: 400x400px. Максимальный размер: 5MB</p>
+                    <button type="button" onclick="document.getElementById('avatar').click()" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-button text-sm font-medium hover:bg-gray-200 transition-colors cursor-pointer whitespace-nowrap">
+                        Изменить фото
                     </button>
-                    <button class="w-full flex items-center space-x-3 px-4 py-3 text-left rounded-button hover:bg-gray-50 transition-colors settings-nav" data-section="account">
-                        <div class="w-5 h-5 flex items-center justify-center">
-                            <i class="ri-settings-line text-gray-600"></i>
-                        </div>
-                        <span class="text-gray-700 font-medium">Account</span>
-                    </button>
-                    <button class="w-full flex items-center space-x-3 px-4 py-3 text-left rounded-button hover:bg-gray-50 transition-colors settings-nav" data-section="notifications">
-                        <div class="w-5 h-5 flex items-center justify-center">
-                            <i class="ri-notification-line text-gray-600"></i>
-                        </div>
-                        <span class="text-gray-700 font-medium">Notifications</span>
-                    </button>
-                    <button class="w-full flex items-center space-x-3 px-4 py-3 text-left rounded-button hover:bg-gray-50 transition-colors settings-nav" data-section="privacy">
-                        <div class="w-5 h-5 flex items-center justify-center">
-                            <i class="ri-shield-line text-gray-600"></i>
-                        </div>
-                        <span class="text-gray-700 font-medium">Privacy</span>
-                    </button>
-                    <button class="w-full flex items-center space-x-3 px-4 py-3 text-left rounded-button hover:bg-gray-50 transition-colors settings-nav" data-section="preferences">
-                        <div class="w-5 h-5 flex items-center justify-center">
-                            <i class="ri-palette-line text-gray-600"></i>
-                        </div>
-                        <span class="text-gray-700 font-medium">Preferences</span>
-                    </button>
-                </nav>
-            </div>
-        </aside>
-
-        <!-- Content Area -->
-        <div class="flex-1">
-            <!-- Profile Section -->
-            <div class="settings-section" id="profile-section">
-                <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
-                    <h1 class="heading-font text-3xl text-gray-900 mb-2">Profile Settings</h1>
-                    <p class="text-gray-600 mb-8">Manage your personal information and player profile</p>
-
-                    <!-- Profile Picture -->
-                    <div class="flex items-start space-x-6 mb-8">
-                        <div class="relative">
-                            <img src="https://readdy.ai/api/search-image?query=Professional%20football%20player%20avatar%20portrait%2C%20young%20Asian%20athlete%20Alex%20Chen%20with%20confident%20expression%2C%20friendly%20smile%20in%20team%20colors&width=200&height=200&seq=602&orientation=squarish" alt="Profile Picture" class="w-24 h-24 rounded-full object-cover object-top">
-                            <button class="absolute -bottom-2 -right-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-gray-900 hover:bg-opacity-80 transition-colors cursor-pointer">
-                                <div class="w-4 h-4 flex items-center justify-center">
-                                    <i class="ri-camera-line text-sm"></i>
-                                </div>
-                            </button>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Profile Picture</h3>
-                            <p class="text-sm text-gray-600 mb-4">Upload a new profile picture. Recommended size: 400x400px</p>
-                            <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded-button text-sm font-medium hover:bg-gray-200 transition-colors cursor-pointer whitespace-nowrap">
-                                Change Photo
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Player Information Form -->
-                    <form class="space-y-6" id="profile-form">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Player Name</label>
-                                <input type="text" value="Alex Chen" name="player_name" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Display Name</label>
-                                <input type="text" value="AlexC_MFL" name="display_name" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Preferred Position</label>
-                                <div class="relative">
-                                    <button type="button" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-left bg-white cursor-pointer position-select">
-                                        Midfielder
-                                    </button>
-                                    <div class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 flex items-center justify-center">
-                                        <i class="ri-arrow-down-s-line text-gray-400"></i>
-                                    </div>
-                                    <div class="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-button mt-1 shadow-lg z-10 hidden position-dropdown">
-                                        <button type="button" class="w-full px-4 py-3 text-left hover:bg-gray-50 cursor-pointer position-option" data-value="Goalkeeper">Goalkeeper</button>
-                                        <button type="button" class="w-full px-4 py-3 text-left hover:bg-gray-50 cursor-pointer position-option" data-value="Defender">Defender</button>
-                                        <button type="button" class="w-full px-4 py-3 text-left hover:bg-gray-50 cursor-pointer position-option" data-value="Midfielder">Midfielder</button>
-                                        <button type="button" class="w-full px-4 py-3 text-left hover:bg-gray-50 cursor-pointer position-option" data-value="Forward">Forward</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
-                                <input type="date" value="1995-03-15" name="birth_date" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Bio</label>
-                            <textarea rows="4" name="bio" maxlength="500" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none">Passionate midfielder with 8 years of experience. Love creating plays and supporting my team. Always looking to improve my game and reach new heights in the league.</textarea>
-                            <div class="text-right">
-                                <span class="text-sm text-gray-500 bio-counter">184/500</span>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-end space-x-4">
-                            <button type="button" class="px-6 py-3 text-gray-700 bg-gray-100 rounded-button font-medium hover:bg-gray-200 transition-colors cursor-pointer whitespace-nowrap">
-                                Cancel
-                            </button>
-                            <button type="submit" class="px-6 py-3 bg-primary text-gray-900 rounded-button font-medium hover:bg-opacity-80 transition-colors cursor-pointer whitespace-nowrap">
-                                Save Changes
-                            </button>
-                        </div>
-                    </form>
+                    @error('avatar')
+                        <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
-            <!-- Account Section -->
-            <div class="settings-section hidden" id="account-section">
-                <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
-                    <h1 class="heading-font text-3xl text-gray-900 mb-2">Account Settings</h1>
-                    <p class="text-gray-600 mb-8">Manage your account credentials and security settings</p>
-
-                    <form class="space-y-6" id="account-form">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                            <input type="email" value="alex.chen@email.com" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        </div>
-
-                        <div class="border-t border-gray-200 pt-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Change Password</h3>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
-                                    <input type="password" name="current_password" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
-                                    <input type="password" name="new_password" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
-                                    <input type="password" name="confirm_password" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="border-t border-gray-200 pt-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Two-Factor Authentication</h3>
-                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-button">
-                                <div>
-                                    <p class="text-sm font-medium text-gray-900">Enable 2FA</p>
-                                    <p class="text-sm text-gray-600">Add an extra layer of security to your account</p>
-                                </div>
-                                <div class="relative">
-                                    <input type="checkbox" id="2fa-toggle" class="sr-only">
-                                    <label for="2fa-toggle" class="relative cursor-pointer">
-                                        <div class="w-11 h-6 bg-gray-300 rounded-full toggle-bg"></div>
-                                        <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform toggle-dot"></div>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-end space-x-4">
-                            <button type="button" class="px-6 py-3 text-gray-700 bg-gray-100 rounded-button font-medium hover:bg-gray-200 transition-colors cursor-pointer whitespace-nowrap">
-                                Cancel
-                            </button>
-                            <button type="submit" class="px-6 py-3 bg-primary text-gray-900 rounded-button font-medium hover:bg-opacity-80 transition-colors cursor-pointer whitespace-nowrap">
-                                Update Account
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Notifications Section -->
-            <div class="settings-section hidden" id="notifications-section">
-                <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
-                    <h1 class="heading-font text-3xl text-gray-900 mb-2">Notification Preferences</h1>
-                    <p class="text-gray-600 mb-8">Choose what notifications you want to receive</p>
-
-                    <div class="space-y-6">
-                        <div class="border-b border-gray-200 pb-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Match Notifications</h3>
-                            <div class="space-y-4">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">Match Reminders</p>
-                                        <p class="text-sm text-gray-600">Get notified 30 minutes before your matches</p>
-                                    </div>
-                                    <div class="relative">
-                                        <input type="checkbox" id="match-reminders" class="sr-only" checked>
-                                        <label for="match-reminders" class="relative cursor-pointer">
-                                            <div class="w-11 h-6 bg-primary rounded-full toggle-bg"></div>
-                                            <div class="absolute top-0.5 right-0.5 w-5 h-5 bg-white rounded-full transition-transform toggle-dot"></div>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">Match Results</p>
-                                        <p class="text-sm text-gray-600">Get notified when match results are available</p>
-                                    </div>
-                                    <div class="relative">
-                                        <input type="checkbox" id="match-results" class="sr-only" checked>
-                                        <label for="match-results" class="relative cursor-pointer">
-                                            <div class="w-11 h-6 bg-primary rounded-full toggle-bg"></div>
-                                            <div class="absolute top-0.5 right-0.5 w-5 h-5 bg-white rounded-full transition-transform toggle-dot"></div>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="border-b border-gray-200 pb-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Team Notifications</h3>
-                            <div class="space-y-4">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">Team Updates</p>
-                                        <p class="text-sm text-gray-600">News and announcements from your team</p>
-                                    </div>
-                                    <div class="relative">
-                                        <input type="checkbox" id="team-updates" class="sr-only" checked>
-                                        <label for="team-updates" class="relative cursor-pointer">
-                                            <div class="w-11 h-6 bg-primary rounded-full toggle-bg"></div>
-                                            <div class="absolute top-0.5 right-0.5 w-5 h-5 bg-white rounded-full transition-transform toggle-dot"></div>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">Lineup Changes</p>
-                                        <p class="text-sm text-gray-600">When you're added or removed from starting lineup</p>
-                                    </div>
-                                    <div class="relative">
-                                        <input type="checkbox" id="lineup-changes" class="sr-only">
-                                        <label for="lineup-changes" class="relative cursor-pointer">
-                                            <div class="w-11 h-6 bg-gray-300 rounded-full toggle-bg"></div>
-                                            <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform toggle-dot"></div>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">League Notifications</h3>
-                            <div class="space-y-4">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">League News</p>
-                                        <p class="text-sm text-gray-600">Updates about the Meme Football League</p>
-                                    </div>
-                                    <div class="relative">
-                                        <input type="checkbox" id="league-news" class="sr-only" checked>
-                                        <label for="league-news" class="relative cursor-pointer">
-                                            <div class="w-11 h-6 bg-primary rounded-full toggle-bg"></div>
-                                            <div class="absolute top-0.5 right-0.5 w-5 h-5 bg-white rounded-full transition-transform toggle-dot"></div>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">Achievement Rewards</p>
-                                        <p class="text-sm text-gray-600">When you unlock new achievements or rewards</p>
-                                    </div>
-                                    <div class="relative">
-                                        <input type="checkbox" id="achievements" class="sr-only" checked>
-                                        <label for="achievements" class="relative cursor-pointer">
-                                            <div class="w-11 h-6 bg-primary rounded-full toggle-bg"></div>
-                                            <div class="absolute top-0.5 right-0.5 w-5 h-5 bg-white rounded-full transition-transform toggle-dot"></div>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <!-- Player Information Form -->
+            <div class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Имя</label>
+                        <input type="text" id="name" name="name" value="{{ old('name', auth()->user()->name) }}" required class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent @error('name') border-red-500 @enderror">
+                        @error('name')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
-
-                    <div class="flex justify-end">
-                        <button class="px-6 py-3 bg-primary text-gray-900 rounded-button font-medium hover:bg-opacity-80 transition-colors cursor-pointer whitespace-nowrap">
-                            Save Preferences
-                        </button>
+                    <div>
+                        <label for="nickname" class="block text-sm font-medium text-gray-700 mb-2">Никнейм</label>
+                        <input type="text" id="nickname" name="nickname" value="{{ old('nickname', auth()->user()->nickname) }}" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent @error('nickname') border-red-500 @enderror">
+                        @error('nickname')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-1">Уникальный никнейм для вашего профиля</p>
                     </div>
                 </div>
-            </div>
 
-            <!-- Privacy Section -->
-            <div class="settings-section hidden" id="privacy-section">
-                <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
-                    <h1 class="heading-font text-3xl text-gray-900 mb-2">Privacy Settings</h1>
-                    <p class="text-gray-600 mb-8">Control who can see your information and activity</p>
-
-                    <div class="space-y-6">
-                        <div class="border-b border-gray-200 pb-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Profile Visibility</h3>
-                            <div class="space-y-4">
-                                <label class="flex items-center space-x-3 cursor-pointer">
-                                    <input type="radio" name="profile_visibility" value="public" checked class="text-primary focus:ring-primary">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">Public</p>
-                                        <p class="text-sm text-gray-600">Anyone can view your profile and stats</p>
-                                    </div>
-                                </label>
-                                <label class="flex items-center space-x-3 cursor-pointer">
-                                    <input type="radio" name="profile_visibility" value="friends" class="text-primary focus:ring-primary">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">Friends Only</p>
-                                        <p class="text-sm text-gray-600">Only friends can view your detailed profile</p>
-                                    </div>
-                                </label>
-                                <label class="flex items-center space-x-3 cursor-pointer">
-                                    <input type="radio" name="profile_visibility" value="private" class="text-primary focus:ring-primary">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">Private</p>
-                                        <p class="text-sm text-gray-600">Your profile is hidden from other players</p>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="border-b border-gray-200 pb-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Contact Preferences</h3>
-                            <div class="space-y-4">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">Allow Friend Requests</p>
-                                        <p class="text-sm text-gray-600">Other players can send you friend requests</p>
-                                    </div>
-                                    <div class="relative">
-                                        <input type="checkbox" id="friend-requests" class="sr-only" checked>
-                                        <label for="friend-requests" class="relative cursor-pointer">
-                                            <div class="w-11 h-6 bg-primary rounded-full toggle-bg"></div>
-                                            <div class="absolute top-0.5 right-0.5 w-5 h-5 bg-white rounded-full transition-transform toggle-dot"></div>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">Show Online Status</p>
-                                        <p class="text-sm text-gray-600">Others can see when you're online</p>
-                                    </div>
-                                    <div class="relative">
-                                        <input type="checkbox" id="online-status" class="sr-only">
-                                        <label for="online-status" class="relative cursor-pointer">
-                                            <div class="w-11 h-6 bg-gray-300 rounded-full toggle-bg"></div>
-                                            <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform toggle-dot"></div>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Data & Analytics</h3>
-                            <div class="space-y-4">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">Performance Analytics</p>
-                                        <p class="text-sm text-gray-600">Allow collection of gameplay data for analysis</p>
-                                    </div>
-                                    <div class="relative">
-                                        <input type="checkbox" id="analytics" class="sr-only" checked>
-                                        <label for="analytics" class="relative cursor-pointer">
-                                            <div class="w-11 h-6 bg-primary rounded-full toggle-bg"></div>
-                                            <div class="absolute top-0.5 right-0.5 w-5 h-5 bg-white rounded-full transition-transform toggle-dot"></div>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" id="email" name="email" value="{{ old('email', auth()->user()->email) }}" required class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent @error('email') border-red-500 @enderror">
+                        @error('email')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    <div class="flex justify-end">
-                        <button class="px-6 py-3 bg-primary text-gray-900 rounded-button font-medium hover:bg-opacity-80 transition-colors cursor-pointer whitespace-nowrap">
-                            Save Settings
-                        </button>
+                    <div>
+                        <label for="preferred_position" class="block text-sm font-medium text-gray-700 mb-2">Предпочитаемая позиция</label>
+                        <select id="preferred_position" name="preferred_position" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent @error('preferred_position') border-red-500 @enderror">
+                            <option value="">Выберите позицию</option>
+                            @foreach(\App\Models\User::getPositions() as $key => $label)
+                                <option value="{{ $key }}" {{ old('preferred_position', auth()->user()->preferred_position) === $key ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('preferred_position')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
-            </div>
 
-            <!-- Preferences Section -->
-            <div class="settings-section hidden" id="preferences-section">
-                <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
-                    <h1 class="heading-font text-3xl text-gray-900 mb-2">App Preferences</h1>
-                    <p class="text-gray-600 mb-8">Customize your app experience and interface</p>
-
-                    <div class="space-y-6">
-                        <div class="border-b border-gray-200 pb-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Language & Region</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Language</label>
-                                    <div class="relative">
-                                        <button type="button" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-left bg-white cursor-pointer language-select">
-                                            English (US)
-                                        </button>
-                                        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 flex items-center justify-center">
-                                            <i class="ri-arrow-down-s-line text-gray-400"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Timezone</label>
-                                    <div class="relative">
-                                        <button type="button" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-left bg-white cursor-pointer timezone-select">
-                                            UTC-08:00 (Pacific Time)
-                                        </button>
-                                        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 flex items-center justify-center">
-                                            <i class="ri-arrow-down-s-line text-gray-400"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="border-b border-gray-200 pb-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Display Options</h3>
-                            <div class="space-y-4">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">Auto-refresh Stats</p>
-                                        <p class="text-sm text-gray-600">Automatically update your performance statistics</p>
-                                    </div>
-                                    <div class="relative">
-                                        <input type="checkbox" id="auto-refresh" class="sr-only" checked>
-                                        <label for="auto-refresh" class="relative cursor-pointer">
-                                            <div class="w-11 h-6 bg-primary rounded-full toggle-bg"></div>
-                                            <div class="absolute top-0.5 right-0.5 w-5 h-5 bg-white rounded-full transition-transform toggle-dot"></div>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">Show Advanced Metrics</p>
-                                        <p class="text-sm text-gray-600">Display detailed performance analytics</p>
-                                    </div>
-                                    <div class="relative">
-                                        <input type="checkbox" id="advanced-metrics" class="sr-only">
-                                        <label for="advanced-metrics" class="relative cursor-pointer">
-                                            <div class="w-11 h-6 bg-gray-300 rounded-full toggle-bg"></div>
-                                            <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform toggle-dot"></div>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                <div class="border-t border-gray-200 pt-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Изменить пароль</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Game Preferences</h3>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Default Match View</label>
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <label class="flex items-center space-x-3 cursor-pointer p-3 border border-gray-300 rounded-button hover:bg-gray-50">
-                                            <input type="radio" name="match_view" value="live" checked class="text-primary focus:ring-primary">
-                                            <span class="text-sm font-medium text-gray-900">Live View</span>
-                                        </label>
-                                        <label class="flex items-center space-x-3 cursor-pointer p-3 border border-gray-300 rounded-button hover:bg-gray-50">
-                                            <input type="radio" name="match_view" value="summary" class="text-primary focus:ring-primary">
-                                            <span class="text-sm font-medium text-gray-900">Summary</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">Sound Effects</p>
-                                        <p class="text-sm text-gray-600">Play sounds for goals, matches, and notifications</p>
-                                    </div>
-                                    <div class="relative">
-                                        <input type="checkbox" id="sound-effects" class="sr-only" checked>
-                                        <label for="sound-effects" class="relative cursor-pointer">
-                                            <div class="w-11 h-6 bg-primary rounded-full toggle-bg"></div>
-                                            <div class="absolute top-0.5 right-0.5 w-5 h-5 bg-white rounded-full transition-transform toggle-dot"></div>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
+                            <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">Текущий пароль</label>
+                            <input type="password" id="current_password" name="current_password" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent @error('current_password') border-red-500 @enderror">
+                            @error('current_password')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
-                    </div>
-
-                    <div class="flex justify-end">
-                        <button class="px-6 py-3 bg-primary text-gray-900 rounded-button font-medium hover:bg-opacity-80 transition-colors cursor-pointer whitespace-nowrap">
-                            Save Preferences
-                        </button>
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Новый пароль</label>
+                            <input type="password" id="password" name="password" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent @error('password') border-red-500 @enderror">
+                            @error('password')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">Подтвердите пароль</label>
+                            <input type="password" id="password_confirmation" name="password_confirmation" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
                     </div>
                 </div>
+
+                <div class="flex justify-end space-x-4">
+                    <a href="{{ route('account') }}" class="px-6 py-3 text-gray-700 bg-gray-100 rounded-button font-medium hover:bg-gray-200 transition-colors cursor-pointer whitespace-nowrap">
+                        Отмена
+                    </a>
+                    <button type="submit" class="px-6 py-3 bg-primary text-gray-900 rounded-button font-medium hover:bg-opacity-80 transition-colors cursor-pointer whitespace-nowrap">
+                        Сохранить изменения
+                    </button>
+                </div>
             </div>
-        </div>
-    </main>
-    </main>
+        </form>
+    </div>
 </div>
-<script id="navigation">
-    document.addEventListener('DOMContentLoaded', function() {
-        const navLinks = document.querySelectorAll('nav a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                navLinks.forEach(l => {
-                    l.classList.remove('text-primary');
-                    l.classList.add('text-gray-600');
-                });
-                this.classList.add('text-primary');
-                this.classList.remove('text-gray-600');
-            });
-        });
-    });
-</script>
-<script id="settings-navigation">
-    document.addEventListener('DOMContentLoaded', function() {
-        const settingsNavButtons = document.querySelectorAll('.settings-nav');
-        const settingsSections = document.querySelectorAll('.settings-section');
 
-        function showSection(sectionId) {
-            settingsSections.forEach(section => {
-                section.classList.add('hidden');
-            });
-            const targetSection = document.getElementById(sectionId + '-section');
-            if (targetSection) {
-                targetSection.classList.remove('hidden');
-            }
+<script>
+function previewAvatar(input) {
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+
+        // Проверка размера файла (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('Размер файла не должен превышать 5MB');
+            input.value = '';
+            return;
         }
 
-        settingsNavButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const sectionId = this.dataset.section;
-
-                settingsNavButtons.forEach(btn => {
-                    btn.classList.remove('sidebar-active');
-                });
-                this.classList.add('sidebar-active');
-
-                showSection(sectionId);
-            });
-        });
-
-        showSection('profile');
-    });
-</script>
-<script id="form-interactions">
-    document.addEventListener('DOMContentLoaded', function() {
-        const positionSelect = document.querySelector('.position-select');
-        const positionDropdown = document.querySelector('.position-dropdown');
-        const positionOptions = document.querySelectorAll('.position-option');
-        const bioTextarea = document.querySelector('textarea[name="bio"]');
-        const bioCounter = document.querySelector('.bio-counter');
-
-        if (positionSelect && positionDropdown) {
-            positionSelect.addEventListener('click', function() {
-                positionDropdown.classList.toggle('hidden');
-            });
-
-            positionOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    const value = this.dataset.value;
-                    positionSelect.textContent = value;
-                    positionDropdown.classList.add('hidden');
-                });
-            });
-
-            document.addEventListener('click', function(e) {
-                if (!positionSelect.contains(e.target) && !positionDropdown.contains(e.target)) {
-                    positionDropdown.classList.add('hidden');
-                }
-            });
+        // Проверка типа файла
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Разрешены только изображения: JPEG, PNG, JPG, GIF, WEBP');
+            input.value = '';
+            return;
         }
 
-        if (bioTextarea && bioCounter) {
-            function updateBioCounter() {
-                const length = bioTextarea.value.length;
-                bioCounter.textContent = `${length}/500`;
-                if (length > 500) {
-                    bioCounter.classList.add('text-red-500');
-                    bioCounter.classList.remove('text-gray-500');
-                } else {
-                    bioCounter.classList.remove('text-red-500');
-                    bioCounter.classList.add('text-gray-500');
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('avatar-preview');
+            const placeholder = document.getElementById('avatar-placeholder');
+
+            if (preview) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            } else {
+                const img = document.createElement('img');
+                img.id = 'avatar-preview';
+                img.src = e.target.result;
+                img.className = 'w-full h-full object-cover object-top';
+                img.alt = 'Avatar';
+
+                const container = input.closest('.relative').querySelector('.w-24');
+                if (placeholder) {
+                    placeholder.remove();
                 }
+                container.appendChild(img);
             }
 
-            bioTextarea.addEventListener('input', updateBioCounter);
-            updateBioCounter();
-        }
-
-        const toggles = document.querySelectorAll('input[type="checkbox"]:not([id^="2fa-toggle"])');
-        toggles.forEach(toggle => {
-            toggle.addEventListener('change', function() {
-                const label = this.nextElementSibling;
-                const bg = label.querySelector('.toggle-bg');
-                const dot = label.querySelector('.toggle-dot');
-
-                if (this.checked) {
-                    bg.classList.remove('bg-gray-300');
-                    bg.classList.add('bg-primary');
-                    dot.classList.remove('translate-x-0');
-                    dot.classList.add('translate-x-5');
-                } else {
-                    bg.classList.remove('bg-primary');
-                    bg.classList.add('bg-gray-300');
-                    dot.classList.remove('translate-x-5');
-                    dot.classList.add('translate-x-0');
-                }
-            });
-        });
-
-        const forms = document.querySelectorAll('form');
-        forms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const formName = this.id.replace('-form', '');
-
-                const notification = document.createElement('div');
-                notification.className = 'fixed top-4 right-4 bg-primary text-gray-900 px-6 py-3 rounded-button shadow-lg z-50';
-                notification.textContent = `${formName.charAt(0).toUpperCase() + formName.slice(1)} settings saved successfully!`;
-                document.body.appendChild(notification);
-
-                setTimeout(() => {
-                    notification.remove();
-                }, 3000);
-            });
-        });
-    });
+            if (placeholder && placeholder.parentNode) {
+                placeholder.style.display = 'none';
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+}
 </script>
+
+@endsection

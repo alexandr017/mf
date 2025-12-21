@@ -1,7 +1,11 @@
 <!-- Page Header -->
 <section class="bg-gray-900 py-16 relative overflow-hidden">
     <div class="absolute inset-0">
-        <img src="/v1/images/tournaments-banner.jpg" alt="Tournament Background" class="w-full h-full object-cover opacity-30">
+        @if(isset($image))
+            <img src="{{ $image }}" alt="Tournament Background" class="w-full h-full object-cover opacity-30">
+        @else
+            <img src="/v1/images/tournaments-banner.jpg" alt="Tournament Background" class="w-full h-full object-cover opacity-30">
+        @endif
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h1 class="heading-font text-5xl md:text-7xl text-white mb-6">Tournament Central</h1>

@@ -12,6 +12,8 @@ use App\Http\Controllers\Site\StaticPages\StaticPagesController;
 use App\Http\Controllers\Site\Account\AccountController;
 use App\Http\Controllers\Site\Players\PlayersController;
 use App\Http\Controllers\Site\Games\GamesController;
+use App\Http\Controllers\Site\Reports\ReportsController;
+use App\Http\Controllers\Site\LiveMatches\LiveMatchesController;
 use App\Http\Controllers\ProfileController;
 
 // Главная страница
@@ -26,6 +28,7 @@ Route::get('teams/{alias}', [TeamsController::class, 'team']);
 
 // Игроки
 Route::get('players', [PlayersController::class, 'players']);
+Route::get('players/api', [PlayersController::class, 'api'])->name('players.api');
 Route::get('players/{alias}', [PlayersController::class, 'player']);
 
 // Статические страницы
@@ -46,9 +49,16 @@ Route::get('tournaments/{alias}/tours/{tour}/{game}', [TournamentsController::cl
 // Предстоящие игры
 Route::get('upcoming-games', [UpcomingGamesController::class, 'index']);
 
+// Live матчи
+Route::get('live-matches/{matchId}', [LiveMatchesController::class, 'show'])->name('live-matches.show');
+Route::get('live-matches/{matchId}/state', [LiveMatchesController::class, 'getState'])->name('live-matches.state');
+
 // Блог
 Route::get('blog', [NewsController::class, 'list']);
 Route::get('blog/{alias}', [NewsController::class, 'post']);
+
+// Жалобы
+Route::post('reports', [ReportsController::class, 'store'])->name('reports.store');
 
 // Личный кабинет (требует авторизации)
 Route::middleware('auth')->group(function () {

@@ -40,8 +40,12 @@ class UsersSeeder extends Seeder
                     $referredById = fake()->randomElement($existingUserIds);
                 }
 
+                $name = fake()->name();
+                $nickname = Str::lower(Str::slug($name)) . '_' . Str::random(6);
+                
                 $batch[] = [
-                    'name' => fake()->name(),
+                    'name' => $name,
+                    'nickname' => $nickname,
                     'email' => 'user_' . ($i + $j) . '_' . time() . '_' . Str::random(5) . '@example.com',
                     'password' => bcrypt('password'),
                     'goals' => $goals,
