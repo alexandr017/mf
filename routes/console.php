@@ -18,3 +18,13 @@ Schedule::command('live-matches:process')
 Schedule::command('friendly-matches:process')
     ->daily()
     ->withoutOverlapping();
+
+// Отправка напоминаний о матчах каждые 15 минут
+Schedule::command('notifications:send-game-reminders')
+    ->everyFifteenMinutes()
+    ->withoutOverlapping();
+
+// Обработка запланированных уведомлений каждые 5 минут
+Schedule::command('notifications:process-scheduled')
+    ->everyFiveMinutes()
+    ->withoutOverlapping();

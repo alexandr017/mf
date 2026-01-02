@@ -33,6 +33,27 @@
 
             @auth
                 <div class="flex items-center space-x-3">
+                    <!-- Уведомления -->
+                    <div class="relative group">
+                        <button id="notifications-button" class="relative p-2 text-gray-600 hover:text-gray-900 transition-colors">
+                            <i class="ri-notification-3-line text-2xl"></i>
+                            <span id="notifications-badge" class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+                        </button>
+                        <div id="notifications-dropdown" class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg z-50 opacity-0 invisible transition-all duration-200" style="max-height: 400px; overflow-y: auto;">
+                            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                                <h3 class="font-semibold text-gray-900">Уведомления</h3>
+                                <button id="mark-all-read-btn" class="text-sm text-primary hover:text-opacity-80">Отметить все как прочитанные</button>
+                            </div>
+                            <div id="notifications-list" class="divide-y divide-gray-200">
+                                <div class="p-4 text-center text-gray-500">Загрузка...</div>
+                            </div>
+                            <div class="p-3 border-t border-gray-200 text-center">
+                                <a href="{{ route('account') }}" class="text-sm text-primary hover:text-opacity-80">Показать все уведомления</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Профиль -->
                     <div class="relative group">
                         <a href="{{ route('account') }}" class="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer">
                             <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-300 flex items-center justify-center">
@@ -121,3 +142,154 @@
         }
     });
 </script>
+
+@auth
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const notificationsButton = document.getElementById('notifications-button');
+    const notificationsDropdown = document.getElementById('notifications-dropdown');
+    const notificationsList = document.getElementById('notifications-list');
+    const notificationsBadge = document.getElementById('notifications-badge');
+    const markAllReadBtn = document.getElementById('mark-all-read-btn');
+    
+    let notificationsCheckInterval;
+    
+    // Загрузка уведомлений
+    function loadNotifications() {
+        fetch('{{ route("notifications.index") }}', {
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            updateNotificationsList(data.notifications);
+            updateBadge(data.unread_count);
+        })
+        .catch(error => {
+            console.error('Error loading notifications:', error);
+        });
+    }
+    
+    // Обновление списка уведомлений
+    function updateNotificationsList(notifications) {
+        if (notifications.length === 0) {
+            notificationsList.innerHTML = '<div class="p-4 text-center text-gray-500">Нет уведомлений</div>';
+            return;
+        }
+        
+        notificationsList.innerHTML = notifications.map(notification => {
+            const readClass = notification.is_read ? 'bg-gray-50' : 'bg-blue-50';
+            return `
+                <div class="p-4 ${readClass} hover:bg-gray-100 transition-colors cursor-pointer notification-item" data-id="${notification.id}">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-900 text-sm">${notification.title}</h4>
+                            <p class="text-sm text-gray-600 mt-1">${notification.message}</p>
+                            <p class="text-xs text-gray-500 mt-2">${notification.created_at_human}</p>
+                        </div>
+                        ${!notification.is_read ? '<div class="w-2 h-2 bg-blue-500 rounded-full ml-2 mt-1"></div>' : ''}
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        // Добавляем обработчики клика
+        document.querySelectorAll('.notification-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const notificationId = this.dataset.id;
+                markAsRead(notificationId);
+            });
+        });
+    }
+    
+    // Обновление badge
+    function updateBadge(count) {
+        if (count > 0) {
+            notificationsBadge.textContent = count > 99 ? '99+' : count;
+            notificationsBadge.classList.remove('hidden');
+        } else {
+            notificationsBadge.classList.add('hidden');
+        }
+    }
+    
+    // Отметить как прочитанное
+    function markAsRead(notificationId) {
+        fetch(`/notifications/${notificationId}/read`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateBadge(data.unread_count);
+                loadNotifications();
+            }
+        })
+        .catch(error => {
+            console.error('Error marking notification as read:', error);
+        });
+    }
+    
+    // Отметить все как прочитанные
+    if (markAllReadBtn) {
+        markAllReadBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            fetch('{{ route("notifications.mark-all-read") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateBadge(0);
+                    loadNotifications();
+                }
+            })
+            .catch(error => {
+                console.error('Error marking all as read:', error);
+            });
+        });
+    }
+    
+    // Открытие/закрытие dropdown
+    if (notificationsButton && notificationsDropdown) {
+        notificationsButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isVisible = notificationsDropdown.classList.contains('opacity-100');
+            if (isVisible) {
+                notificationsDropdown.classList.remove('opacity-100', 'visible');
+                notificationsDropdown.classList.add('opacity-0', 'invisible');
+            } else {
+                notificationsDropdown.classList.remove('opacity-0', 'invisible');
+                notificationsDropdown.classList.add('opacity-100', 'visible');
+                loadNotifications();
+            }
+        });
+        
+        // Закрытие при клике вне
+        document.addEventListener('click', function(e) {
+            if (!notificationsButton.contains(e.target) && !notificationsDropdown.contains(e.target)) {
+                notificationsDropdown.classList.remove('opacity-100', 'visible');
+                notificationsDropdown.classList.add('opacity-0', 'invisible');
+            }
+        });
+    }
+    
+    // Автоматическая проверка каждые 30 секунд
+    notificationsCheckInterval = setInterval(function() {
+        loadNotifications();
+    }, 30000);
+    
+    // Загружаем сразу
+    loadNotifications();
+});
+</script>
+@endauth

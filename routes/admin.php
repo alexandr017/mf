@@ -24,6 +24,8 @@ use App\Http\Controllers\Admin\TeamPlayers\TeamPlayersController;
 use App\Http\Controllers\Admin\Referrals\ReferralsController;
 use App\Http\Controllers\Admin\Reports\ReportsController;
 use App\Http\Controllers\Admin\FriendlyMatches\FriendlyMatchesController;
+use App\Http\Controllers\Admin\Games\MatchPredictionsController;
+use App\Http\Controllers\Admin\Notifications\NotificationsController;
 
 Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
 
@@ -74,5 +76,7 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin', 'as' => 'a
     Route::resource('reports', ReportsController::class)->except(['show']);
 
     Route::resource('friendly-matches', FriendlyMatchesController::class);
+    Route::resource('match-predictions', MatchPredictionsController::class);
+    Route::resource('notifications', NotificationsController::class);
 
 });

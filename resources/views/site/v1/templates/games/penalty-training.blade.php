@@ -97,8 +97,11 @@
                         </button>
                     </div>
 
+                    <!-- Fireworks Container -->
+                    <div id="fireworksContainer" class="absolute inset-0 pointer-events-none hidden" style="z-index: 100;"></div>
+
                     <!-- Result Message -->
-                    <div id="resultMessage" class="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden">
+                    <div id="resultMessage" class="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden" style="z-index: 50;">
                         <div class="bg-white rounded-xl p-8 text-center max-w-md">
                             <div id="resultIcon" class="text-6xl mb-4"></div>
                             <h2 id="resultTitle" class="heading-font text-3xl mb-2"></h2>
@@ -259,6 +262,34 @@ document.addEventListener('DOMContentLoaded', function() {
             playSound(300, 0.2, 'square');
             setTimeout(() => playSound(400, 0.15, 'square'), 100);
             
+            // Вратарь прыгает сразу при ударе (случайное направление для визуализации)
+            // Реальное направление будет известно только после ответа сервера
+            const randomGoalkeeperChoice = ['left', 'center', 'right'][Math.floor(Math.random() * 3)];
+            const goalkeeperPositions = {
+                'left': '15%',
+                'center': '50%',
+                'right': '85%'
+            };
+            
+            // Анимация прыжка вратаря (начинается сразу при ударе)
+            goalkeeper.style.left = goalkeeperPositions[randomGoalkeeperChoice];
+            goalkeeper.style.transition = 'left 0.8s ease-out';
+            
+            // Анимация рук вратаря (прыжок)
+            if (randomGoalkeeperChoice === 'left') {
+                goalkeeperLeftArm.style.transform = 'rotate(-45deg)';
+                goalkeeperRightArm.style.transform = 'rotate(-20deg)';
+            } else if (randomGoalkeeperChoice === 'right') {
+                goalkeeperLeftArm.style.transform = 'rotate(20deg)';
+                goalkeeperRightArm.style.transform = 'rotate(45deg)';
+            } else {
+                goalkeeperLeftArm.style.transform = 'rotate(-10deg)';
+                goalkeeperRightArm.style.transform = 'rotate(10deg)';
+            }
+            
+            // Звук прыжка вратаря
+            playSound(150, 0.3, 'triangle');
+            
             // Анимация мяча (длится минимум 5 секунд)
             const animationDuration = 5000; // 5 секунд в миллисекундах
             
@@ -293,7 +324,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 loading.classList.add('hidden');
                 
                 if (data.success) {
-                    // Позиции вратаря в соответствии с шириной ворот
+                    // Корректируем позицию вратаря на реальную (если она отличается от визуальной)
                     const goalkeeperPositions = {
                         'left': '15%',
                         'center': '50%',
@@ -302,12 +333,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     const goalkeeperChoice = data.goalkeeper_choice;
                     
-                    // Синхронизированная анимация: вратарь прыгает одновременно с ударом
-                    // Анимация начинается сразу после получения ответа (мяч уже в полете)
-                    goalkeeper.style.left = goalkeeperPositions[goalkeeperChoice];
-                    goalkeeper.style.transition = 'left 0.8s ease-out';
+                    // Обновляем позицию вратаря на реальную (если нужно)
+                    if (goalkeeper.style.left !== goalkeeperPositions[goalkeeperChoice]) {
+                        goalkeeper.style.left = goalkeeperPositions[goalkeeperChoice];
+                    }
                     
-                    // Анимация рук вратаря (прыжок)
+                    // Обновляем анимацию рук на реальную
                     if (goalkeeperChoice === 'left') {
                         goalkeeperLeftArm.style.transform = 'rotate(-45deg)';
                         goalkeeperRightArm.style.transform = 'rotate(-20deg)';
@@ -319,15 +350,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         goalkeeperRightArm.style.transform = 'rotate(10deg)';
                     }
                     
-                    // Звук прыжка вратаря
-                    playSound(150, 0.3, 'triangle');
-                    
                     // Звук пробития (мяч попадает или нет)
                     setTimeout(() => {
                         if (data.is_goal) {
                             // Звук гола
                             playSound(600, 0.4, 'sine');
                             setTimeout(() => playSound(800, 0.3, 'sine'), 200);
+                            setTimeout(() => playSound(1000, 0.2, 'sine'), 400);
+                            
+                            // Запускаем фейерверк
+                            startFireworks();
                         } else {
                             // Звук отбитого мяча
                             playSound(200, 0.2, 'square');
@@ -369,6 +401,82 @@ document.addEventListener('DOMContentLoaded', function() {
         resetGame();
     });
 
+    // Функция для создания фейерверка
+    function startFireworks() {
+        const fireworksContainer = document.getElementById('fireworksContainer');
+        fireworksContainer.classList.remove('hidden');
+        fireworksContainer.innerHTML = '';
+        
+        const colors = ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F'];
+        const fireworkCount = 15;
+        
+        for (let i = 0; i < fireworkCount; i++) {
+            setTimeout(() => {
+                createFirework(
+                    Math.random() * 100 + '%',
+                    Math.random() * 50 + 10 + '%',
+                    colors[Math.floor(Math.random() * colors.length)]
+                );
+            }, i * 200);
+        }
+        
+        // Скрываем фейерверк через 3 секунды
+        setTimeout(() => {
+            fireworksContainer.classList.add('hidden');
+            fireworksContainer.innerHTML = '';
+        }, 3000);
+    }
+    
+    function createFirework(x, y, color) {
+        const firework = document.createElement('div');
+        firework.style.position = 'absolute';
+        firework.style.left = x;
+        firework.style.top = y;
+        firework.style.width = '4px';
+        firework.style.height = '4px';
+        firework.style.backgroundColor = color;
+        firework.style.borderRadius = '50%';
+        firework.style.boxShadow = `0 0 10px ${color}`;
+        
+        const fireworksContainer = document.getElementById('fireworksContainer');
+        fireworksContainer.appendChild(firework);
+        
+        // Анимация взрыва
+        const particles = 12;
+        const angleStep = (2 * Math.PI) / particles;
+        
+        for (let i = 0; i < particles; i++) {
+            const particle = document.createElement('div');
+            particle.style.position = 'absolute';
+            particle.style.left = x;
+            particle.style.top = y;
+            particle.style.width = '3px';
+            particle.style.height = '3px';
+            particle.style.backgroundColor = color;
+            particle.style.borderRadius = '50%';
+            particle.style.boxShadow = `0 0 8px ${color}`;
+            
+            const angle = i * angleStep;
+            const distance = 80 + Math.random() * 40;
+            const vx = Math.cos(angle) * distance;
+            const vy = Math.sin(angle) * distance;
+            
+            fireworksContainer.appendChild(particle);
+            
+            // Анимация частицы
+            particle.animate([
+                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                { transform: `translate(${vx}px, ${vy}px) scale(0)`, opacity: 0 }
+            ], {
+                duration: 1000 + Math.random() * 500,
+                easing: 'ease-out'
+            }).onfinish = () => particle.remove();
+        }
+        
+        // Удаляем центральную точку
+        setTimeout(() => firework.remove(), 100);
+    }
+
     function resetGame() {
         isPlaying = false;
         gameStartTime = null;
@@ -392,6 +500,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Скрываем результат
         resultMessage.classList.add('hidden');
+        
+        // Скрываем фейерверк
+        const fireworksContainer = document.getElementById('fireworksContainer');
+        fireworksContainer.classList.add('hidden');
+        fireworksContainer.innerHTML = '';
         
         // Перезагружаем страницу для обновления статистики
         setTimeout(() => {

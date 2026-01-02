@@ -76,9 +76,27 @@ Route::middleware('auth')->group(function () {
     Route::get('account/options', [AccountController::class, 'options'])->name('account.options');
     Route::post('account/options', [AccountController::class, 'saveOptions'])->name('account.options.save');
     
+    // Тикеты
+    Route::get('account/tickets', [\App\Http\Controllers\Site\Tickets\TicketsController::class, 'index'])->name('account.tickets.index');
+    Route::get('account/tickets/create', [\App\Http\Controllers\Site\Tickets\TicketsController::class, 'create'])->name('account.tickets.create');
+    Route::post('account/tickets', [\App\Http\Controllers\Site\Tickets\TicketsController::class, 'store'])->name('account.tickets.store');
+    Route::get('account/tickets/{id}', [\App\Http\Controllers\Site\Tickets\TicketsController::class, 'show'])->name('account.tickets.show');
+    Route::post('account/tickets/{id}/message', [\App\Http\Controllers\Site\Tickets\TicketsController::class, 'addMessage'])->name('account.tickets.add-message');
+    Route::get('account/tickets/{id}/check-messages', [\App\Http\Controllers\Site\Tickets\TicketsController::class, 'checkNewMessages'])->name('account.tickets.check-messages');
+    
+    // Уведомления
+    Route::get('notifications', [\App\Http\Controllers\Site\Notifications\NotificationsController::class, 'index'])->name('notifications.index');
+    Route::get('notifications/unread-count', [\App\Http\Controllers\Site\Notifications\NotificationsController::class, 'unreadCount'])->name('notifications.unread-count');
+    Route::post('notifications/{id}/read', [\App\Http\Controllers\Site\Notifications\NotificationsController::class, 'markAsRead'])->name('notifications.mark-read');
+    Route::post('notifications/mark-all-read', [\App\Http\Controllers\Site\Notifications\NotificationsController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+    
     // Мини-игры
     Route::get('games/penalty-training', [\App\Http\Controllers\Site\Games\PenaltyTrainingController::class, 'index'])->name('games.penalty-training');
     Route::post('games/penalty-training/play', [\App\Http\Controllers\Site\Games\PenaltyTrainingController::class, 'play'])->name('games.penalty-training.play');
+    Route::get('games/match-predictions', [\App\Http\Controllers\Site\Games\MatchPredictionsController::class, 'index'])->name('games.match-predictions');
+    Route::post('games/match-predictions/{matchId}/predict', [\App\Http\Controllers\Site\Games\MatchPredictionsController::class, 'predict'])->name('games.match-predictions.predict');
+    Route::get('games/keepie-uppie', [\App\Http\Controllers\Site\Games\KeepieUppieController::class, 'index'])->name('games.keepie-uppie');
+    Route::post('games/keepie-uppie/play', [\App\Http\Controllers\Site\Games\KeepieUppieController::class, 'play'])->name('games.keepie-uppie.play');
 
     // Профиль Breeze
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

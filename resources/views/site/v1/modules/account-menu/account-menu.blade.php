@@ -12,6 +12,44 @@
             ->first();
         $currentTeam = $latestUserTeam ? $latestUserTeam->team : null;
     }
+    
+    // Подсчитываем непрочитанные сообщения от администраторов в тикетах
+    $unreadMessagesCount = 0;
+    if ($user) {
+        // Оптимизированный запрос: для каждого тикета находим последнее сообщение пользователя
+        // и считаем сообщения от администраторов после него
+        $tickets = \App\Models\Tickets\Ticket::where('created_by_user_id', $user->id)
+            ->with(['messages' => function($query) use ($user) {
+                $query->orderBy('created_at', 'desc');
+            }])
+            ->get();
+        
+        foreach ($tickets as $ticket) {
+            // Находим последнее сообщение от пользователя
+            $lastUserMessage = $ticket->messages
+                ->where('is_admin', false)
+                ->where('user_id', $user->id)
+                ->sortByDesc('created_at')
+                ->first();
+            
+            if ($lastUserMessage) {
+                // Считаем сообщения от администраторов, созданные после последнего сообщения пользователя
+                $unreadCount = $ticket->messages
+                    ->where('is_admin', true)
+                    ->filter(function($message) use ($lastUserMessage) {
+                        return $message->created_at > $lastUserMessage->created_at;
+                    })
+                    ->count();
+            } else {
+                // Если пользователь еще не писал сообщений, считаем все сообщения от администраторов
+                $unreadCount = $ticket->messages
+                    ->where('is_admin', true)
+                    ->count();
+            }
+            
+            $unreadMessagesCount += $unreadCount;
+        }
+    }
 
     // Определяем активный пункт меню
     $isActive = function($route) use ($currentRoute) {
@@ -30,7 +68,16 @@
         if ($route === 'account.matches' && $currentRoute === 'account.matches') {
             return true;
         }
+        if ($route === 'account.tickets' && strpos($currentRoute, 'account.tickets') === 0) {
+            return true;
+        }
         if ($route === 'games.penalty-training' && $currentRoute === 'games.penalty-training') {
+            return true;
+        }
+        if ($route === 'games.match-predictions' && $currentRoute === 'games.match-predictions') {
+            return true;
+        }
+        if ($route === 'games.keepie-uppie' && $currentRoute === 'games.keepie-uppie') {
             return true;
         }
         return false;
@@ -99,11 +146,36 @@
                 </div>
                 Матчи
             </a>
+            <a href="{{ route('account.tickets.index') }}" class="{{ $isActive('account.tickets') ? 'sidebar-active' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' }} flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-colors">
+                <div class="flex items-center">
+                    <div class="w-5 h-5 mr-3 flex items-center justify-center">
+                        <i class="ri-customer-service-2-line"></i>
+                    </div>
+                    Поддержка
+                </div>
+                @if($unreadMessagesCount > 0)
+                    <span class="bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1 min-w-[20px] text-center">
+                        {{ $unreadMessagesCount > 99 ? '99+' : $unreadMessagesCount }}
+                    </span>
+                @endif
+            </a>
             <a href="{{ route('games.penalty-training') }}" class="{{ $isActive('games.penalty-training') ? 'sidebar-active' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' }} flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors">
                 <div class="w-5 h-5 mr-3 flex items-center justify-center">
                     <i class="ri-football-line"></i>
                 </div>
                 Тренировка пенальти
+            </a>
+            <a href="{{ route('games.match-predictions') }}" class="{{ $isActive('games.match-predictions') ? 'sidebar-active' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' }} flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors">
+                <div class="w-5 h-5 mr-3 flex items-center justify-center">
+                    <i class="ri-crystal-ball-line"></i>
+                </div>
+                Прогноз матчей
+            </a>
+            <a href="{{ route('games.keepie-uppie') }}" class="{{ $isActive('games.keepie-uppie') ? 'sidebar-active' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' }} flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors">
+                <div class="w-5 h-5 mr-3 flex items-center justify-center">
+                    <i class="ri-football-line"></i>
+                </div>
+                Чеканка
             </a>
             <a href="{{ route('account.referrals') }}" class="{{ $isActive('account.referrals') ? 'sidebar-active' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' }} flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors">
                 <div class="w-5 h-5 mr-3 flex items-center justify-center">

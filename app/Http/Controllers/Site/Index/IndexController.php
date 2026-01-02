@@ -15,7 +15,7 @@ class IndexController
         $posts = (new BlogRepository)->list(3);
         $teams = (new RatingsRepository)->getTopTeams(10);
 
-        \Auth::loginUsingId(53719);
+        //\Auth::loginUsingId(1);
 
         if ($page == null) {
             abort(404);

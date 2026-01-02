@@ -84,7 +84,9 @@
                         <p class="text-sm font-medium text-gray-500">Пригласил вас</p>
                         <p class="text-3xl font-bold text-yellow-600">
                             @if($user->referredBy)
-                                {{ $user->referredBy->name }}
+                                <a href="/players/{{ $user->referredBy->nickname ?? $user->referredBy->id }}" class="hover:underline">
+                                    {{ $user->referredBy->name }}
+                                </a>
                             @else
                                 Нет
                             @endif
@@ -115,7 +117,9 @@
                         @foreach($referrals as $referral)
                         <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">{{ $referral->name }}</div>
+                                <a href="/players/{{ $referral->nickname ?? $referral->id }}" class="text-sm font-medium text-gray-900 hover:text-primary hover:underline">
+                                    {{ $referral->name }}
+                                </a>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-500">{{ $referral->email }}</div>

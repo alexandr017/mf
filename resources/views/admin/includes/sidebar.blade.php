@@ -45,6 +45,12 @@
                     <span>Товарищеские матчи</span>
                 </a>
             </li>
+            <li class="@if(Request::routeIs('admin.match-predictions.*')) active @endif">
+                <a href="{{ route('admin.match-predictions.index') }}">
+                    <i class="fa fa-crystal-ball"></i>
+                    <span>Прогнозы матчей</span>
+                </a>
+            </li>
 
             <li class="header">Команды</li>
             <li class="@if(Request::routeIs('admin.teams.*')) active @endif">
@@ -141,6 +147,12 @@
                 <a href="{{ route('admin.tickets.index') }}">
                     <i class="fa fa-ticket"></i>
                     <span>Тикеты</span>
+                </a>
+            </li>
+            <li class="@if(Request::routeIs('admin.notifications.*')) active @endif">
+                <a href="{{ route('admin.notifications.index') }}">
+                    <i class="fa fa-bell"></i>
+                    <span>Массовые уведомления</span>
                 </a>
             </li>
 

@@ -51,6 +51,8 @@ class User extends Authenticatable
         'referrals_count',
         'hometown_city_id',
         'show_hometown',
+        'telegram_chat_id',
+        'telegram_notifications_enabled',
     ];
 
     /**
@@ -75,6 +77,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'rating' => 'decimal:2',
             'show_hometown' => 'boolean',
+            'telegram_notifications_enabled' => 'boolean',
         ];
     }
 
@@ -92,6 +95,22 @@ class User extends Authenticatable
     public function referrals()
     {
         return $this->hasMany(User::class, 'referred_by_id');
+    }
+
+    /**
+     * Уведомления пользователя
+     */
+    public function notifications()
+    {
+        return $this->hasMany(\App\Models\Notifications\UserNotification::class);
+    }
+
+    /**
+     * Непрочитанные уведомления
+     */
+    public function unreadNotifications()
+    {
+        return $this->notifications()->where('is_read', false);
     }
 
     /**
