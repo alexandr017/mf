@@ -167,3 +167,4 @@ SELECT id, name, goals, assists FROM users WHERE id IN (
 
 Подробная документация по архитектуре системы находится в файле `docs/live-matches.md`.
 
+

@@ -49,6 +49,8 @@ class User extends Authenticatable
         'referral_code',
         'referred_by_id',
         'referrals_count',
+        'hometown_city_id',
+        'show_hometown',
     ];
 
     /**
@@ -72,6 +74,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'rating' => 'decimal:2',
+            'show_hometown' => 'boolean',
         ];
     }
 
@@ -227,5 +230,13 @@ class User extends Authenticatable
             return (float) $subscription->plan->rating_multiplier;
         }
         return 1.0; // Базовый множитель без подписки
+    }
+
+    /**
+     * Родной город пользователя
+     */
+    public function hometownCity()
+    {
+        return $this->belongsTo(\App\Models\Cities\City::class, 'hometown_city_id');
     }
 }

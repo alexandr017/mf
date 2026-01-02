@@ -41,4 +41,9 @@ class Team extends Model
     {
         return $this->hasMany(TournamentMatch::class, 'team_2');
     }
+
+    public function city()
+    {
+        return $this->belongsTo(\App\Models\Cities\City::class, 'city_id');
+    }
 }

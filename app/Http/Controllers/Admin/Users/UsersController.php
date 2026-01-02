@@ -77,6 +77,13 @@ final class UsersController extends AdminController
 
         $data = empty_str_to_null($data);
 
+        // Обработка show_hometown
+        if (isset($data['show_hometown'])) {
+            $data['show_hometown'] = (bool) $data['show_hometown'];
+        } else {
+            $data['show_hometown'] = false;
+        }
+
         // Генерируем referral_code, если не указан
         if (empty($data['referral_code'])) {
             $data['referral_code'] = Str::upper(Str::random(8));
@@ -127,6 +134,13 @@ final class UsersController extends AdminController
         $data = $request->all();
 
         $data = empty_str_to_null($data);
+
+        // Обработка show_hometown
+        if (isset($data['show_hometown'])) {
+            $data['show_hometown'] = (bool) $data['show_hometown'];
+        } else {
+            $data['show_hometown'] = false;
+        }
 
         // Хешируем пароль, если он указан
         if (!empty($data['password'])) {

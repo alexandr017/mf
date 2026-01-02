@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Site\Tournaments;
 
 use App\Models\Tournaments\Tournament;
+use App\Models\FriendlyMatches\FriendlyMatch;
 use DB;
 
 class TournamentsController
@@ -42,7 +43,14 @@ class TournamentsController
                 return $item->country_id ?? 'null';
             });
 
-        return view('site.v1.templates.tournaments.tournaments', compact('tournaments'));
+        // Получаем последние товарищеские матчи (5 штук)
+        $friendlyMatches = FriendlyMatch::with(['homeTeam', 'awayTeam'])
+            ->where('status', 'played')
+            ->orderBy('date', 'desc')
+            ->limit(5)
+            ->get();
+
+        return view('site.v1.templates.tournaments.tournaments', compact('tournaments', 'friendlyMatches'));
     }
 
     // 2) Список сезонов выбранного турнира

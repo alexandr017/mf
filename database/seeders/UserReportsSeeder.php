@@ -63,3 +63,4 @@ class UserReportsSeeder extends Seeder
     }
 }
 
+

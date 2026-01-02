@@ -88,7 +88,7 @@
                                 </div>
                                 <div>
                                     <div class="text-sm text-gray-500">Squad Size</div>
-                                    <div class="font-medium">25 Players</div>
+                                    <div class="font-medium">{{ $activePlayersCount ?? 0 }} Players</div>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
@@ -177,7 +177,58 @@
 
                 <!-- Sidebar -->
                 <div class="space-y-8">
-                    <button class="w-full bg-primary hover:bg-opacity-80 text-gray-900 font-bold px-6 py-3 !rounded-button whitespace-nowrap">
+                    @auth
+                        @if(isset($currentUserTeam) && $currentUserTeam)
+                            @if($canLeave && $canLeave['can_leave'])
+                                <button onclick="showLeaveModal()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 !rounded-button whitespace-nowrap">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <div class="w-5 h-5 flex items-center justify-center">
+                                            <i class="ri-logout-box-line"></i>
+                                        </div>
+                                        <span>Покинуть команду</span>
+                                    </div>
+                                </button>
+                            @elseif($canLeave && !$canLeave['can_leave'])
+                                <div class="w-full bg-gray-100 text-gray-600 font-bold px-6 py-3 !rounded-button whitespace-nowrap text-center">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <div class="w-5 h-5 flex items-center justify-center">
+                                            <i class="ri-information-line"></i>
+                                        </div>
+                                        <span>{{ $canLeave['reason'] ?? 'Нельзя покинуть команду' }}</span>
+                                    </div>
+                                </div>
+                            @endif
+                        @elseif($canJoin && $canJoin['can_join'])
+                            <button onclick="showJoinModal()" class="w-full bg-primary hover:bg-opacity-80 text-gray-900 font-bold px-6 py-3 !rounded-button whitespace-nowrap">
+                                <div class="flex items-center justify-center gap-2">
+                                    <div class="w-5 h-5 flex items-center justify-center">
+                                        <i class="ri-team-line"></i>
+                                    </div>
+                                    <span>Присоединиться к команде</span>
+                                </div>
+                            </button>
+                        @elseif($canJoin && !$canJoin['can_join'])
+                            <div class="w-full bg-gray-100 text-gray-600 font-bold px-6 py-3 !rounded-button whitespace-nowrap text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    <div class="w-5 h-5 flex items-center justify-center">
+                                        <i class="ri-information-line"></i>
+                                    </div>
+                                    <span>{{ $canJoin['reason'] ?? 'Нельзя присоединиться' }}</span>
+                                </div>
+                            </div>
+                        @endif
+                    @else
+                        <a href="{{ route('login') }}" class="w-full bg-primary hover:bg-opacity-80 text-gray-900 font-bold px-6 py-3 !rounded-button whitespace-nowrap block text-center">
+                            <div class="flex items-center justify-center gap-2">
+                                <div class="w-5 h-5 flex items-center justify-center">
+                                    <i class="ri-team-line"></i>
+                                </div>
+                                <span>Войти для присоединения</span>
+                            </div>
+                        </a>
+                    @endauth
+
+                    <button class="w-full bg-secondary hover:bg-opacity-80 text-white font-bold px-6 py-3 !rounded-button whitespace-nowrap">
                         <div class="flex items-center justify-center gap-2">
                             <div class="w-5 h-5 flex items-center justify-center">
                                 <i class="ri-ticket-line"></i>
@@ -185,6 +236,50 @@
                             <span>Поддержать команду</span>
                         </div>
                     </button>
+
+                    <!-- Transfer Rules Info -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden border-2 border-gray-100">
+                        <div class="bg-gray-900 p-4">
+                            <h2 class="heading-font text-xl text-white">Правила присоединения</h2>
+                        </div>
+                        <div class="p-4 space-y-3 text-sm">
+                            <div class="flex items-start gap-2">
+                                <i class="ri-group-line text-primary mt-1"></i>
+                                <div>
+                                    <div class="font-semibold text-gray-900">Лимит игроков</div>
+                                    <div class="text-gray-600">Максимум {{ $transferRules['max_players'] ?? 100 }} активных игроков в команде</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="ri-calendar-line text-primary mt-1"></i>
+                                <div>
+                                    <div class="font-semibold text-gray-900">Трансферное окно</div>
+                                    <div class="text-gray-600">
+                                        С {{ $transferRules['transfer_window_start'] ?? '01.06' }} по {{ $transferRules['transfer_window_end'] ?? '31.08' }}
+                                        @if($transferRules['transfer_window_open'] ?? false)
+                                            <span class="text-green-600 font-semibold">(Открыто)</span>
+                                        @else
+                                            <span class="text-red-600 font-semibold">(Закрыто)</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="ri-exchange-line text-primary mt-1"></i>
+                                <div>
+                                    <div class="font-semibold text-gray-900">Смена команды</div>
+                                    <div class="text-gray-600">1 раз за трансферное окно. Нельзя менять в течение сезона</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="ri-vip-crown-line text-yellow-500 mt-1"></i>
+                                <div>
+                                    <div class="font-semibold text-gray-900">Премиум аккаунт</div>
+                                    <div class="text-gray-600">Неограниченное количество смен команды и смена вне трансферного окна</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Trophy Cabinet -->
                     <div class="bg-white rounded-lg shadow-lg overflow-hidden border-2 border-gray-100">
@@ -305,4 +400,179 @@
             </div>
         </div>
     </section>
+
+    <!-- Join Team Modal -->
+    <div id="joinTeamModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="heading-font text-2xl text-gray-900">Присоединение к команде</h3>
+                <button onclick="closeJoinModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="ri-close-line text-2xl"></i>
+                </button>
+            </div>
+            
+            <div class="mb-6">
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                    <div class="flex items-start gap-3">
+                        <i class="ri-alert-line text-yellow-600 text-xl mt-1"></i>
+                        <div>
+                            <div class="font-semibold text-yellow-900 mb-2">Важно!</div>
+                            <div class="text-sm text-yellow-800">
+                                После завершения трансферного окна (31 августа) вы не сможете сменить команду до следующего трансферного окна (1 июня следующего года), если у вас нет премиум аккаунта.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-2 text-sm text-gray-600">
+                    <p>Вы присоединяетесь к команде <strong class="text-gray-900">{{ $team->name }}</strong></p>
+                    @if(!($transferRules['transfer_window_open'] ?? false))
+                        <p class="text-red-600 font-semibold">Трансферное окно закрыто. Для присоединения требуется премиум аккаунт.</p>
+                    @endif
+                </div>
+            </div>
+            
+            <div class="flex gap-3">
+                <button onclick="closeJoinModal()" class="flex-1 bg-gray-200 text-gray-700 font-bold px-6 py-3 rounded-button hover:bg-gray-300 transition-colors">
+                    Отмена
+                </button>
+                <button onclick="confirmJoinTeam()" class="flex-1 bg-primary text-gray-900 font-bold px-6 py-3 rounded-button hover:bg-opacity-80 transition-colors">
+                    Присоединиться
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showJoinModal() {
+            document.getElementById('joinTeamModal').classList.remove('hidden');
+        }
+
+        function closeJoinModal() {
+            document.getElementById('joinTeamModal').classList.add('hidden');
+        }
+
+        function confirmJoinTeam() {
+            const button = event.target;
+            const originalText = button.textContent;
+            button.disabled = true;
+            button.textContent = 'Обработка...';
+
+            fetch('{{ route("teams.join", $team->alias) }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    window.location.reload();
+                } else {
+                    alert(data.message || 'Ошибка при присоединении к команде');
+                    button.disabled = false;
+                    button.textContent = originalText;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Произошла ошибка. Попробуйте позже.');
+                button.disabled = false;
+                button.textContent = originalText;
+            });
+        }
+
+        // Закрытие модального окна при клике вне его
+        document.getElementById('joinTeamModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeJoinModal();
+            }
+        });
+    </script>
+
+    <!-- Leave Team Modal -->
+    <div id="leaveTeamModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="heading-font text-2xl text-gray-900">Выход из команды</h3>
+                <button onclick="closeLeaveModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="ri-close-line text-2xl"></i>
+                </button>
+            </div>
+            
+            <div class="mb-6">
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                    <div class="flex items-start gap-3">
+                        <i class="ri-alert-line text-yellow-600 text-xl mt-1"></i>
+                        <div>
+                            <div class="font-semibold text-yellow-900 mb-2">Внимание!</div>
+                            <div class="text-sm text-yellow-800">
+                                Вы уверены, что хотите покинуть команду <strong>{{ $team->name }}</strong>? После выхода вы сможете присоединиться к другой команде только в трансферное окно (если у вас нет премиум аккаунта).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex gap-3">
+                <button onclick="closeLeaveModal()" class="flex-1 bg-gray-200 text-gray-700 font-bold px-6 py-3 rounded-button hover:bg-gray-300 transition-colors">
+                    Отмена
+                </button>
+                <button onclick="confirmLeaveTeam()" class="flex-1 bg-red-600 text-white font-bold px-6 py-3 rounded-button hover:bg-red-700 transition-colors">
+                    Покинуть команду
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showLeaveModal() {
+            document.getElementById('leaveTeamModal').classList.remove('hidden');
+        }
+
+        function closeLeaveModal() {
+            document.getElementById('leaveTeamModal').classList.add('hidden');
+        }
+
+        function confirmLeaveTeam() {
+            const button = event.target;
+            const originalText = button.textContent;
+            button.disabled = true;
+            button.textContent = 'Обработка...';
+
+            fetch('{{ route("teams.leave", $team->alias) }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    window.location.reload();
+                } else {
+                    alert(data.message || 'Ошибка при выходе из команды');
+                    button.disabled = false;
+                    button.textContent = originalText;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Произошла ошибка. Попробуйте позже.');
+                button.disabled = false;
+                button.textContent = originalText;
+            });
+        }
+
+        // Закрытие модального окна при клике вне его
+        document.getElementById('leaveTeamModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLeaveModal();
+            }
+        });
+    </script>
 @endsection

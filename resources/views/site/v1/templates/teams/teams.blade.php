@@ -37,6 +37,8 @@
                         <option value="name-desc">По названию (Я-А)</option>
                         <option value="city-asc">По городу (А-Я)</option>
                         <option value="city-desc">По городу (Я-А)</option>
+                        <option value="players-asc">По игрокам (меньше → больше)</option>
+                        <option value="players-desc">По игрокам (больше → меньше)</option>
                     </select>
                 </div>
             </div>
@@ -53,7 +55,8 @@
                     <a href="/teams/{{$team->alias}}" class="team-card bg-white rounded-lg shadow-lg overflow-hidden border-2 border-gray-100 hover:border-primary transition-all duration-300 card-hover"
                        data-name="{{ strtolower($team->name) }}"
                        data-city="{{ strtolower($team->city_name ?? '') }}"
-                       data-stadium="{{ strtolower($team->stadium ?? '') }}">
+                       data-stadium="{{ strtolower($team->stadium ?? '') }}"
+                       data-players="{{ $team->players_count ?? 0 }}">
                         <div class="relative">
                             <div class="h-48 overflow-hidden">
                                 <img src="{{$team->stadium_small_preview}}" alt="{{$team->stadium}}" class="w-full h-full object-cover object-top">
@@ -101,7 +104,7 @@
                                     <div class="w-5 h-5 text-primary">
                                         <i class="ri-team-line"></i>
                                     </div>
-                                    <span class="text-gray-600">Состав: 25 игроков</span>
+                                    <span class="text-gray-600">Состав: {{ $team->players_count ?? 0 }} игроков</span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <div class="w-5 h-5 text-primary">
@@ -186,16 +189,25 @@
                     } else if (field === 'city') {
                         aValue = a.dataset.city || '';
                         bValue = b.dataset.city || '';
+                    } else if (field === 'players') {
+                        aValue = parseInt(a.dataset.players || 0);
+                        bValue = parseInt(b.dataset.players || 0);
                     } else {
                         return 0;
                     }
 
                     // Сравнение
                     let comparison = 0;
-                    if (aValue < bValue) {
-                        comparison = -1;
-                    } else if (aValue > bValue) {
-                        comparison = 1;
+                    if (field === 'players') {
+                        // Числовое сравнение для игроков
+                        comparison = aValue - bValue;
+                    } else {
+                        // Строковое сравнение для остальных полей
+                        if (aValue < bValue) {
+                            comparison = -1;
+                        } else if (aValue > bValue) {
+                            comparison = 1;
+                        }
                     }
 
                     return order === 'asc' ? comparison : -comparison;

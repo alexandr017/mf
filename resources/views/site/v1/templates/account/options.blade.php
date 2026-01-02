@@ -93,6 +93,36 @@
                     </div>
                 </div>
 
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="hometown_city_id" class="block text-sm font-medium text-gray-700 mb-2">Родной город</label>
+                        <select id="hometown_city_id" name="hometown_city_id" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent @error('hometown_city_id') border-red-500 @enderror">
+                            <option value="">Выберите город</option>
+                            @php
+                                $cities = \App\Models\Cities\City::orderBy('name')->get();
+                            @endphp
+                            @foreach($cities as $city)
+                                <option value="{{ $city->id }}" {{ old('hometown_city_id', auth()->user()->hometown_city_id) == $city->id ? 'selected' : '' }}>
+                                    {{ $city->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('hometown_city_id')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label for="show_hometown" class="block text-sm font-medium text-gray-700 mb-2">Отображать город в профиле</label>
+                        <select id="show_hometown" name="show_hometown" class="w-full px-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent @error('show_hometown') border-red-500 @enderror">
+                            <option value="0" {{ old('show_hometown', auth()->user()->show_hometown) == 0 ? 'selected' : '' }}>Нет</option>
+                            <option value="1" {{ old('show_hometown', auth()->user()->show_hometown) == 1 ? 'selected' : '' }}>Да</option>
+                        </select>
+                        @error('show_hometown')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
                 <div class="border-t border-gray-200 pt-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Изменить пароль</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">

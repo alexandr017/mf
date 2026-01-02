@@ -40,6 +40,41 @@
 </div>
 
 <div class="form-group">
+    <label for="hometown_city_id">Родной город</label>
+    <select class="form-control select2" name="hometown_city_id" id="hometown_city_id" style="width: 100%;">
+        <option value="">Не выбрано</option>
+        @php
+            $cities = \App\Models\Cities\City::orderBy('name')->get();
+        @endphp
+        @foreach($cities as $city)
+            <option value="{{$city->id}}"
+                    @if((old('hometown_city_id') == $city->id) || (isset($item) && $item->hometown_city_id == $city->id))
+                        selected
+                    @endif>
+                {{$city->name}}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="show_hometown">Отображать город в профиле</label>
+    <select class="form-control" name="show_hometown" id="show_hometown">
+        <option value="0" @if((old('show_hometown') === '0' || old('show_hometown') === 0) || (isset($item) && $item->show_hometown == 0)) selected @endif>Нет</option>
+        <option value="1" @if((old('show_hometown') === '1' || old('show_hometown') === 1) || (isset($item) && $item->show_hometown == 1)) selected @endif>Да</option>
+    </select>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    $('#hometown_city_id').select2({
+        placeholder: 'Выберите город',
+        allowClear: true
+    });
+});
+</script>
+
+<div class="form-group">
     <label for="password">@if(!isset($item))<i class="red">*</i>@endif Пароль</label>
     <input type="password" class="form-control" name="password" id="password" @if(!isset($item)) required @endif>
     @if(isset($item))

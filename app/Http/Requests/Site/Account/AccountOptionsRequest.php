@@ -30,6 +30,8 @@ class AccountOptionsRequest extends FormRequest
             'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'preferred_position' => ['nullable', 'string', 'in:defender,midfielder,forward'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'], // 5MB max
+            'hometown_city_id' => ['nullable', 'integer', 'exists:cities,id'],
+            'show_hometown' => ['nullable', 'boolean'],
         ];
 
         // Валидация пароля только если он указан

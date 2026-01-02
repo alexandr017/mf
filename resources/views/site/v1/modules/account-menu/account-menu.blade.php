@@ -2,12 +2,13 @@
     $user = auth()->user();
     $currentRoute = request()->route()->getName();
 
-    // Получаем последнюю команду игрока
+    // Получаем текущую команду игрока (текущий сезон)
     $currentTeam = null;
     if ($user) {
+        $currentSeason = \Carbon\Carbon::now()->year;
         $latestUserTeam = $user->userTeams()
             ->with('team')
-            ->latest('created_at')
+            ->where('season', $currentSeason)
             ->first();
         $currentTeam = $latestUserTeam ? $latestUserTeam->team : null;
     }
@@ -24,6 +25,12 @@
             return true;
         }
         if ($route === 'account.games' && ($currentRoute === 'account.games' || $currentRoute === 'account.game')) {
+            return true;
+        }
+        if ($route === 'account.matches' && $currentRoute === 'account.matches') {
+            return true;
+        }
+        if ($route === 'games.penalty-training' && $currentRoute === 'games.penalty-training') {
             return true;
         }
         return false;
@@ -85,6 +92,18 @@
                     <i class="ri-football-line"></i>
                 </div>
                 Игры
+            </a>
+            <a href="{{ route('account.matches') }}" class="{{ $isActive('account.matches') ? 'sidebar-active' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' }} flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors">
+                <div class="w-5 h-5 mr-3 flex items-center justify-center">
+                    <i class="ri-calendar-line"></i>
+                </div>
+                Матчи
+            </a>
+            <a href="{{ route('games.penalty-training') }}" class="{{ $isActive('games.penalty-training') ? 'sidebar-active' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' }} flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors">
+                <div class="w-5 h-5 mr-3 flex items-center justify-center">
+                    <i class="ri-football-line"></i>
+                </div>
+                Тренировка пенальти
             </a>
             <a href="{{ route('account.referrals') }}" class="{{ $isActive('account.referrals') ? 'sidebar-active' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' }} flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors">
                 <div class="w-5 h-5 mr-3 flex items-center justify-center">

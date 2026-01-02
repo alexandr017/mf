@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\RatingHistory\RatingHistoryController;
 use App\Http\Controllers\Admin\TeamPlayers\TeamPlayersController;
 use App\Http\Controllers\Admin\Referrals\ReferralsController;
 use App\Http\Controllers\Admin\Reports\ReportsController;
+use App\Http\Controllers\Admin\FriendlyMatches\FriendlyMatchesController;
 
 Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
 
@@ -71,5 +72,7 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin', 'as' => 'a
     Route::get('referrals/search-users', [ReferralsController::class, 'searchUsers'])->name('referrals.search-users');
 
     Route::resource('reports', ReportsController::class)->except(['show']);
+
+    Route::resource('friendly-matches', FriendlyMatchesController::class);
 
 });

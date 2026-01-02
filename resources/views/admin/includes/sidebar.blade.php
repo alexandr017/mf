@@ -39,6 +39,12 @@
                     <span>Матчи</span>
                 </a>
             </li>
+            <li class="@if(Request::routeIs('admin.friendly-matches.*')) active @endif">
+                <a href="{{ route('admin.friendly-matches.index') }}">
+                    <i class="fa fa-handshake-o"></i>
+                    <span>Товарищеские матчи</span>
+                </a>
+            </li>
 
             <li class="header">Команды</li>
             <li class="@if(Request::routeIs('admin.teams.*')) active @endif">

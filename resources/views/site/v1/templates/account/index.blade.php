@@ -20,7 +20,7 @@
                         <h2 class="heading-font text-2xl mb-1">Текущая команда</h2>
                         <p class="text-lg font-semibold">{{ $currentUserTeam->team->name }}</p>
                         @if($currentUserTeam->season)
-                            <p class="text-sm opacity-90">Сезон {{ $currentUserTeam->season->year_start }}-{{ $currentUserTeam->season->year_finish }}</p>
+                            <p class="text-sm opacity-90">Сезон {{ $currentUserTeam->season }}</p>
                         @endif
                     </div>
                 </div>
@@ -145,7 +145,7 @@
                                         <p class="text-sm text-gray-500">
                                             {{ $user->preferred_position ? \App\Models\User::getPositions()[$user->preferred_position] ?? 'Игрок' : 'Игрок' }}
                                             @if($stat['season'])
-                                                • Сезон {{ $stat['season']->year_start }}-{{ $stat['season']->year_finish }}
+                                                • Сезон {{ $stat['season'] }}
                                             @endif
                                         </p>
                                     </div>
@@ -186,6 +186,7 @@
                 <div class="border-b border-gray-200 mb-6">
                     <div class="flex space-x-4">
                         <button class="px-4 py-2 border-b-2 border-primary text-primary font-medium tab-button active" data-tab="stats">Статистика</button>
+                        <button class="px-4 py-2 border-b-2 border-transparent text-gray-600 hover:text-gray-900 font-medium tab-button" data-tab="friendly">Товарищеские игры</button>
                         <button class="px-4 py-2 border-b-2 border-transparent text-gray-600 hover:text-gray-900 font-medium tab-button" data-tab="titles">Титулы</button>
                     </div>
                 </div>
@@ -198,7 +199,7 @@
                             if (!empty($seasonStats)) {
                                 foreach ($seasonStats as $stat) {
                                     if ($stat['season']) {
-                                        $years[$stat['season']->year_start] = true;
+                                        $years[$stat['season']] = true;
                                     }
                                 }
                             }
@@ -226,6 +227,47 @@
                         @empty
                             <div class="text-center py-8 text-gray-500">
                                 <p>Статистика по годам пока недоступна</p>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                <!-- Friendly Matches Tab -->
+                <div id="friendly-tab" class="tab-content hidden">
+                    <div class="space-y-4">
+                        @php
+                            $friendlyYears = [];
+                            if (isset($yearlyStats) && !empty($yearlyStats)) {
+                                $friendlyYears = array_keys($yearlyStats);
+                                rsort($friendlyYears);
+                            }
+                        @endphp
+                        @forelse($friendlyYears as $year)
+                            @php
+                                $yearGoals = $yearlyStats[$year]['goals'] ?? 0;
+                                $yearAssists = $yearlyStats[$year]['assists'] ?? 0;
+                                $yearMatches = $yearlyStats[$year]['matches'] ?? 0;
+                            @endphp
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <h3 class="font-bold text-gray-900 mb-3">{{ $year }} год</h3>
+                                <div class="grid grid-cols-3 gap-4">
+                                    <div class="text-center">
+                                        <p class="text-xl font-bold text-primary">{{ $yearGoals }}</p>
+                                        <p class="text-sm text-gray-500">Голов</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <p class="text-xl font-bold text-secondary">{{ $yearAssists }}</p>
+                                        <p class="text-sm text-gray-500">Передач</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <p class="text-xl font-bold text-blue-600">{{ $yearMatches }}</p>
+                                        <p class="text-sm text-gray-500">Матчей</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="text-center py-8 text-gray-500">
+                                <p>Статистика товарищеских игр по годам пока недоступна</p>
                             </div>
                         @endforelse
                     </div>

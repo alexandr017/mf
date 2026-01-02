@@ -13,3 +13,8 @@ Schedule::command('live-matches:process')
     ->everySecond()
     ->withoutOverlapping()
     ->runInBackground();
+
+// Обработка товарищеских матчей каждый день в 00:00
+Schedule::command('friendly-matches:process')
+    ->daily()
+    ->withoutOverlapping();

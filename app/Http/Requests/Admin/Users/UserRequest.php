@@ -37,6 +37,8 @@ class UserRequest extends FormRequest
             'referral_code' => ['nullable', 'max:255', 'unique:users,referral_code,' . ($userId ?? 'NULL')],
             'referred_by_id' => ['nullable', 'exists:users,id'],
             'referrals_count' => ['nullable', 'integer', 'min:0'],
+            'hometown_city_id' => ['nullable', 'integer', 'exists:cities,id'],
+            'show_hometown' => ['nullable', 'boolean'],
         ];
 
         if ($userId) {
@@ -71,6 +73,8 @@ class UserRequest extends FormRequest
             'referral_code' => 'Реферальный код',
             'referred_by_id' => 'Приглашен пользователем',
             'referrals_count' => 'Количество рефералов',
+            'hometown_city_id' => 'Родной город',
+            'show_hometown' => 'Отображать город',
         ];
     }
 }

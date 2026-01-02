@@ -5,6 +5,28 @@
 @section('content')
     @include('site.v1.modules.tournaments-banner.tournaments-banner')
 
+<!-- Friendly Matches Section -->
+@if(isset($friendlyMatches) && $friendlyMatches->count() > 0)
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="heading-font text-4xl text-gray-900">Последние товарищеские игры</h2>
+            <a href="/friendly-matches" class="text-primary hover:text-primary-dark font-medium flex items-center">
+                Смотреть все
+                <div class="w-5 h-5 ml-1 flex items-center justify-center">
+                    <i class="ri-arrow-right-line"></i>
+                </div>
+            </a>
+        </div>
+        <div class="flex overflow-x-auto pb-4 gap-6 hide-scrollbar">
+            @foreach($friendlyMatches as $match)
+                @include('site.v1.modules.match-card.match-card', ['match' => $match])
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
 <!-- Current Tournaments Section -->
 <section class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -53,37 +75,37 @@
                             ];
                             $typeLabel = $typeLabels[$tournament->type] ?? $tournament->type;
                         @endphp
-                        <div class="bg-white rounded-lg shadow-lg overflow-hidden border-2 border-gray-100 transition-all duration-300 card-hover trophy-card cursor-pointer"
-                             style="border-color: {{ $tournamentColor }};"
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden border-2 border-gray-100 transition-all duration-300 card-hover trophy-card relative"
+                             style="border-color: {{ $tournamentColor }}; opacity: 0.6;"
                              onmouseover="this.style.borderColor='{{ $tournamentColor }}'; this.style.boxShadow='0 0 0 3px {{ $tournamentColor }}33';"
                              onmouseout="this.style.borderColor='#e5e7eb'; this.style.boxShadow='';">
-                            <a href="/tournaments/{{ $tournament->id }}">
-                                <div class="p-8 text-center">
-                                    <div class="w-32 h-32 mx-auto mb-6 trophy-glow">
-                                        @if($tournament->image)
-                                            <img src="{{ $tournament->image }}" alt="{{ $tournament->name }}" class="w-full h-full object-cover object-top">
-                                        @else
-                                            <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center">
-                                                <i class="ri-trophy-line text-5xl text-gray-400"></i>
-                                            </div>
-                                        @endif
-                                    </div>
-                                    <h4 class="heading-font text-xl text-gray-900 mb-2">{{ $tournament->name }}</h4>
-                                    <p class="text-gray-600 text-sm mb-4">{{ $typeLabel }}</p>
-                                    <div class="space-y-2 text-sm">
-                                        <div class="flex justify-between">
-                                            <span class="text-gray-500">Teams:</span>
-                                            <span class="font-bold">{{ $tournament->participants_count }}</span>
+                            <div class="absolute top-2 right-2 z-10">
+                                <span class="bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">Скоро</span>
+                            </div>
+                            <div class="p-8 text-center">
+                                <div class="w-32 h-32 mx-auto mb-6 trophy-glow">
+                                    @if($tournament->image)
+                                        <img src="{{ $tournament->image }}" alt="{{ $tournament->name }}" class="w-full h-full object-cover object-top">
+                                    @else
+                                        <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center">
+                                            <i class="ri-trophy-line text-5xl text-gray-400"></i>
                                         </div>
-                                    </div>
-                                    <button class="w-full mt-4 font-bold py-2 !rounded-button whitespace-nowrap cursor-pointer transition-colors"
-                                            style="background-color: {{ $tournamentColor }}; color: {{ $tournamentColor == '#7FFF00' ? '#1f2937' : 'white' }};"
-                                            onmouseover="this.style.opacity='0.8';"
-                                            onmouseout="this.style.opacity='1';">
-                                        Join Tournament
-                                    </button>
+                                    @endif
                                 </div>
-                            </a>
+                                <h4 class="heading-font text-xl text-gray-900 mb-2">{{ $tournament->name }}</h4>
+                                <p class="text-gray-600 text-sm mb-4">{{ $typeLabel }}</p>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Teams:</span>
+                                        <span class="font-bold">{{ $tournament->participants_count }}</span>
+                                    </div>
+                                </div>
+                                <button class="w-full mt-4 font-bold py-2 !rounded-button whitespace-nowrap cursor-not-allowed opacity-50"
+                                        style="background-color: {{ $tournamentColor }}; color: {{ $tournamentColor == '#7FFF00' ? '#1f2937' : 'white' }};"
+                                        disabled>
+                                    Join Tournament
+                                </button>
+                            </div>
                         </div>
                     @endforeach
                 </div>

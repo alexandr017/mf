@@ -27,3 +27,4 @@ class ReportRepository extends Repository
     }
 }
 
+

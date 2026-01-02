@@ -25,6 +25,8 @@ Route::get('ratings', [RatingsController::class, 'index']);
 // Команды
 Route::get('teams', [TeamsController::class, 'teams']);
 Route::get('teams/{alias}', [TeamsController::class, 'team']);
+Route::post('teams/{alias}/join', [TeamsController::class, 'joinTeam'])->middleware('auth')->name('teams.join');
+Route::post('teams/{alias}/leave', [TeamsController::class, 'leaveTeam'])->middleware('auth')->name('teams.leave');
 
 // Игроки
 Route::get('players', [PlayersController::class, 'players']);
@@ -40,6 +42,10 @@ Route::get('terms', [StaticPagesController::class, 'page']);
 
 // Турниры
 Route::get('tournaments', [TournamentsController::class, 'index']);
+
+// Товарищеские матчи
+Route::get('friendly-matches', [\App\Http\Controllers\Site\FriendlyMatches\FriendlyMatchesController::class, 'index'])->name('friendly-matches.index');
+Route::get('friendly-matches/{id}', [\App\Http\Controllers\Site\FriendlyMatches\FriendlyMatchesController::class, 'show'])->name('friendly-matches.show');
 Route::get('tournaments/{alias}', [TournamentsController::class, 'tournament']);
 Route::get('tournaments/{alias}/{season}', [TournamentsController::class, 'season']);
 Route::get('tournaments/{alias}/{season}/tours', [TournamentsController::class, 'tours']);
@@ -66,8 +72,13 @@ Route::middleware('auth')->group(function () {
     Route::get('account/referrals', [AccountController::class, 'referrals'])->name('account.referrals');
     Route::get('account/games', [AccountController::class, 'games'])->name('account.games');
     Route::get('account/games/{alias}', [AccountController::class, 'game'])->name('account.game');
+    Route::get('account/matches', [AccountController::class, 'matches'])->name('account.matches');
     Route::get('account/options', [AccountController::class, 'options'])->name('account.options');
     Route::post('account/options', [AccountController::class, 'saveOptions'])->name('account.options.save');
+    
+    // Мини-игры
+    Route::get('games/penalty-training', [\App\Http\Controllers\Site\Games\PenaltyTrainingController::class, 'index'])->name('games.penalty-training');
+    Route::post('games/penalty-training/play', [\App\Http\Controllers\Site\Games\PenaltyTrainingController::class, 'play'])->name('games.penalty-training.play');
 
     // Профиль Breeze
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

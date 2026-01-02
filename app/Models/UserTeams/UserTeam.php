@@ -3,7 +3,6 @@
 namespace App\Models\UserTeams;
 
 use App\Models\Teams\Team;
-use App\Models\Tournaments\TournamentSeason;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,10 +13,14 @@ class UserTeam extends Model
     protected $fillable = [
         'user_id',
         'team_id',
-        'season_id',
+        'season', // Год сезона
     ];
 
     public $timestamps = true;
+
+    protected $casts = [
+        'season' => 'integer',
+    ];
 
     public function user()
     {
@@ -27,11 +30,6 @@ class UserTeam extends Model
     public function team()
     {
         return $this->belongsTo(Team::class);
-    }
-
-    public function season()
-    {
-        return $this->belongsTo(TournamentSeason::class, 'season_id');
     }
 }
 

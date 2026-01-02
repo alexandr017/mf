@@ -56,16 +56,16 @@ class PlayersController
 
         // Получаем текущую команду через user_teams (последний сезон)
         $currentUserTeam = $player->userTeams()
-            ->with('team', 'season')
-            ->orderBy('season_id', 'desc')
+            ->with('team.city')
+            ->orderBy('season', 'desc')
             ->first();
         
         $currentTeam = $currentUserTeam ? $currentUserTeam->team : null;
         
         // Получаем все сезоны пользователя с командами
         $userSeasons = $player->userTeams()
-            ->with('team', 'season')
-            ->orderBy('season_id', 'desc')
+            ->with('team')
+            ->orderBy('season', 'desc')
             ->get();
         
         // Получаем достижения пользователя
@@ -80,7 +80,7 @@ class PlayersController
         $seasonStats = [];
         foreach ($userSeasons as $userTeam) {
             $seasonStats[] = [
-                'season' => $userTeam->season,
+                'season' => $userTeam->season, // Теперь это просто год (integer)
                 'team' => $userTeam->team,
                 'goals' => 0, // TODO: получить из таблицы статистики матчей
                 'assists' => 0, // TODO: получить из таблицы статистики матчей
@@ -89,11 +89,97 @@ class PlayersController
             ];
         }
         
+        // Статистика по годам из товарищеских матчей
+        $yearlyStats = [];
+        $friendlyMatches = \App\Models\FriendlyMatches\FriendlyMatch::where('status', 'played')
+            ->get()
+            ->filter(function($match) use ($player) {
+                // Проверяем участие в матче через scorers, assists или squad
+                $hasInScorers = false;
+                $hasInAssists = false;
+                $hasInSquad = false;
+                
+                if ($match->scorers) {
+                    foreach ($match->scorers as $scorer) {
+                        if (isset($scorer['user_id']) && $scorer['user_id'] == $player->id) {
+                            $hasInScorers = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if ($match->assists) {
+                    foreach ($match->assists as $assist) {
+                        if (isset($assist['user_id']) && $assist['user_id'] == $player->id) {
+                            $hasInAssists = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if ($match->squad) {
+                    $team1Squad = $match->squad['team_1'] ?? [];
+                    $team2Squad = $match->squad['team_2'] ?? [];
+                    $allSquad = array_merge($team1Squad, $team2Squad);
+                    foreach ($allSquad as $squadItem) {
+                        if (isset($squadItem['user_id']) && $squadItem['user_id'] == $player->id) {
+                            $hasInSquad = true;
+                            break;
+                        }
+                    }
+                }
+                
+                return $hasInScorers || $hasInAssists || $hasInSquad;
+            });
+        
+        foreach ($friendlyMatches as $match) {
+            $year = $match->date ? $match->date->format('Y') : date('Y');
+            if (!isset($yearlyStats[$year])) {
+                $yearlyStats[$year] = ['goals' => 0, 'assists' => 0, 'matches' => 0];
+            }
+            
+            // Подсчитываем голы
+            if ($match->scorers) {
+                foreach ($match->scorers as $scorer) {
+                    if (isset($scorer['user_id']) && $scorer['user_id'] == $player->id) {
+                        $goals = is_array($scorer['goals']) ? count($scorer['goals']) : ($scorer['goals'] ?? 0);
+                        $yearlyStats[$year]['goals'] += $goals;
+                    }
+                }
+            }
+            
+            // Подсчитываем ассисты
+            if ($match->assists) {
+                foreach ($match->assists as $assist) {
+                    if (isset($assist['user_id']) && $assist['user_id'] == $player->id) {
+                        $assists = is_array($assist['assists']) ? count($assist['assists']) : ($assist['assists'] ?? 0);
+                        $yearlyStats[$year]['assists'] += $assists;
+                    }
+                }
+            }
+            
+            // Проверяем участие в матче (если есть в заявке)
+            if ($match->squad) {
+                $team1Squad = $match->squad['team_1'] ?? [];
+                $team2Squad = $match->squad['team_2'] ?? [];
+                $allSquad = array_merge($team1Squad, $team2Squad);
+                foreach ($allSquad as $squadItem) {
+                    if (isset($squadItem['user_id']) && $squadItem['user_id'] == $player->id) {
+                        $yearlyStats[$year]['matches']++;
+                        break;
+                    }
+                }
+            }
+        }
+        
         // Титулы по годам (пока заглушки)
         $titlesByYear = [];
         
         // Проверяем, является ли это профилем текущего пользователя
         $isOwnProfile = auth()->check() && auth()->id() === $player->id;
+        
+        // Загружаем родной город
+        $player->load('hometownCity');
         
         return view('site.v1.templates.players.player', [
             'player' => $player,
@@ -104,6 +190,7 @@ class PlayersController
             'achievements' => $achievements,
             'seasonStats' => $seasonStats,
             'titlesByYear' => $titlesByYear,
+            'yearlyStats' => $yearlyStats,
             'isOwnProfile' => $isOwnProfile,
         ]);
     }
