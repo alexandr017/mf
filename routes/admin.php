@@ -51,6 +51,7 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin', 'as' => 'a
     Route::resource('faq', FAQController::class)->except(['show']);
     Route::resource('users', UsersController::class)->except(['show']);
     Route::get('users/data', [UsersController::class, 'dataTables'])->name('users.data');
+    Route::post('users/{id}/change-team', [UsersController::class, 'changeTeam'])->name('users.change-team');
     Route::get('achievements/{id}/assign-users', [AchievementsController::class, 'assignUsers'])->name('achievements.assign-users');
     Route::patch('achievements/{id}/assign-users', [AchievementsController::class, 'updateAssignedUsers'])->name('achievements.assign-users.update');
     Route::resource('achievements', AchievementsController::class)->except(['show']);

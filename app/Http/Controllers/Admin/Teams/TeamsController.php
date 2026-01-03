@@ -13,6 +13,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 final class TeamsController extends AdminController
 {
@@ -55,6 +56,22 @@ final class TeamsController extends AdminController
         $result = $item->save();
 
         if ($result) {
+            // Создаем запись в таблице ratings с нулевыми значениями (если еще не существует)
+            $existingRating = DB::table('ratings')->where('team_id', $item->id)->first();
+            if (!$existingRating) {
+                DB::table('ratings')->insert([
+                    'team_id' => $item->id,
+                    'games' => 0,
+                    'wins' => 0,
+                    'draws' => 0,
+                    'losses' => 0,
+                    'goal_difference' => 0,
+                    'points' => 0,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
             ActivityLogHelper::logCreate($item);
             return redirect()
                 ->route('admin.teams.index')

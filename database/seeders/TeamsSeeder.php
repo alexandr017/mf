@@ -6,6 +6,7 @@ use App\Models\Cities\City;
 use App\Models\Countries\Country;
 use App\Models\Teams\Team;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class TeamsSeeder extends Seeder
@@ -72,7 +73,7 @@ class TeamsSeeder extends Seeder
             $stadiumName = $stadiumNames[$i % count($stadiumNames)] ?? 'Стадион ' . $name;
             $dateCreated = fake()->numberBetween(1890, 2020);
 
-            Team::create([
+            $team = Team::create([
                 'name' => $name,
                 'alias' => $alias,
                 'stadium' => $stadiumName,
@@ -87,6 +88,19 @@ class TeamsSeeder extends Seeder
                 'stadium_small_preview' => '/images/stadiums/' . $alias . '_small.jpg',
                 'stadium_big_preview' => '/images/stadiums/' . $alias . '_big.jpg',
                 'status' => fake()->boolean(90), // 90% активных команд
+            ]);
+
+            // Создаем запись в таблице ratings с нулевыми значениями
+            DB::table('ratings')->insert([
+                'team_id' => $team->id,
+                'games' => 0,
+                'wins' => 0,
+                'draws' => 0,
+                'losses' => 0,
+                'goal_difference' => 0,
+                'points' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
 

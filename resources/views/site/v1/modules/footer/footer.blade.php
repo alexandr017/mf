@@ -60,6 +60,22 @@
                             <span>Поддержать проект</span>
                         </div>
                     </a>
+                    
+                    <!-- Telegram Mini App Section -->
+                    <div class="mt-6 pt-6 border-t border-gray-800">
+                        <p class="text-gray-300 text-sm mb-3 text-center leading-relaxed">
+                            Играйте прямо в Telegram! Не нужно открывать браузер — все функции доступны прямо в мессенджере через мини-приложение.
+                        </p>
+                        <a href="#" class="bg-[#0088cc] hover:bg-[#0077b5] text-white font-bold px-6 py-3 !rounded-button block text-center whitespace-nowrap transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+                            <div class="flex items-center justify-center gap-2">
+                                <div class="w-5 h-5 flex items-center justify-center">
+                                    <i class="ri-telegram-fill text-xl"></i>
+                                </div>
+                                <span>Играть в Telegram</span>
+                            </div>
+                        </a>
+                    </div>
+                    
                     <div class="flex space-x-4 mt-4 md:mt-0">
                         <div class="w-8 h-8 flex items-center justify-center text-gray-400">
                             <i class="ri-visa-fill ri-lg"></i>

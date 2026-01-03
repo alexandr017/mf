@@ -26,6 +26,9 @@ class PlayersController
             ->distinct('user_id')
             ->count('user_id');
         
+        // Добавляем фейковых активных игроков для создания иллюзии активности
+        $activePlayers += 1200;
+        
         // Top Scorer
         $topScorer = User::orderBy('goals', 'desc')->first();
         

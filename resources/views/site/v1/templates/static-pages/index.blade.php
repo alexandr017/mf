@@ -73,21 +73,21 @@
                             <ul class="space-y-4">
                                 <li class="flex">
                                     <div class="w-6 h-6 mr-2 flex items-center justify-center text-primary flex-shrink-0 mt-0.5">
-                                        <i class="ri-checkbox-circle-line"></i>
+                                        <i class="ri-gamepad-line"></i>
                                     </div>
-                                    <span>Teams must have ridiculous names related to disgusting things, diseases, or bodily functions.</span>
+                                    <span><strong>Прокачка рейтинга через мини-игры:</strong> Участвуйте в тренировках (пенальти, чеканка, прогнозы матчей) для повышения индивидуального рейтинга.</span>
                                 </li>
                                 <li class="flex">
                                     <div class="w-6 h-6 mr-2 flex items-center justify-center text-primary flex-shrink-0 mt-0.5">
-                                        <i class="ri-checkbox-circle-line"></i>
+                                        <i class="ri-trophy-line"></i>
                                     </div>
-                                    <span>Matches are played in the worst possible conditions: mud, rain, garbage dumps, or abandoned factories.</span>
+                                    <span><strong>Топ 33 игрока:</strong> Перед каждым матчем команда заявляет топ 33 игрока с наивысшим рейтингом, которые будут участвовать в матче.</span>
                                 </li>
                                 <li class="flex">
                                     <div class="w-6 h-6 mr-2 flex items-center justify-center text-primary flex-shrink-0 mt-0.5">
-                                        <i class="ri-checkbox-circle-line"></i>
+                                        <i class="ri-team-line"></i>
                                     </div>
-                                    <span>Each team must have at least one "mascot" that represents their name (e.g., Perm Pimples have a person in a giant zit costume).</span>
+                                    <span><strong>Реальные матчи городов:</strong> Топ игроки играют в реальных матчах между командами из разных городов и стран.</span>
                                 </li>
                             </ul>
                         </div>
@@ -95,34 +95,34 @@
                             <ul class="space-y-4">
                                 <li class="flex">
                                     <div class="w-6 h-6 mr-2 flex items-center justify-center text-primary flex-shrink-0 mt-0.5">
-                                        <i class="ri-checkbox-circle-line"></i>
+                                        <i class="ri-star-line"></i>
                                     </div>
-                                    <span>Standard football rules apply, except the referee can randomly add "challenge rounds" where players must perform ridiculous tasks.</span>
+                                    <span><strong>Система очков:</strong> Внутренние турниры - 3 очка за победу, 1 за ничью. Международные - 5 за победу, 3 за ничью. Товарищеские - 2 за победу, 1 за ничью.</span>
                                 </li>
                                 <li class="flex">
                                     <div class="w-6 h-6 mr-2 flex items-center justify-center text-primary flex-shrink-0 mt-0.5">
-                                        <i class="ri-checkbox-circle-line"></i>
+                                        <i class="ri-user-add-line"></i>
                                     </div>
-                                    <span>Teams earn 3 points for a win, 1 for a draw, and 0 for a loss. The team with the most points at the end of the season wins the "Golden Toilet" trophy.</span>
+                                    <span><strong>Присоединение к команде:</strong> Максимум 100 активных игроков в команде. Трансферное окно с 1 июня по 31 августа (1 раз за окно).</span>
                                 </li>
                                 <li class="flex">
                                     <div class="w-6 h-6 mr-2 flex items-center justify-center text-primary flex-shrink-0 mt-0.5">
-                                        <i class="ri-checkbox-circle-line"></i>
+                                        <i class="ri-award-line"></i>
                                     </div>
-                                    <span>Fans are encouraged to dress up in theme with their team and bring absurd props to matches.</span>
+                                    <span><strong>Статистика и достижения:</strong> Ваши голы, передачи и участие в матчах фиксируются и влияют на рейтинг команды и личные достижения.</span>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div class="mt-8 text-center">
-                        <button class="bg-primary hover:bg-opacity-80 text-gray-900 font-bold px-6 py-3 !rounded-button whitespace-nowrap">
+                        <a href="/rules" class="inline-block bg-primary hover:bg-opacity-80 text-gray-900 font-bold px-6 py-3 !rounded-button whitespace-nowrap">
                             <div class="flex items-center gap-2">
                                 <div class="w-5 h-5 flex items-center justify-center">
                                     <i class="ri-book-open-line"></i>
                                 </div>
                                 <span>Читать все правила</span>
                             </div>
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>

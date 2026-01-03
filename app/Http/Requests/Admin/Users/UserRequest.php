@@ -39,6 +39,12 @@ class UserRequest extends FormRequest
             'referrals_count' => ['nullable', 'integer', 'min:0'],
             'hometown_city_id' => ['nullable', 'integer', 'exists:cities,id'],
             'show_hometown' => ['nullable', 'boolean'],
+            'is_fake' => ['nullable', 'boolean'],
+            'telegram_chat_id' => ['nullable', 'string', 'max:255'],
+            'telegram_notifications_enabled' => ['nullable', 'boolean'],
+            'telegram_username' => ['nullable', 'string', 'max:255'],
+            'telegram_first_name' => ['nullable', 'string', 'max:255'],
+            'telegram_last_name' => ['nullable', 'string', 'max:255'],
         ];
 
         if ($userId) {

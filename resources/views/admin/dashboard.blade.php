@@ -137,6 +137,95 @@
         </div>
     </div>
 
+    <!-- Teams with Low Players -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Команды с недостаточным составом</h3>
+                    <span class="label label-danger">{{ count($teamsWithLowPlayers) }}</span>
+                </div>
+                <div class="box-body">
+                    @if(count($teamsWithLowPlayers) > 0)
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Команда</th>
+                                        <th>Игроков</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($teamsWithLowPlayers as $team)
+                                        <tr>
+                                            <td>
+                                                <a href="{{ route('admin.teams.edit', $team['id']) }}">{{ $team['name'] }}</a>
+                                            </td>
+                                            <td>
+                                                <span class="label label-danger">{{ $team['players_count'] }} / 15</span>
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('admin.teams.edit', $team['id']) }}" class="btn btn-xs btn-primary">
+                                                    <i class="fa fa-edit"></i> Управление
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <p class="text-success">Все команды имеют достаточный состав (≥15 игроков)</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="box box-warning">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Команды с малым составом</h3>
+                    <span class="label label-warning">{{ count($teamsWithFewPlayers) }}</span>
+                </div>
+                <div class="box-body">
+                    @if(count($teamsWithFewPlayers) > 0)
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Команда</th>
+                                        <th>Игроков</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($teamsWithFewPlayers as $team)
+                                        <tr>
+                                            <td>
+                                                <a href="{{ route('admin.teams.edit', $team['id']) }}">{{ $team['name'] }}</a>
+                                            </td>
+                                            <td>
+                                                <span class="label label-warning">{{ $team['players_count'] }} / 30</span>
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('admin.teams.edit', $team['id']) }}" class="btn btn-xs btn-primary">
+                                                    <i class="fa fa-edit"></i> Управление
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <p class="text-success">Нет команд с малым составом</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Recommendations -->
     <div class="row">
         <div class="col-md-12">

@@ -197,8 +197,17 @@ class ProcessFriendlyMatches extends Command
             'team_2' => $squad2,
         ];
 
+        // Определяем результат матча
+        $homeWin = $score1 > $score2;
+        $awayWin = $score2 > $score1;
+        $draw = $score1 == $score2;
+
+        // Очки за товарищеские игры: победа = 2, ничья = 1, поражение = 0
+        $homePoints = $homeWin ? 2 : ($draw ? 1 : 0);
+        $awayPoints = $awayWin ? 2 : ($draw ? 1 : 0);
+
         // Обновляем матч
-        DB::transaction(function () use ($match, $score1, $score2, $scorersJson, $assistsJson, $squadJson, $scorers, $assists) {
+        DB::transaction(function () use ($match, $score1, $score2, $scorersJson, $assistsJson, $squadJson, $scorers, $assists, $homeWin, $awayWin, $draw, $homePoints, $awayPoints) {
             $match->update([
                 'status' => 'played',
                 'score_1' => $score1,
@@ -218,6 +227,10 @@ class ProcessFriendlyMatches extends Command
                 $assistsCount = is_array($assistsList) ? count($assistsList) : $assistsList;
                 User::where('id', $userId)->increment('assists', $assistsCount);
             }
+
+            // Обновляем рейтинг команд (таблица ratings)
+            $this->updateTeamRating($match->team_1, $homeWin, $draw, $score1, $score2, $homePoints);
+            $this->updateTeamRating($match->team_2, $awayWin, $draw, $score2, $score1, $awayPoints);
         });
 
         $this->info("Матч завершен: {$score1} - {$score2}");
@@ -255,6 +268,40 @@ class ProcessFriendlyMatches extends Command
         }
 
         return $players;
+    }
+
+    /**
+     * Обновить рейтинг команды после товарищеского матча
+     */
+    protected function updateTeamRating(int $teamId, bool $win, bool $draw, int $goalsFor, int $goalsAgainst, int $points): void
+    {
+        // Проверяем, существует ли запись в таблице ratings
+        $rating = DB::table('ratings')->where('team_id', $teamId)->first();
+
+        if (!$rating) {
+            // Создаем новую запись
+            DB::table('ratings')->insert([
+                'team_id' => $teamId,
+                'games' => 1,
+                'wins' => $win ? 1 : 0,
+                'draws' => $draw ? 1 : 0,
+                'losses' => (!$win && !$draw) ? 1 : 0,
+                'goal_difference' => $goalsFor - $goalsAgainst,
+                'points' => $points,
+            ]);
+        } else {
+            // Обновляем существующую запись
+            DB::table('ratings')
+                ->where('team_id', $teamId)
+                ->update([
+                    'games' => DB::raw('games + 1'),
+                    'wins' => DB::raw($win ? 'wins + 1' : 'wins'),
+                    'draws' => DB::raw($draw ? 'draws + 1' : 'draws'),
+                    'losses' => DB::raw((!$win && !$draw) ? 'losses + 1' : 'losses'),
+                    'goal_difference' => DB::raw("goal_difference + ({$goalsFor} - {$goalsAgainst})"),
+                    'points' => DB::raw("points + {$points}"),
+                ]);
+        }
     }
 }
 

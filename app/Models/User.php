@@ -53,6 +53,10 @@ class User extends Authenticatable
         'show_hometown',
         'telegram_chat_id',
         'telegram_notifications_enabled',
+        'is_fake',
+        'telegram_username',
+        'telegram_first_name',
+        'telegram_last_name',
     ];
 
     /**
@@ -78,6 +82,7 @@ class User extends Authenticatable
             'rating' => 'decimal:2',
             'show_hometown' => 'boolean',
             'telegram_notifications_enabled' => 'boolean',
+            'is_fake' => 'boolean',
         ];
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Import;
 
 use App\Models\Teams\Team;
+use Illuminate\Support\Facades\DB;
 
 class ImportTeamsController
 {
@@ -50,7 +51,21 @@ class ImportTeamsController
 
             $team->save();
 
-
+            // Создаем запись в таблице ratings с нулевыми значениями (если еще не существует)
+            $existingRating = DB::table('ratings')->where('team_id', $team->id)->first();
+            if (!$existingRating) {
+                DB::table('ratings')->insert([
+                    'team_id' => $team->id,
+                    'games' => 0,
+                    'wins' => 0,
+                    'draws' => 0,
+                    'losses' => 0,
+                    'goal_difference' => 0,
+                    'points' => 0,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         }
     }
 }

@@ -43,8 +43,7 @@ Route::get('terms', [StaticPagesController::class, 'page']);
 // Турниры
 Route::get('tournaments', [TournamentsController::class, 'index']);
 
-// Товарищеские матчи
-Route::get('friendly-matches', [\App\Http\Controllers\Site\FriendlyMatches\FriendlyMatchesController::class, 'index'])->name('friendly-matches.index');
+// Товарищеские матчи (детальный просмотр)
 Route::get('friendly-matches/{id}', [\App\Http\Controllers\Site\FriendlyMatches\FriendlyMatchesController::class, 'show'])->name('friendly-matches.show');
 Route::get('tournaments/{alias}', [TournamentsController::class, 'tournament']);
 Route::get('tournaments/{alias}/{season}', [TournamentsController::class, 'season']);

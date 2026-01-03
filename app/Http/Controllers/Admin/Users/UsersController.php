@@ -77,11 +77,14 @@ final class UsersController extends AdminController
 
         $data = empty_str_to_null($data);
 
-        // Обработка show_hometown
-        if (isset($data['show_hometown'])) {
-            $data['show_hometown'] = (bool) $data['show_hometown'];
-        } else {
-            $data['show_hometown'] = false;
+        // Обработка boolean полей
+        $booleanFields = ['show_hometown', 'is_fake', 'telegram_notifications_enabled'];
+        foreach ($booleanFields as $field) {
+            if (isset($data[$field])) {
+                $data[$field] = (bool) $data[$field];
+            } else {
+                $data[$field] = false;
+            }
         }
 
         // Генерируем referral_code, если не указан
@@ -135,11 +138,14 @@ final class UsersController extends AdminController
 
         $data = empty_str_to_null($data);
 
-        // Обработка show_hometown
-        if (isset($data['show_hometown'])) {
-            $data['show_hometown'] = (bool) $data['show_hometown'];
-        } else {
-            $data['show_hometown'] = false;
+        // Обработка boolean полей
+        $booleanFields = ['show_hometown', 'is_fake', 'telegram_notifications_enabled'];
+        foreach ($booleanFields as $field) {
+            if (isset($data[$field])) {
+                $data[$field] = (bool) $data[$field];
+            } else {
+                $data[$field] = false;
+            }
         }
 
         // Хешируем пароль, если он указан
@@ -177,6 +183,60 @@ final class UsersController extends AdminController
         return redirect()
             ->route('admin.users.index')
             ->with('flash_errors', 'Ошибка удаления!');
+    }
+
+    /**
+     * Быстрая смена команды пользователя
+     */
+    public function changeTeam(\Illuminate\Http\Request $request, string $id): RedirectResponse
+    {
+        $user = $this->userRepository->findOrFail($id);
+        $teamId = $request->input('team_id');
+        
+        if (!$teamId) {
+            return redirect()
+                ->route('admin.users.edit', $id)
+                ->with('flash_errors', 'Необходимо выбрать команду!');
+        }
+
+        $team = \App\Models\Teams\Team::findOrFail($teamId);
+        $transferService = app(\App\Services\TeamTransferService::class);
+        
+        $currentSeason = $transferService->getCurrentSeason();
+        
+        // Проверяем лимит команды
+        $playersCount = $transferService->getActivePlayersCount($team, $currentSeason);
+        if ($playersCount >= \App\Services\TeamTransferService::MAX_ACTIVE_PLAYERS) {
+            return redirect()
+                ->route('admin.users.edit', $id)
+                ->with('flash_errors', "В команде {$team->name} достигнут лимит игроков (100 человек)!");
+        }
+        
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            // Удаляем текущую команду пользователя в текущем сезоне
+            \App\Models\UserTeams\UserTeam::where('user_id', $user->id)
+                ->where('season', $currentSeason)
+                ->delete();
+            
+            // Добавляем в новую команду
+            \App\Models\UserTeams\UserTeam::create([
+                'user_id' => $user->id,
+                'team_id' => $team->id,
+                'season' => $currentSeason,
+            ]);
+
+            \Illuminate\Support\Facades\DB::commit();
+
+            return redirect()
+                ->route('admin.users.edit', $id)
+                ->with('flash_success', "Пользователь успешно переведен в команду {$team->name}!");
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            return redirect()
+                ->route('admin.users.edit', $id)
+                ->with('flash_errors', 'Ошибка при смене команды: ' . $e->getMessage());
+        }
     }
 }
 

@@ -11,7 +11,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center mb-8">
             <h2 class="heading-font text-4xl text-gray-900">Последние товарищеские игры</h2>
-            <a href="/friendly-matches" class="text-primary hover:text-primary-dark font-medium flex items-center">
+            <a href="/upcoming-games" class="text-primary hover:text-primary-dark font-medium flex items-center">
                 Смотреть все
                 <div class="w-5 h-5 ml-1 flex items-center justify-center">
                     <i class="ri-arrow-right-line"></i>

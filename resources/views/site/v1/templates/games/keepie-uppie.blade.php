@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function resetBall() {
         // Случайная позиция X
         ballX = 20 + Math.random() * 60;
-        ballY = 10;
+        ballY = 5; // Начинаем выше, чтобы мяч падал с самого верха
         ballHorizontalSpeed = (Math.random() - 0.5) * 0.5; // Случайное горизонтальное движение
     }
     
@@ -241,7 +241,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Если мяч упал вниз - игра окончена
-            if (ballY > 95) {
+            // Игра заканчивается, когда мяч опускается ниже 95% высоты экрана
+            if (ballY >= 95) {
                 endGame();
                 return;
             }
@@ -354,8 +355,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!isPlaying) return;
         e.stopPropagation();
         
-        // Проверяем, что мяч падает и достаточно низко (можно кликнуть)
-        if (ballDirection === 1 && ballY > 50) {
+        // Проверяем, что мяч падает (можно кликнуть на любом уровне)
+        if (ballDirection === 1) {
             // Подбрасываем мяч
             ballDirection = -1;
             
@@ -369,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!isPlaying) return;
         
         // Проверяем, что клик не по мячу напрямую
-        if (e.target === ball) return;
+        if (e.target === ball || e.target.closest('#ball')) return;
         
         // Получаем позицию мяча на экране
         const ballRect = ball.getBoundingClientRect();
@@ -382,8 +383,8 @@ document.addEventListener('DOMContentLoaded', function() {
             Math.pow(e.clientY - ballCenterY, 2)
         );
         
-        // Если клик в пределах 80px от мяча и мяч падает и достаточно низко
-        if (distance < 80 && ballDirection === 1 && ballY > 50) {
+        // Увеличиваем область клика до 120px и убираем ограничение по высоте
+        if (distance < 120 && ballDirection === 1) {
             ballDirection = -1;
             playSound(500, 0.1, 'square');
         }

@@ -28,3 +28,9 @@ Schedule::command('notifications:send-game-reminders')
 Schedule::command('notifications:process-scheduled')
     ->everyFiveMinutes()
     ->withoutOverlapping();
+
+// Увеличение рейтинга фейковых пользователей (5-6 раз в день)
+// Запускаем каждые 4 часа (6 раз в день)
+Schedule::command('fake-users:increase-rating')
+    ->everyFourHours()
+    ->withoutOverlapping();

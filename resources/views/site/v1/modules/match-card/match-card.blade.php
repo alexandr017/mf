@@ -36,28 +36,42 @@
     // Определяем URL для клика
     $matchUrl = null;
     if (isset($match->id)) {
-        // Проверяем, это товарищеский матч или турнирный
-        if (isset($match->stage_id) || isset($match->group_id)) {
-            // Турнирный матч - пока не реализовано, можно добавить позже
-            // $matchUrl = "/tournaments/matches/{$match->id}";
-        } else {
+        // Проверяем тип матча (friendly или tournament)
+        $matchType = $match->type ?? null;
+        if ($matchType === 'tournament' && (isset($match->stage_id) || isset($match->group_id))) {
+            // Турнирный матч
+            // $matchUrl = "/tournaments/{$match->stage_id}/matches/{$match->id}";
+        } elseif ($matchType === 'friendly' || (!isset($match->stage_id) && !isset($match->group_id))) {
             // Товарищеский матч
-            $matchUrl = "/friendly-matches/{$match->id}";
+            if ($isPlayed) {
+                $matchUrl = "/friendly-matches/{$match->id}";
+            }
         }
-    }
-    
-    // Если матч сыгран, всегда показываем ссылку
-    if ($isPlayed && $matchUrl) {
-        $matchUrl = $matchUrl;
-    } elseif (!$isPlayed && $matchUrl) {
-        // Для запланированных матчей тоже можно показать ссылку
-        $matchUrl = $matchUrl;
     }
     
     // Если передан флаг noLink, не создаем ссылку (уже обернуто)
     $noLink = $noLink ?? false;
     if ($noLink) {
         $matchUrl = null;
+    }
+    
+    // Определяем тип матча для лейбла
+    $matchType = $match->type ?? null;
+    if (!$matchType) {
+        // Если тип не указан, определяем по наличию stage_id
+        $matchType = (isset($match->stage_id) || isset($match->group_id)) ? 'tournament' : 'friendly';
+    }
+    
+    // Название турнира для отображения (только для турнирных матчей)
+    // Если передан tournamentName извне, используем его, иначе берем из match
+    $tournamentNameForDisplay = $tournamentName ?? null;
+    if (!$tournamentNameForDisplay && $matchType === 'tournament') {
+        $tournamentNameForDisplay = $match->tournament_name ?? null;
+    }
+    
+    // Для товарищеских матчей всегда null
+    if ($matchType === 'friendly') {
+        $tournamentNameForDisplay = null;
     }
 @endphp
 
@@ -94,8 +108,23 @@
             <span class="font-medium text-sm text-center">{{ $awayName }}</span>
         </div>
     </div>
-    <div class="text-center">
-        <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded">{{ $stadium }}</span>
+    <div class="text-center space-y-1">
+        @if($tournamentNameForDisplay)
+            <div>
+                <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">{{ $tournamentNameForDisplay }}</span>
+            </div>
+        @elseif($matchType === 'friendly')
+            <div>
+                <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Товарищеский матч</span>
+            </div>
+        @elseif($matchType === 'tournament')
+            <div>
+                <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Официальный матч</span>
+            </div>
+        @endif
+        <div>
+            <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded">{{ $stadium }}</span>
+        </div>
     </div>
 </div>
 @if($matchUrl)

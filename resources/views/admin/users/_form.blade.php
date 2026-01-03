@@ -205,6 +205,85 @@ document.addEventListener('DOMContentLoaded', function() {
     <small class="form-text text-muted">Количество пользователей, приглашенных этим пользователем</small>
 </div>
 
+<div class="form-group">
+    <label for="is_fake">Тип пользователя</label>
+    <select class="form-control" name="is_fake" id="is_fake">
+        <option value="0" @if((old('is_fake') === '0' || old('is_fake') === 0) || (isset($item) && $item->is_fake == 0)) selected @endif>Реальный пользователь</option>
+        <option value="1" @if((old('is_fake') === '1' || old('is_fake') === 1) || (isset($item) && $item->is_fake == 1)) selected @endif>Фейковый пользователь</option>
+    </select>
+    <small class="form-text text-muted">Фейковые пользователи используются для заполнения команд и создания активности</small>
+</div>
+
+<hr>
+<h4>Telegram данные</h4>
+
+<div class="form-group">
+    <label for="telegram_chat_id">Telegram Chat ID</label>
+    <input type="text" class="form-control" name="telegram_chat_id" id="telegram_chat_id" maxlength="255"
+           @if(old('telegram_chat_id'))
+               value="{{old('telegram_chat_id')}}"
+           @else
+               @if(isset($item))
+                   value="{{$item->telegram_chat_id}}"
+               @endif
+           @endif
+    >
+    <small class="form-text text-muted">ID чата пользователя в Telegram</small>
+</div>
+
+<div class="form-group">
+    <label for="telegram_username">Telegram Username</label>
+    <input type="text" class="form-control" name="telegram_username" id="telegram_username" maxlength="255"
+           @if(old('telegram_username'))
+               value="{{old('telegram_username')}}"
+           @else
+               @if(isset($item))
+                   value="{{$item->telegram_username}}"
+               @endif
+           @endif
+    >
+    <small class="form-text text-muted">Username пользователя в Telegram (без @)</small>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="telegram_first_name">Telegram Имя</label>
+            <input type="text" class="form-control" name="telegram_first_name" id="telegram_first_name" maxlength="255"
+                   @if(old('telegram_first_name'))
+                       value="{{old('telegram_first_name')}}"
+                   @else
+                       @if(isset($item))
+                           value="{{$item->telegram_first_name}}"
+                       @endif
+                   @endif
+            >
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="telegram_last_name">Telegram Фамилия</label>
+            <input type="text" class="form-control" name="telegram_last_name" id="telegram_last_name" maxlength="255"
+                   @if(old('telegram_last_name'))
+                       value="{{old('telegram_last_name')}}"
+                   @else
+                       @if(isset($item))
+                           value="{{$item->telegram_last_name}}"
+                       @endif
+                   @endif
+            >
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="telegram_notifications_enabled">Включить уведомления Telegram</label>
+    <select class="form-control" name="telegram_notifications_enabled" id="telegram_notifications_enabled">
+        <option value="0" @if((old('telegram_notifications_enabled') === '0' || old('telegram_notifications_enabled') === 0) || (isset($item) && $item->telegram_notifications_enabled == 0)) selected @endif>Нет</option>
+        <option value="1" @if((old('telegram_notifications_enabled') === '1' || old('telegram_notifications_enabled') === 1) || (isset($item) && $item->telegram_notifications_enabled == 1)) selected @endif>Да</option>
+    </select>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const generateBtn = document.getElementById('generate-referral-code');

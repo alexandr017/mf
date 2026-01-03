@@ -77,6 +77,29 @@ final class DashboardController extends AdminController
             $teamsData[] = $teamsCount;
         }
         
+        // Статистика команд по количеству игроков
+        $teamsWithLowPlayers = []; // < 15 игроков
+        $teamsWithFewPlayers = []; // 15-30 игроков
+        
+        $allTeams = Team::all();
+        foreach ($allTeams as $team) {
+            $playersCount = $this->transferService->getActivePlayersCount($team, $currentSeason);
+            
+            if ($playersCount < 15) {
+                $teamsWithLowPlayers[] = [
+                    'id' => $team->id,
+                    'name' => $team->name,
+                    'players_count' => $playersCount,
+                ];
+            } elseif ($playersCount >= 15 && $playersCount <= 30) {
+                $teamsWithFewPlayers[] = [
+                    'id' => $team->id,
+                    'name' => $team->name,
+                    'players_count' => $playersCount,
+                ];
+            }
+        }
+        
         // Статус системы
         $status = 'ok';
         $statusMessage = '';
@@ -106,7 +129,9 @@ final class DashboardController extends AdminController
             'usersData',
             'teamsData',
             'status',
-            'statusMessage'
+            'statusMessage',
+            'teamsWithLowPlayers',
+            'teamsWithFewPlayers'
         ));
     }
 }
